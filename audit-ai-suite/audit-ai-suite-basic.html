@@ -47,6 +47,7 @@
   .list-btn { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid var(--line); border-radius: 8px;
               padding: 10px 16px; margin-bottom: 8px; }
   .list-btn:hover, .plain:hover, .subnav button:hover { border-color: var(--theme); background: var(--tint); color: var(--theme); }
+  .plain[aria-pressed="true"]:hover, .subnav button[aria-current="page"]:hover { background: var(--theme); color: #fff; }   /* stays picked under the mouse */
   .link { background: none; border: 0; color: var(--theme); text-decoration: underline; padding: 0 2px; min-height: 0; font-size: inherit; }
 
   /* Rating labels: the word is always written on the label */
@@ -724,7 +725,7 @@ let reportSection = 0, reportType = 0;   // the chips picked on Report a mistake
 let message = "";           // a short "Logged" / "Saved" message shown once
 let confirming = "";        // which "Are you sure?" question is showing, if any
 let panels = {};            // which fold-out panels are open, so a redraw keeps them open
-let where = SWITCH_OPTIONS[load("where", "cloud")] ? load("where", "cloud") : "cloud";   // the switch on Home
+let where = Object.keys(SWITCH_OPTIONS).includes(load("where", "cloud")) ? load("where", "cloud") : "cloud";   // the switch on Home
 let level = [0, 1, 2, 3].includes(load("level", 0)) ? load("level", 0) : 0;              // the testing level on Home
 
 // ---------- Navigation ----------
@@ -734,7 +735,8 @@ function go(name) {         // move to another screen
   if (name === "checker" && screen !== "checker" && answers.length === CHECKER_QUESTIONS.length) answers = [];   // a finished check starts afresh
   screen = name; confirming = ""; panels = {};
   draw();
-  focusHeading(document.querySelector("#screen h1").textContent + " · Settling into AI");
+  const heading = document.querySelector("#screen h1").textContent;
+  focusHeading(heading === "Settling into AI" ? heading : heading + " · Settling into AI");
 }
 
 function draw() {           // redraw the current screen and the tabs
@@ -771,10 +773,12 @@ function ratingsFor() {     // "Ratings for: X · change on Home"
 function levelFor() {
   return `<p class="small">Level: <b>${LEVELS[level]}</b> · <button class="link" id="changeLevel" onclick="go('home')">change on Home</button></p>`;
 }
-function confirmHtml(question, yesText, yesAction) {   // an on-page "Are you sure?" step
+function confirmHtml(question, yesText, yesAction, backTo) {   // an on-page "Are you sure?" step; Cancel returns to the button
   return `<div class="warn" role="alert"><p>${question}</p><button class="btn" id="confirmYes" onclick="${yesAction}">${yesText}</button>
-    <button class="plain" id="confirmNo" onclick="confirming = ''; draw()">Cancel</button></div>`;
+    <button class="plain" id="confirmNo" onclick="confirming = ''; draw(); focusId('${backTo}')">Cancel</button></div>`;
 }
+function ask(what) { confirming = what; draw(); focusId("confirmNo"); }   // show the question with focus on Cancel (the safe choice)
+function focusId(id) { const el = document.getElementById(id); if (el) el.focus(); }
 
 // =====================================================================
 // SCREEN 1: Home
@@ -921,8 +925,8 @@ function reportScreen() {
       <div class="field"><label for="impact">What could have happened?</label><input id="impact" type="text"></div></details>
     <p><button class="btn" id="logBtn" onclick="saveReport()">Log it</button> <span class="small" id="reportMsg" role="status">${message}</span></p>
     <details id="savedBox"${panels.saved ? " open" : ""} ontoggle="panels.saved = this.open"><summary>Saved reports (${reports.length})</summary>
-      ${confirming === "reports" ? confirmHtml("Delete all " + reports.length + " saved reports?", "Yes, delete them", "save('reports', []); confirming = ''; message = 'All reports deleted.'; draw()")
-        : (reports.length ? `<p><button class="plain" id="clearReports" onclick="confirming = 'reports'; draw()">Clear all</button></p>` : "")}
+      ${confirming === "reports" ? confirmHtml("Delete all " + reports.length + " saved reports?", "Yes, delete them", "clearReports()", "clearReports")
+        : (reports.length ? `<p><button class="plain" id="clearReports" onclick="ask('reports')">Clear all</button></p>` : "")}
       ${list || "<p>No reports yet.</p>"}</details>
     <details id="sendBox"${panels.send ? " open" : ""} ontoggle="panels.send = this.open"><summary>Send to my manager</summary>${sendHtml()}</details>`;
 }
@@ -939,6 +943,7 @@ function saveReport() {
   draw();
   document.getElementById("wrong").focus();
 }
+function clearReports() { save("reports", []); confirming = ""; message = "All reports deleted."; draw(); focusId("logBtn"); }
 function deleteReport(i) {
   const list = loadReports();
   list.splice(i, 1);
@@ -983,13 +988,14 @@ function heatScreen() {
   return `<h1>Heat map</h1>
     <p class="grey">Where AI mistakes have been reported, by audit section and type of mistake. Darker means more reports; pick a square to see them.</p>
     <button class="btn" id="exampleBtn" onclick="loadExamples()">Load example data</button>
-    <button class="plain" id="clearBtn" onclick="confirming = 'heat'; draw()">Clear</button>
-    ${confirming === "heat" ? confirmHtml("Delete every saved report, including your own?", "Yes, clear it", "save('reports', []); heatCell = null; confirming = ''; message = 'Cleared.'; draw()") : ""}
+    <button class="plain" id="clearBtn" onclick="ask('heat')">Clear</button>
+    ${confirming === "heat" ? confirmHtml("Delete every saved report, including your own?", "Yes, clear it", "clearHeat()", "clearBtn") : ""}
     <p class="small" role="status">${message}</p>
     ${heatTable(counts, "pickCell")}
     <p><b>${top.max ? "Most reports: " + top.names.join(" and ") + (top.names.length > 1 ? " (joint)" : "") : "No reports yet."}</b></p>${picked}`;
 }
 function pickCell(s, t) { heatCell = [s, t]; draw(); }
+function clearHeat() { save("reports", []); heatCell = null; confirming = ""; message = "Cleared."; draw(); focusId("clearBtn"); }
 
 function loadExamples() {   // adds the made-up reports (replacing any made-up ones already there)
   const list = loadReports().filter(r => !r.example);
