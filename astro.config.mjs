@@ -1,16 +1,9 @@
 import { defineConfig } from 'astro/config';
-import netlify from '@astrojs/netlify';
-import react from '@astrojs/react';
 import tailwind from '@astrojs/tailwind';
 
-// https://astro.build/config
+// Fully static site: deploys to Cloudflare Pages, Netlify or any static host.
 export default defineConfig({
-    integrations: [
-        react(),
-        tailwind({
-            applyBaseStyles: false
-        })
-    ],
-    output: 'hybrid',
-    adapter: netlify()
+    site: 'https://mcass.uk',
+    output: 'static',
+    integrations: [tailwind({ applyBaseStyles: false })]
 });

@@ -1,0 +1,31 @@
+---
+// Shows the photo if one is set, otherwise a labelled placeholder box
+// so the committee can see exactly which picture goes where.
+interface Props {
+    src?: string | null;
+    alt: string;
+    label?: string;
+    class?: string;
+    rounded?: string;
+}
+const { src, alt, label, class: className = 'aspect-[4/3]', rounded = 'rounded-2xl' } = Astro.props;
+---
+
+{
+    src ? (
+        <img src={src} alt={alt} loading="lazy" class:list={['h-full w-full object-cover', className, rounded]} />
+    ) : (
+        <div
+            role="img"
+            aria-label={`Photo placeholder: ${label ?? alt}`}
+            class:list={['flex flex-col items-center justify-center gap-2 border-2 border-dashed border-slate-300 bg-slate-100 p-4 text-center text-slate-500', className, rounded]}
+        >
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-8 w-8" aria-hidden="true">
+                <path d="M3 7h3l2-3h8l2 3h3v13H3z" />
+                <circle cx="12" cy="13" r="4" />
+            </svg>
+            <span class="text-xs font-medium uppercase tracking-wide">Photo</span>
+            <span class="text-sm">{label ?? alt}</span>
+        </div>
+    )
+}

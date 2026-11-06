@@ -1,0 +1,22 @@
+{
+    "draftMode": true,
+    "shortName": "MCASS",
+    "fullName": "The Manchester Chartered Accountants Students' Society",
+    "tagline": "The society for ICAEW ACA students training in Greater Manchester.",
+    "intro": "Run by students, for students. We organise socials, sport, revision support and professional events so that training for the ACA is easier, and more fun, alongside work.",
+    "email": "hello@mcass.uk",
+    "sponsorshipEmail": "hello@mcass.uk",
+    "charityNumber": "217014",
+    "registeredSince": "1963",
+    "linkedinUrl": "",
+    "instagramUrl": "",
+    "joinUrl": "",
+    "heroImage": "",
+    "cloudflareAnalyticsToken": "",
+    "stats": [
+        { "value": "TBC", "label": "ACA students in our area", "confirmed": false },
+        { "value": "TBC", "label": "Guests at the Annual Ball", "confirmed": false },
+        { "value": "TBC", "label": "Events a year", "confirmed": false },
+        { "value": "1963", "label": "Registered charity since", "confirmed": true }
+    ]
+}

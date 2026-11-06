@@ -1,51 +1,47 @@
-# Astro on Netlify Platform Starter
+# MCASS website
 
-[Live Demo](https://astro-platform-starter.netlify.app/)
+Static website for The Manchester Chartered Accountants Students' Society (registered charity 217014), built with [Astro](https://astro.build) and edited through [Pages CMS](https://pagescms.org).
 
-A modern starter based on Astro.js, Tailwind, daisyUI, and [Netlify Core Primitives](https://docs.netlify.com/core/overview/#develop) (Edge Functions, Image CDN, Blob Store).
+## For the committee: editing the site
 
-## Astro Commands
+1. Go to app.pagescms.org and sign in with the MCASS GitHub account.
+2. Open this repository. You can edit **Events**, **Committee**, **Sponsors**, **Pages**, **Site settings** and **Sponsorship packages**.
+3. Click **Save**. The site rebuilds and updates in about a minute.
 
-All commands are run from the root of the project, from a terminal:
+Grey dashed boxes on the site are **photo placeholders**. Each says which photo belongs there. Upload a photo in the matching field and the box is replaced.
 
-| Command                   | Action                                           |
-| :------------------------ | :----------------------------------------------- |
-| `npm install`             | Installs dependencies                            |
-| `npm run dev`             | Starts local dev server at `localhost:4321`      |
-| `npm run build`           | Build your production site to `./dist/`          |
-| `npm run preview`         | Preview your build locally, before deploying     |
-| `npm run astro ...`       | Run CLI commands like `astro add`, `astro check` |
-| `npm run astro -- --help` | Get help using the Astro CLI                     |
+## Before launch checklist
 
-## Deploying to Netlify
+- [ ] Replace placeholder stats (Site settings → Headline figures) with figures from MCASS's own records, e.g. Ball ticket data.
+- [ ] Committee approves sponsorship prices, then tick **Prices approved**.
+- [ ] Treasurer confirms VAT status. Set it to `registered` only if MCASS is VAT-registered; "+ VAT" then appears next to prices automatically.
+- [ ] Fill in the Join page (how membership works) and the Privacy notice (name the ticketing provider).
+- [ ] Add real committee names and headshots, event dates and photos.
+- [ ] Add LinkedIn and Instagram links.
+- [ ] List every page on the old Wix site and add redirects in `public/_redirects`.
+- [ ] Turn off **Draft mode** in Site settings. This removes the yellow banner and lets Google index the site.
 
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/netlify-templates/astro-platform-starter)
+## Hosting (Cloudflare Pages)
 
-## Developing Locally
+1. Create a Cloudflare account using a role-based MCASS email (not a personal one) so it can be handed over each year.
+2. Workers & Pages → Create → Pages → connect this GitHub repository.
+3. Build command `npm run build`, output directory `dist`.
+4. Add the custom domain `mcass.uk`.
+5. **Before moving DNS away from Wix:** copy every email record (MX, SPF/TXT, DKIM) so `hello@mcass.uk` keeps working.
+6. Optional: turn on Cloudflare Web Analytics and paste its token into Site settings.
 
-| Prerequisites             |
-| :------------------------ |
-| [Node.js](https://nodejs.org/) v18.14+. |
-| (optional) [nvm](https://github.com/nvm-sh/nvm) for Node version management. |
+The site also works unchanged on Netlify (build `npm run build`, publish `dist`).
 
-1. Clone this repository, then run `npm install` in its root directory.
+Events move from "Upcoming" to "Past" when the site rebuilds, so the list is correct after any edit. If nothing has been edited for a while, trigger a rebuild from the Cloudflare dashboard (or set a scheduled deploy hook).
 
-2. For the starter to have full functionality locally (e.g. edge functions, blob store), please ensure you have an up-to-date version of Netlify CLI. Run:
+## For developers
 
-```
-npm install netlify-cli@latest -g
-```
-
-3. Link your local repository to the deployed Netlify site. This will ensure you're using the same runtime version for both local development and your deployed site.
-
-```
-netlify link
-```
-
-4. Then, run the Astro.js development server via Netlify CLI:
-
-```
-netlify dev
+```sh
+npm install
+npm run dev      # http://localhost:4321
+npm run build    # outputs to dist/
 ```
 
-If your browser doesn't navigate to the site automatically, visit [localhost:8888](http://localhost:8888).
+- Content: `src/content/` (events, committee, sponsors, pages) and `src/data/` (site settings, sponsorship packages)
+- CMS fields: `.pages.yml`. Keep it in step with `src/content/config.ts`.
+- Uploaded images: `public/images/uploads/`

@@ -1,0 +1,151 @@
+# Pages CMS configuration: lets the committee edit the site at app.pagescms.org
+# by signing in with GitHub. Every save is a commit, which triggers a rebuild.
+media:
+  input: public/images/uploads
+  output: /images/uploads
+  categories: [image, document]
+
+content:
+  - name: events
+    label: Events
+    type: collection
+    path: src/content/events
+    format: yaml-frontmatter
+    filename: "{fields.title}-{year}.md"
+    view:
+      fields: [title, date, category, published]
+      default: { sort: date, order: desc }
+    fields:
+      - { name: title, label: Title, type: string, required: true }
+      - { name: date, label: Date, type: date, required: true }
+      - { name: dateConfirmed, label: Date confirmed?, type: boolean, description: "Untick to show 'Date TBC' with just the month." }
+      - { name: time, label: Time, type: string }
+      - { name: venue, label: Venue, type: string }
+      - name: category
+        label: Category
+        type: select
+        options: { values: [Social, Sports, Revision, Professional, Ball] }
+      - { name: summary, label: Short summary, type: text, required: true }
+      - { name: image, label: Photo, type: image }
+      - { name: ticketUrl, label: Ticket link, type: string }
+      - { name: sponsor, label: Supported by, type: string }
+      - { name: published, label: Show on site?, type: boolean, default: true }
+      - { name: body, label: Full details, type: rich-text }
+
+  - name: committee
+    label: Committee
+    type: collection
+    path: src/content/committee
+    format: json
+    filename: "{fields.role}.json"
+    view:
+      fields: [role, name]
+      default: { sort: order, order: asc }
+    fields:
+      - { name: name, label: Name, type: string, required: true }
+      - { name: role, label: Role, type: string, required: true }
+      - { name: firm, label: Training firm, type: string }
+      - { name: photo, label: Headshot, type: image }
+      - { name: linkedinUrl, label: LinkedIn URL, type: string }
+      - { name: order, label: Display order, type: number, default: 99 }
+
+  - name: sponsors
+    label: Sponsors
+    type: collection
+    path: src/content/sponsors
+    format: json
+    filename: "{fields.name}.json"
+    view:
+      fields: [name, tier, active]
+    fields:
+      - { name: name, label: Company name, type: string, required: true }
+      - name: tier
+        label: Tier
+        type: select
+        options: { values: [Headline Partner, Pillar Partner, Supporter, Event Sponsor] }
+      - { name: logo, label: Logo, type: image }
+      - { name: website, label: Website, type: string }
+      - { name: blurb, label: Short description, type: text }
+      - { name: active, label: Current partner?, type: boolean, default: true }
+      - { name: order, label: Display order, type: number, default: 99 }
+
+  - name: pages
+    label: Pages (About, Join, Privacy)
+    type: collection
+    path: src/content/pages
+    format: yaml-frontmatter
+    operations: { create: false, delete: false, rename: false }
+    fields:
+      - { name: title, label: Title, type: string }
+      - { name: description, label: Search description, type: text }
+      - { name: body, label: Content, type: rich-text }
+
+  - name: site
+    label: Site settings
+    type: file
+    path: src/data/site.json
+    format: json
+    fields:
+      - { name: draftMode, label: "Draft mode (shows banner, hides from Google)", type: boolean }
+      - { name: shortName, label: Short name, type: string }
+      - { name: fullName, label: Full name, type: string }
+      - { name: tagline, label: Tagline, type: string }
+      - { name: intro, label: Home page intro, type: text }
+      - { name: email, label: General email, type: string }
+      - { name: sponsorshipEmail, label: Sponsorship email, type: string }
+      - { name: charityNumber, label: Charity number, type: string }
+      - { name: registeredSince, label: Registered since, type: string }
+      - { name: linkedinUrl, label: LinkedIn URL, type: string }
+      - { name: instagramUrl, label: Instagram URL, type: string }
+      - { name: joinUrl, label: Join / sign-up link, type: string }
+      - { name: heroImage, label: Home page main photo, type: image }
+      - { name: cloudflareAnalyticsToken, label: Cloudflare Web Analytics token, type: string }
+      - name: stats
+        label: Headline figures
+        type: object
+        list: true
+        fields:
+          - { name: value, label: Figure, type: string }
+          - { name: label, label: Label, type: string }
+          - { name: confirmed, label: Confirmed?, type: boolean }
+
+  - name: sponsorship
+    label: Sponsorship packages
+    type: file
+    path: src/data/sponsorship.json
+    format: json
+    fields:
+      - { name: pricesConfirmed, label: Prices approved by committee?, type: boolean }
+      - name: vatStatus
+        label: VAT status (treasurer to confirm)
+        type: select
+        options: { values: [unconfirmed, registered, not-registered] }
+      - { name: contractLength, label: Contract length, type: string }
+      - { name: intro, label: Intro, type: text }
+      - { name: prospectusUrl, label: Prospectus PDF, type: file }
+      - name: tiers
+        label: Tiers
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - { name: price, label: Price, type: string, description: "e.g. From £2,000. '+ VAT' is added automatically if VAT-registered." }
+          - { name: availability, label: Availability, type: string }
+          - { name: featured, label: Highlight this tier?, type: boolean }
+          - { name: summary, label: Summary, type: text }
+          - { name: benefits, label: Benefits, type: string, list: true }
+      - name: addons
+        label: Add-ons
+        type: object
+        list: true
+        fields:
+          - { name: name, label: Name, type: string }
+          - { name: price, label: Price, type: string }
+          - { name: summary, label: Summary, type: text }
+      - name: process
+        label: How it works steps
+        type: object
+        list: true
+        fields:
+          - { name: title, label: Title, type: string }
+          - { name: text, label: Text, type: text }

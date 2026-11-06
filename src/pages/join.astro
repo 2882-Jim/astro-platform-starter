@@ -1,0 +1,16 @@
+---
+import { getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+const page = await getEntry('pages', 'join');
+if (!page) throw new Error('Missing src/content/pages/join.md');
+const { Content } = await page.render();
+---
+
+<Layout title={page.data.title} description={page.data.description ?? undefined}>
+    <section class="section">
+        <div class="container-site">
+            <h1>{page.data.title}</h1>
+            <div class="prose-site mt-6"><Content /></div>
+        </div>
+    </section>
+</Layout>

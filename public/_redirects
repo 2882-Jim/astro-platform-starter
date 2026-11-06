@@ -1,0 +1,7 @@
+# Redirects from old Wix page addresses to the new site (Cloudflare Pages and Netlify both read this file).
+# Before switching DNS, list every page on the old Wix site and map it here. Examples:
+# /about-us      /about/     301
+# /events-1      /events/    301
+# /sponsorship   /sponsors/  301
+/sponsorship  /sponsors/  301
+/partners     /sponsors/  301

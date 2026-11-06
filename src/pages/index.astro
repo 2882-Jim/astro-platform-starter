@@ -1,21 +1,116 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import ContextAlert from '../components/ContextAlert.astro';
-import Markdown from '../components/Markdown.astro';
+import Photo from '../components/Photo.astro';
+import EventCard from '../components/EventCard.astro';
+import site from '../data/site.json';
+import { getEvents, getActiveSponsors } from '../lib/format';
 
-const explainer = `
-An Astro website can go way beyond static pages - on the right platform.
-
-Netlify supports not only [Streaming SSR](https://docs.astro.build/en/guides/server-side-rendering/#html-streaming) and fast [Edge Middleware](https://docs.astro.build/en/guides/middleware/), but also [on-demand revalidation](https://www.netlify.com/blog/cache-tags-and-purge-api-on-netlify/) and [stale-while-revalidate](https://www.netlify.com/blog/swr-and-fine-grained-cache-control/). 
-Any page or data can be rebuilt only when needed, without site visitors ever getting a performance hit.
-`;
+const { upcoming } = await getEvents();
+const sponsors = await getActiveSponsors();
+const pillars = [
+    { title: 'Social', text: 'Meet trainees from other firms at regular socials across Manchester.', photo: 'Members at a social' },
+    { title: 'Sport', text: 'Summer Games and sports fixtures between firms.', photo: 'Summer Games team photo' },
+    { title: 'Revision & development', text: 'Revision sessions and professional events to help you through the ACA.', photo: 'Revision session in progress' }
+];
 ---
 
-<Layout title="Welcome to Astro.">
-    <ContextAlert class="mb-4" />
-    <h1 class="mb-10">Netlify Platform Starter for Astro</h1>
-    <Markdown content={explainer} class="text-lg mb-10" />
-    <p class="mb-8">
-        <a href="https://docs.netlify.com/frameworks/astro/" class="btn btn-lg btn-primary sm:btn-wide">Read the Docs</a>
-    </p>
+<Layout>
+    <section class="bg-navy-900 text-white">
+        <div class="container-site grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-2">
+            <div>
+                <p class="eyebrow text-gold-400">Greater Manchester · ICAEW ACA students</p>
+                <h1 class="mt-3 text-white">The society for Manchester's trainee chartered accountants</h1>
+                <p class="mt-5 text-lg text-navy-100">{site.intro}</p>
+                <div class="mt-8 flex flex-wrap gap-3">
+                    <a href="/events/" class="btn-primary">See upcoming events</a>
+                    <a href="/sponsors/" class="btn-outline text-white">Partner with us</a>
+                </div>
+            </div>
+            <Photo src={site.heroImage} alt="MCASS members at an event" label="Hero: members at the Annual Ball" class="aspect-[4/3]" />
+        </div>
+    </section>
+
+    <section class="border-b border-slate-200 bg-navy-50">
+        <dl class="container-site grid grid-cols-2 gap-6 py-10 text-center md:grid-cols-4">
+            {
+                site.stats.map((s) => (
+                    <div class="flex flex-col">
+                        <dt class="order-2 text-sm text-slate-600">{s.label}</dt>
+                        <dd class="text-3xl font-extrabold text-navy-800">{s.value}</dd>
+                        {!s.confirmed && <dd class="text-xs text-gold-600">to confirm</dd>}
+                    </div>
+                ))
+            }
+        </dl>
+    </section>
+
+    <section class="section">
+        <div class="container-site">
+            <p class="eyebrow">What we do</p>
+            <h2 class="mt-2">Three pillars, one society</h2>
+            <div class="mt-10 grid gap-6 md:grid-cols-3">
+                {
+                    pillars.map((p) => (
+                        <div class="card p-0 overflow-hidden">
+                            <Photo alt={p.photo} rounded="rounded-none" class="aspect-[16/10]" />
+                            <div class="p-6">
+                                <h3>{p.title}</h3>
+                                <p class="mt-2 text-sm text-slate-600">{p.text}</p>
+                            </div>
+                        </div>
+                    ))
+                }
+            </div>
+        </div>
+    </section>
+
+    <section class="section bg-slate-50">
+        <div class="container-site">
+            <div class="flex flex-wrap items-end justify-between gap-4">
+                <div>
+                    <p class="eyebrow">Coming up</p>
+                    <h2 class="mt-2">Upcoming events</h2>
+                </div>
+                <a href="/events/" class="text-sm font-semibold text-navy-600">All events →</a>
+            </div>
+            {
+                upcoming.length ? (
+                    <div class="mt-10 grid gap-6 md:grid-cols-3">
+                        {upcoming.slice(0, 3).map((e) => <EventCard event={e} />)}
+                    </div>
+                ) : (
+                    <p class="mt-8 text-slate-600">New events will be announced soon. Follow us to hear first.</p>
+                )
+            }
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container-site">
+            <p class="eyebrow">Our partners</p>
+            <h2 class="mt-2">Supported by</h2>
+            {
+                sponsors.length ? (
+                    <ul class="mt-8 flex flex-wrap items-center gap-8">
+                        {sponsors.map((s) => (
+                            <li>
+                                <a href={s.data.website ?? '#'} class="block no-underline" title={s.data.name}>
+                                    {s.data.logo ? <img src={s.data.logo} alt={s.data.name} class="h-12 w-auto" /> : <span class="font-semibold">{s.data.name}</span>}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                ) : (
+                    <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+                        {['Headline Partner', 'Pillar Partner', 'Pillar Partner', 'Supporter'].map((t) => (
+                            <div class="grid h-24 place-items-center rounded-xl border-2 border-dashed border-slate-300 text-center text-sm text-slate-500">
+                                Logo: {t}
+                            </div>
+                        ))}
+                    </div>
+                )
+            }
+            <a href="/sponsors/" class="btn-dark mt-8">Become a partner</a>
+        </div>
+    </section>
 </Layout>

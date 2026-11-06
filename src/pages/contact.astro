@@ -1,0 +1,24 @@
+---
+import Layout from '../layouts/Layout.astro';
+import site from '../data/site.json';
+---
+
+<Layout title="Contact" description="Get in touch with MCASS.">
+    <section class="section">
+        <div class="container-site">
+            <h1>Contact us</h1>
+            <div class="mt-10 grid gap-6 md:grid-cols-2">
+                <div class="card">
+                    <h2 class="text-xl">General enquiries</h2>
+                    <p class="mt-2 text-slate-600">Questions about events, membership or the committee.</p>
+                    <a href={`mailto:${site.email}`} class="btn-dark mt-4">{site.email}</a>
+                </div>
+                <div class="card">
+                    <h2 class="text-xl">Sponsorship</h2>
+                    <p class="mt-2 text-slate-600">Interested in partnering with MCASS? Ask for our prospectus.</p>
+                    <a href={`mailto:${site.sponsorshipEmail}?subject=Sponsorship%20enquiry`} class="btn-primary mt-4">Email about sponsorship</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Photo from '../../components/Photo.astro';
+import { formatEventDate } from '../../lib/format';
+
+export async function getStaticPaths() {
+    const events = await getCollection('events', (e) => e.data.published);
+    return events.map((event) => ({ params: { slug: event.slug }, props: { event } }));
+}
+const { event } = Astro.props;
+const d = event.data;
+const { Content } = await event.render();
+---
+
+<Layout title={d.title} description={d.summary}>
+    <article class="section">
+        <div class="container-site">
+            <a href="/events/" class="text-sm font-semibold text-navy-600">← All events</a>
+            <div class="mt-6 grid gap-10 lg:grid-cols-[3fr_2fr]">
+                <div>
+                    <p class="eyebrow">{d.category}</p>
+                    <h1 class="mt-2">{d.title}</h1>
+                    <p class="mt-4 text-lg text-slate-600">{d.summary}</p>
+                    <dl class="mt-6 grid gap-2 text-sm">
+                        <div><dt class="inline font-semibold">When: </dt><dd class="inline">{formatEventDate(d.date, d.dateConfirmed)}{d.time && `, ${d.time}`}</dd></div>
+                        {d.venue && <div><dt class="inline font-semibold">Where: </dt><dd class="inline">{d.venue}</dd></div>}
+                        {d.sponsor && <div><dt class="inline font-semibold">Supported by: </dt><dd class="inline">{d.sponsor}</dd></div>}
+                    </dl>
+                    {d.ticketUrl && <a href={d.ticketUrl} class="btn-primary mt-6">Get tickets</a>}
+                    <div class="prose-site mt-8"><Content /></div>
+                </div>
+                <Photo src={d.image} alt={d.title} label={`${d.title} photo`} />
+            </div>
+        </div>
+    </article>
+</Layout>

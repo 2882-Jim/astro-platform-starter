@@ -1,9 +1,31 @@
 ---
-
+import site from '../data/site.json';
+const year = new Date().getFullYear();
 ---
 
-<footer class="pt-16 pb-12 sm:pt-24 sm:pb-16">
-    <p class="text-sm">
-        <a href="https://docs.netlify.com/frameworks/astro/" class="decoration-dashed text-primary underline-offset-8"> Astro on Netlify </a>
-    </p>
+<footer class="bg-navy-900 text-navy-100">
+    <div class="container-site grid gap-8 py-12 sm:grid-cols-3">
+        <div>
+            <p class="font-extrabold text-white">{site.shortName}</p>
+            <p class="mt-2 text-sm">{site.fullName}</p>
+        </div>
+        <div class="text-sm">
+            <p class="font-semibold text-white">Contact</p>
+            <p class="mt-2"><a class="underline" href={`mailto:${site.email}`}>{site.email}</a></p>
+            <p class="mt-1 flex gap-4">
+                {site.linkedinUrl && <a class="underline" href={site.linkedinUrl}>LinkedIn</a>}
+                {site.instagramUrl && <a class="underline" href={site.instagramUrl}>Instagram</a>}
+            </p>
+        </div>
+        <div class="text-sm">
+            <p class="font-semibold text-white">Links</p>
+            <p class="mt-2"><a class="underline" href="/sponsors/">Partner with us</a></p>
+            <p class="mt-1"><a class="underline" href="/privacy/">Privacy notice</a></p>
+        </div>
+    </div>
+    <div class="border-t border-white/10">
+        <p class="container-site py-4 text-xs text-navy-100/80">
+            © {year} {site.fullName}. Registered charity in England and Wales, number {site.charityNumber}.
+        </p>
+    </div>
 </footer>

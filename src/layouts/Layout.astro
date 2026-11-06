@@ -1,38 +1,58 @@
 ---
-import '../../src/styles/globals.css';
+import '../styles/globals.css';
 import '@fontsource/inter/400.css';
+import '@fontsource/inter/600.css';
 import '@fontsource/inter/800.css';
-import interFont400 from '@fontsource/inter/files/inter-latin-400-normal.woff2?url';
-import interFont800 from '@fontsource/inter/files/inter-latin-800-normal.woff2?url';
-
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
+import site from '../data/site.json';
 
 interface Props {
-    title: string;
+    title?: string;
+    description?: string;
 }
 
-const { title } = Astro.props;
+const { title, description = site.tagline } = Astro.props;
+const fullTitle = title ? `${title} | ${site.shortName}` : `${site.shortName} | ${site.fullName}`;
+const canonical = new URL(Astro.url.pathname, Astro.site);
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang="en-GB">
     <head>
         <meta charset="UTF-8" />
-        <title>{title}</title>
-        <meta name="viewport" content="width=device-width" />
-        <meta name="generator" content={Astro.generator} />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>{fullTitle}</title>
+        <meta name="description" content={description} />
+        <link rel="canonical" href={canonical} />
         <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-        <link rel="preload" as="font" type="font/woff2" href={interFont400} crossorigin />
-        <link rel="preload" as="font" type="font/woff2" href={interFont800} crossorigin />
+        <meta property="og:title" content={fullTitle} />
+        <meta property="og:description" content={description} />
+        <meta property="og:type" content="website" />
+        <meta property="og:url" content={canonical} />
+        {site.draftMode && <meta name="robots" content="noindex" />}
     </head>
-    <body class="antialiased text-white bg-[#355C7D]">
-        <div class="flex flex-col min-h-screen px-6 bg-grid-pattern sm:px-12">
-            <div class="flex flex-col w-full max-w-5xl mx-auto grow">
-                <Header />
-                <main class="grow"><slot /></main>
-                <Footer />
-            </div>
-        </div>
+    <body class="flex min-h-screen flex-col">
+        <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
+        {
+            site.draftMode && (
+                <div class="bg-gold-300 px-4 py-2 text-center text-sm font-medium text-navy-900">
+                    Draft site: figures, dates and prices are placeholders pending committee approval.
+                </div>
+            )
+        }
+        <Header />
+        <main id="main" class="grow"><slot /></main>
+        <Footer />
+        {
+            site.cloudflareAnalyticsToken && (
+                <script
+                    is:inline
+                    defer
+                    src="https://static.cloudflareinsights.com/beacon.min.js"
+                    data-cf-beacon={JSON.stringify({ token: site.cloudflareAnalyticsToken })}
+                />
+            )
+        }
     </body>
 </html>

@@ -1,0 +1,40 @@
+---
+import { getCollection, getEntry } from 'astro:content';
+import Layout from '../layouts/Layout.astro';
+import Photo from '../components/Photo.astro';
+
+const page = await getEntry('pages', 'about');
+if (!page) throw new Error('Missing src/content/pages/about.md');
+const { Content } = await page.render();
+const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title={page.data.title} description={page.data.description ?? undefined}>
+    <section class="section">
+        <div class="container-site grid gap-10 lg:grid-cols-[2fr_1fr]">
+            <div>
+                <h1>{page.data.title}</h1>
+                <div class="prose-site mt-6"><Content /></div>
+            </div>
+            <Photo alt="Committee group photo" class="aspect-[3/4]" />
+        </div>
+    </section>
+    <section class="section bg-slate-50">
+        <div class="container-site">
+            <h2>Meet the committee</h2>
+            <ul class="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
+                {
+                    committee.map((m) => (
+                        <li class="card p-4 text-center">
+                            <Photo src={m.data.photo} alt={m.data.name} label={`Headshot: ${m.data.role}`} class="mx-auto aspect-square w-full" rounded="rounded-xl" />
+                            <p class="mt-4 font-semibold text-navy-900">{m.data.name}</p>
+                            <p class="text-sm text-gold-600">{m.data.role}</p>
+                            {m.data.firm && <p class="text-xs text-slate-500">{m.data.firm}</p>}
+                            {m.data.linkedinUrl && <a href={m.data.linkedinUrl} class="mt-2 inline-block text-xs text-navy-600 underline">LinkedIn</a>}
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </section>
+</Layout>

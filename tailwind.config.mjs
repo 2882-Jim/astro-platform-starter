@@ -1,39 +1,15 @@
 /** @type {import('tailwindcss').Config} */
-const colors = require('tailwindcss/colors');
-const defaultTheme = require('tailwindcss/defaultTheme');
-const fs = require('fs');
-
-const noiseBitmap = fs.readFileSync('./src/assets/noise.png', { encoding: 'base64' });
-const noiseDataUri = 'data:image/png;base64,' + noiseBitmap;
+import defaultTheme from 'tailwindcss/defaultTheme';
 
 export default {
-    content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
+    content: ['./src/**/*.{astro,html,js,md,ts}'],
     theme: {
         extend: {
-            backgroundImage: {
-                'grid-pattern': `linear-gradient(to bottom, theme('colors.neutral.950 / 0%'), theme('colors.neutral.950 / 100%')), url('${noiseDataUri}')`
-            },
             colors: {
-                neutral: colors.neutral
+                navy: { 50: '#eef3fa', 100: '#d6e1f1', 600: '#1d3d6b', 700: '#162f54', 800: '#10243f', 900: '#0b1a2e' },
+                gold: { 300: '#f2d67a', 400: '#e9c24a', 500: '#d4a72c', 600: '#b0861b' }
             },
-            fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans]
-            }
+            fontFamily: { sans: ['Inter', ...defaultTheme.fontFamily.sans] }
         }
-    },
-    daisyui: {
-        themes: [
-            {
-                lofi: {
-                    ...require('daisyui/src/theming/themes')['lofi'],
-                    primary: '#F67280',
-                    'primary-content': '#1f1f1f',
-                    secondary: '#C06C84',
-                    info: '#F67280',
-                    'info-content': '#1f1f1f'
-                }
-            }
-        ]
-    },
-    plugins: [require('daisyui')]
+    }
 };
