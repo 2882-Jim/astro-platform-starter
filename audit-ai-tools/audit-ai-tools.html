@@ -17,10 +17,10 @@
   button { cursor: pointer; }
 
   /* Top navigation bar */
-  .topnav { border-bottom: 1px solid #d6d6d6; background: #f6f7f9; }
-  .topnav .wrap { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; padding-bottom: 10px; }
-  .topnav button { background: #fff; color: #1f4e79; border: 1px solid #1f4e79; border-radius: 6px; padding: 6px 10px; font-size: 15px; }
-  .topnav button.on { background: #1f4e79; color: #fff; }
+  .topnav { border-bottom: 1px solid #d6d6d6; }
+  .topnav .wrap { display: flex; gap: 4px; overflow-x: auto; white-space: nowrap; }  /* one row; scrolls sideways on a phone */
+  .topnav button { background: none; color: #1f4e79; border: 0; border-bottom: 3px solid transparent; padding: 12px 8px 9px; font-size: 16px; }
+  .topnav button.on { border-bottom-color: #1f4e79; font-weight: bold; }
 
   /* Buttons */
   .btn { background: #1f4e79; color: #fff; border: 0; border-radius: 8px; padding: 12px 20px; margin: 0 8px 10px 0; }
@@ -54,7 +54,7 @@
   textarea { min-height: 80px; }
   .form label { display: block; font-weight: bold; margin-top: 12px; }
   .entry p { margin: 4px 0; white-space: pre-wrap; }
-  .sectionbar { display: flex; gap: 8px; align-items: center; margin-top: 16px; }
+  .sectionbar { display: flex; gap: 8px; align-items: center; margin-top: 20px; }
   .sectionbar span { flex: 1; text-align: center; color: #555; }
   .sectionbar .btn { padding: 10px 12px; margin: 0; }
   .sentence { display: block; width: 100%; text-align: left; background: #fff; border: 2px dashed #1f4e79; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; }
@@ -68,7 +68,7 @@
   .heat td.cell { text-align: center; min-width: 64px; cursor: pointer; font-weight: bold; }
   .heat th[scope=row] { text-align: left; }
   #promptOut { min-height: 220px; }
-  footer { margin-top: 28px; border-top: 1px solid #d6d6d6; padding: 12px 0 24px; font-size: 15px; color: #555; }
+  footer.wrap { margin-top: 32px; border-top: 1px solid #d6d6d6; padding: 12px 16px 24px; font-size: 15px; color: #555; }
   @media print { .topnav, .noprint { display: none; } }
 </style>
 </head>
@@ -195,18 +195,44 @@ const PITFALLS = [
 // =====================================================================
 // DATA: PROMPT_JOBS  (the Prompt builder)
 // =====================================================================
+// The jobs to choose from. "ask" = the hint shown in the optional "What exactly do you need?" box.
 const PROMPT_JOBS = [
-  { name: "Summarise a document", instruction: "Summarise the document below in short bullet points, covering every important point." },
-  { name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears." },
-  { name: "Draft a note", instruction: "Draft a short, clear note based only on the document below, in plain UK English." },
-  { name: "Check a list against a checklist", instruction: "Check the list in the document below against the checklist. Mark each checklist item met, not met or not found." },
+  { name: "Summarise a document", instruction: "Summarise the document below, covering every important point.", ask: "e.g. focus on dates, amounts and obligations" },
+  { name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears.", ask: "e.g. the total accruals at the year end" },
+  { name: "Draft a note", instruction: "Draft a short, clear note based only on the document below.", ask: "e.g. a file note of the key points from this meeting" },
+  { name: "Check a list against a checklist", instruction: "Check the list in the document below against the checklist. Mark each checklist item met, not met or not found.", ask: "e.g. paste the checklist above the list" },
+  { name: "Pull details into a table", instruction: "Pull the details I ask for from the document below into a table, one row per item.", ask: "e.g. invoice number, date, supplier and amount" },
+  { name: "Compare two versions", instruction: "Compare the two versions in the document below and list every difference.", ask: "e.g. label them VERSION 1 and VERSION 2" },
+  { name: "Explain a term", instruction: "Explain the term I ask about in plain English, using the document below for context.", ask: "e.g. what does 'break clause' mean here?" },
+  { name: "Tidy my wording", instruction: "Make my text below clearer and shorter without changing its meaning or any facts.", ask: "e.g. reply to a review point" },
 ];
-const PROMPT_RULES = ["Use only this document. Do not use outside knowledge.",
-                      "Quote the exact line from the document for each point.",
-                      "If it isn't in the document, say \"not found\". Do not guess.",
-                      "At the end, list anything you're unsure about."];
-const PROMPT_RULE_LABELS = ["Use only this document", "Quote the exact line for each point",
-                            "If it isn't in the document, say \"not found\"", "List anything you're unsure about"];
+
+// Rules that go into EVERY prompt (the user can't untick these)
+const PROMPT_ALWAYS = ["Use only the document below. Don't use outside knowledge or guess.",
+                       "If something isn't in the document, say \"not found\".",
+                       "Never invent figures, names, dates or references to standards.",
+                       "Write in UK English."];
+
+// Optional rules: [tick-box label, rule written into the prompt, ticked to start with?]
+const PROMPT_OPTIONS = [
+  ["Quote the exact line for each point", "Quote the exact line from the document for each point.", true],
+  ["Give the page, clause or note number", "Give the page, clause or note number for each point.", true],
+  ["Show the working for any calculation", "Show your working for any calculation, step by step.", true],
+  ["List anything you're unsure about", "At the end, list anything you're unsure about.", true],
+  ["Keep it short (under 200 words)", "Keep the answer under 200 words.", false],
+  ["Write for the client, not the audit team", "Write for the client: plain words, no audit jargon.", false],
+];
+
+const PROMPT_FORMATS = ["Bullet points", "A table", "Short paragraphs"];
+
+// The preset loaded at the top of the prompt for each level (same order as LEVELS)
+const PROMPT_PRESETS = [
+  "I am a trainee auditor. Explain each point simply. Don't give audit conclusions: flag anything that needs a senior's judgement instead.",
+  "I am a part-qualified auditor. Don't give audit conclusions: flag anything that needs a senior's judgement.",
+  "I am an audit senior. Point out anything I may have missed and challenge my reasoning. Don't give a final conclusion; I will form it.",
+  "I am an audit manager. Be concise and challenge my reasoning. The conclusion stays mine.",
+];
+
 const BEFORE_YOU_USE = ["Check every quote against the source", "Recheck every number",
                         "Check names and dates", "Tell your reviewer AI was used"];
 
@@ -268,6 +294,10 @@ function switchHtml() {   // the "Where does the AI run?" switch
   return html + `</fieldset><p class="small">${WHERE[where].note}</p>`;
 }
 
+function ratingsFor() {   // the small line on other screens saying which switch option is in use
+  return `<p class="small">Ratings for: <b>${WHERE[where].name}</b> · <a href="#" onclick="go('home'); return false">change on Home</a></p>`;
+}
+
 // Saved mistake reports (shared by Report a mistake and the Heat map)
 function loadReports() {
   try { return JSON.parse(localStorage.getItem("auditAiReports")) || []; } catch (e) { return []; }
@@ -314,14 +344,11 @@ function homeScreen() {
   for (const r in RATINGS) key += `<div class="box key">${label(r)}<div>${RATINGS[r].meaning}</div></div>`;
   return `<h1>Can I use AI for this?</h1>
     <p class="grey">Tools to help auditors see which uses of AI are fine, which are risky, and what to do about each.</p>
+    ${switchHtml()}
+    <p class="small">This choice sets every rating in the app.</p>
     <h2>The four ratings</h2>${key}
     <button class="btn big" onclick="go('tasks')">Start</button>
-    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>
-    <button class="btn big" onclick="go('level')">My level</button>
-    <button class="btn big" onclick="go('report')">Report a mistake</button>
-    <button class="btn big" onclick="go('heat')">Heat map</button>
-    <button class="btn big" onclick="go('game')">Spot the mistake</button>
-    <button class="btn big" onclick="go('prompt')">Prompt builder</button>`;
+    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>`;
 }
 
 // =====================================================================
@@ -357,7 +384,7 @@ function openTask(i) {     // open a search result's section and highlight the t
 function tasksScreen() {
   let buttons = "";
   SECTIONS.forEach((name, s) => buttons += `<button class="list-btn" onclick="sectionNo = ${s}; go('section')"><b>${name}</b></button>`);
-  return switchHtml() + searchHtml() + `<h1>Check a task</h1>
+  return ratingsFor() + searchHtml() + `<h1>Check a task</h1>
     <p class="warn">Draft ratings for discussion, not firm policy.</p>${buttons}`;
 }
 
@@ -376,14 +403,13 @@ function sectionScreen() {
       <button class="plain" onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden">See more</button>
       <div class="example" hidden><p><b>Good AI use looks like:</b> ${t.more}</p><p><b>What to do:</b> ${RATINGS[rating].todo}</p></div></div>`;
   });
-  return switchHtml() + searchHtml() + `<h1>${name}</h1>
+  return ratingsFor() + searchHtml() + `<h1>${name}</h1>
     <p class="warn">Draft ratings for discussion, not firm policy.</p>${cards}
     <div class="sectionbar">
       <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('tasks')">Back</button>
-      <button class="btn" onclick="go('home')">Home</button>
       <span>Section ${sectionNo + 1} of ${SECTIONS.length}</span>
       <button class="btn" onclick="sectionNo++; draw()" ${sectionNo === SECTIONS.length - 1 ? "disabled" : ""}>Next</button>
-    </div><p class="small">Tip: the left and right arrow keys move between sections.</p>`;
+    </div>`;
 }
 
 // =====================================================================
@@ -391,7 +417,7 @@ function sectionScreen() {
 // =====================================================================
 function checkerScreen() {
   if (answers.length < CHECKER_QUESTIONS.length) {
-    return switchHtml() + `<h1>Can I use AI for this?</h1>
+    return ratingsFor() + `<h1>Can I use AI for this?</h1>
       <p class="grey">Question ${answers.length + 1} of ${CHECKER_QUESTIONS.length}</p>
       <h2>${CHECKER_QUESTIONS[answers.length]}</h2>
       <button class="btn big" onclick="answers.push(true); draw()">Yes</button>
@@ -403,7 +429,7 @@ function checkerScreen() {
   if (couldMatter) { rating = "Significant"; reason = "A mistake could matter and might be missed, so the tool must be approved and tested for this."; }
   if (where === "personal" && couldMatter) { rating = "Not permitted"; reason = "Risky work needs a firm-approved, tested tool, and a personal account isn't one."; }
   if (where === "personal" && clientData) { rating = "Not permitted"; reason = "Client or personal data must never go into a personal AI account."; }
-  return switchHtml() + `<h1>Suggested rating</h1>
+  return ratingsFor() + `<h1>Suggested rating</h1>
     <div class="box">${label(rating)}<p>${reason}</p><p><b>What to do:</b> ${RATINGS[rating].todo}</p>
     <p class="small">Based on your answers, for: ${WHERE[where].name}.</p></div>
     <button class="btn" onclick="answers = []; draw()">Start again</button>`;
@@ -413,7 +439,7 @@ function checkerScreen() {
 // SCREEN 4: My level (Go ahead / Do it by hand first / Not yet)
 // =====================================================================
 function levelScreen() {
-  let html = switchHtml() + `<h1>What can I do right now?</h1>
+  let html = ratingsFor() + `<h1>What can I do right now?</h1>
     <p class="warn">Draft example for discussion, not firm policy.</p><h2>Pick your level</h2>`;
   LEVELS.forEach((name, n) => html += `<button class="plain ${n === level ? "on" : ""}" onclick="level = ${n}; draw()">${name}</button>`);
   if (level < 0) return html;
@@ -547,12 +573,27 @@ function cheatScreen() {
 // SCREEN 8: Prompt builder
 // =====================================================================
 function promptScreen() {
+  if (level < 0) level = 0;   // start on the lowest level's preset until one is picked
+  // A personal account can't take client data, so say so loudly
+  const personal = where === "personal"
+    ? `<p class="warn"><b>You chose Personal account on Home.</b> Only use made-up or public text here: no client data at all.</p>` : "";
   return `<h1>Safe prompt builder</h1>
-    <p class="grey">Builds a careful prompt that keeps the AI to your document.</p>
-    <label for="job"><b>What's the job?</b></label><select id="job">${options(PROMPT_JOBS.map(j => j.name))}</select>
+    <p class="grey">Builds a careful prompt that keeps the AI to your document.</p>${personal}
+    <label for="lvl"><b>Your level</b></label>
+    <select id="lvl" onchange="level = Number(this.value); document.getElementById('preset').textContent = PROMPT_PRESETS[level]">
+      ${LEVELS.map((name, n) => `<option value="${n}" ${n === level ? "selected" : ""}>${name}</option>`).join("")}</select>
+    <p class="small">Preset loaded for your level:</p><p class="box" id="preset">${PROMPT_PRESETS[level]}</p>
+    <label for="job"><b>What's the job?</b></label>
+    <select id="job" onchange="document.getElementById('ask').placeholder = PROMPT_JOBS[this.value].ask">${options(PROMPT_JOBS.map(j => j.name))}</select>
+    <p><label for="ask"><b>What exactly do you need?</b> <span class="small">(optional)</span></label>
+      <input id="ask" type="search" placeholder="${PROMPT_JOBS[0].ask}"></p>
+    <label for="format"><b>Answer as</b></label><select id="format">${options(PROMPT_FORMATS)}</select>
     <p class="warn">Remove client names first. Only paste what your firm's policy allows in this tool.</p>
     <label for="source"><b>Paste the source text</b></label><textarea id="source" style="min-height: 160px"></textarea>
-    ${PROMPT_RULE_LABELS.map((r, i) => `<p><label><input type="checkbox" id="rule${i}" checked> ${r}</label></p>`).join("")}
+    <h2>Always in every prompt</h2>
+    ${PROMPT_ALWAYS.map(r => `<p><label><input type="checkbox" checked disabled> ${r}</label></p>`).join("")}
+    <h2>Your options</h2>
+    ${PROMPT_OPTIONS.map((o, i) => `<p><label><input type="checkbox" id="opt${i}" ${o[2] ? "checked" : ""}> ${o[0]}</label></p>`).join("")}
     <button class="btn" onclick="buildPrompt()">Build my prompt</button>
     <div id="built" hidden>
       <h2>Your prompt</h2><textarea id="promptOut" readonly></textarea>
@@ -563,12 +604,18 @@ function promptScreen() {
 }
 
 function buildPrompt() {
-  const job = PROMPT_JOBS[document.getElementById("job").value];
-  const text = document.getElementById("source").value.trim() || "[paste your document here]";
-  const rules = PROMPT_RULES.filter((r, i) => document.getElementById("rule" + i).checked);
-  let prompt = job.instruction + "\n\n";
-  if (rules.length) prompt += "Rules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n";
-  prompt += "--- DOCUMENT START ---\n" + text + "\n--- DOCUMENT END ---";
+  const value = id => document.getElementById(id).value.trim();
+  const job = PROMPT_JOBS[value("job")];
+  const text = value("source") || "[paste your document here]";
+  // Every prompt gets the "always" rules, then whichever options are ticked
+  const rules = PROMPT_ALWAYS.concat(PROMPT_OPTIONS.filter((o, i) => document.getElementById("opt" + i).checked).map(o => o[1]));
+
+  let prompt = PROMPT_PRESETS[level] + "\n\n";           // 1. the preset for your level
+  prompt += "Task: " + job.instruction + "\n";            // 2. the job
+  if (value("ask")) prompt += "Specifically: " + value("ask") + "\n";
+  prompt += "Answer as: " + PROMPT_FORMATS[value("format")].toLowerCase() + ".\n\n";
+  prompt += "Rules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n";   // 3. the rules
+  prompt += "--- DOCUMENT START ---\n" + text + "\n--- DOCUMENT END ---";  // 4. the document
   document.getElementById("promptOut").value = prompt;
   document.getElementById("copyMsg").textContent = "";
   document.getElementById("built").hidden = false;
