@@ -21,16 +21,19 @@
   .small { font-size: 15px; }
   button, select, input, textarea { font: inherit; }
   button { cursor: pointer; min-height: 44px; }
-  :focus-visible { outline: 3px solid #ffbf47; outline-offset: 2px; }   /* clear keyboard focus */
+  :focus-visible { outline: 3px solid #1a1a1a; outline-offset: 2px; }   /* clear keyboard focus (dark, so it shows on every background) */
+  .hidden-say { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }   /* read out, not shown */
   .skip { position: absolute; left: -999px; }
   .skip:focus { left: 16px; top: 8px; background: #fff; padding: 8px 12px; z-index: 10; }
 
-  /* Navigation: one row of tabs (scrolls sideways on a small phone), plus a row of pills for sub-screens */
+  /* Navigation: one row of tabs (wraps onto two rows on a phone), plus a row of pills for sub-screens */
   .topnav { border-bottom: 1px solid var(--line); }
   .topnav .tabs { display: flex; gap: 2px; overflow-x: auto; white-space: nowrap; }
   .topnav .tabs button { background: none; color: var(--theme); border: 0; border-bottom: 4px solid transparent;
                          padding: 10px 9px 8px; font-size: 16px; }
   .topnav .tabs button[aria-current="page"] { border-bottom-color: var(--theme); font-weight: bold; }
+  .topnav .tabs button:focus-visible { outline-offset: -4px; }   /* inside the tab, so the row never cuts it off */
+  @media (max-width: 560px) { .topnav .tabs { flex-wrap: wrap; overflow: visible; } }   /* every tab stays in view on a phone */
   .subnav { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 10px; }
   .subnav button { background: #fff; color: var(--theme); border: 1px solid var(--theme); border-radius: 999px; padding: 4px 14px; font-size: 16px; }
   .subnav button[aria-current="page"] { background: var(--theme); color: #fff; }
@@ -48,6 +51,7 @@
               padding: 10px 16px; margin-bottom: 8px; }
   .list-btn:hover, .plain:hover, .subnav button:hover { border-color: var(--theme); background: var(--tint); color: var(--theme); }
   .plain[aria-pressed="true"]:hover, .subnav button[aria-current="page"]:hover { background: var(--theme); color: #fff; }   /* stays picked under the mouse */
+  .plain[aria-pressed="true"], .subnav button[aria-current="page"] { font-weight: bold; border-width: 3px; }   /* picked still shows in high contrast mode */
   .link { background: none; border: 0; color: var(--theme); text-decoration: underline; padding: 0 2px; min-height: 0; font-size: inherit; }
 
   /* Rating labels: the word is always written on the label */
@@ -70,12 +74,12 @@
   .v-goahead { border-color: #00796b; background: #e6f4f1; }
   .v-byhand { border-color: #f2b100; background: #fff8e1; }
   .v-notyet, .v-notpermitted { border-color: #757575; background: #f0f0f0; }
-  details > summary { cursor: pointer; padding: 6px 0; }
+  details > summary { cursor: pointer; padding: 8px 0; min-height: 44px; }
 
   /* Switch, testing box and form fields */
   .switch { border: 1px solid var(--line); border-radius: 8px; padding: 8px 12px 10px; margin: 16px 0 0; }
   .switch legend { font-weight: bold; }
-  .switch label { display: inline-block; border: 1px solid #bbb; border-radius: 6px; padding: 6px 10px; margin: 4px 4px 0 0; }
+  .switch label { display: inline-block; border: 1px solid #bbb; border-radius: 6px; padding: 8px 10px; margin: 4px 4px 0 0; }
   .switch label:has(input:checked) { border-color: var(--theme); background: var(--tint); font-weight: bold; }
   .testing { border: 1px dashed #999; border-radius: 8px; padding: 6px 10px; font-size: 15px; }
   .testing select { width: auto; padding: 2px 6px; margin: 0 6px; }
@@ -128,6 +132,8 @@
     body.printing #printOnly { display: block; }
     .label, .h1, .h2, .h3, .h4 { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
     .box, li, tr { break-inside: avoid; }
+    :focus, :focus-visible { outline: none !important; }   /* no focus box on paper */
+    h1, h2, h3 { break-after: avoid; }                      /* keep a heading with what follows */
   }
   /* ===== SHARED CSS END ===== */
   /* ===== MANAGEMENT CSS START (keep identical in both management files) ===== */
@@ -152,7 +158,7 @@
 </head>
 <body class="mgmt">
 <a class="skip" href="#screen">Skip to content</a>
-<div class="banner"><div class="wrap">Management view: team statistics from files staff send in (no names in them)</div></div>
+<div class="banner"><div class="wrap">Management view: team statistics from files staff send in (the app adds no names)</div></div>
 <nav class="topnav" aria-label="Main"><div class="wrap" id="nav"></div></nav>
 <p id="notice" class="notice" role="status" hidden>This browser isn't saving anything from this page, so your changes will be lost when you close it.</p>
 
@@ -182,7 +188,7 @@ const LEVELS = ["Trainee (NQ1)", "NQ2", "Senior", "Manager"];   // lowest to hig
 const RATINGS = {
   "Low":           { css: "low",          meaning: "Helps you think or draft; nothing relies on it.", todo: "Normal review." },
   "Medium":        { css: "medium",       meaning: "Goes on file, but every item is checked to source.", todo: "Check every item, and tell your reviewer you used AI." },
-  "Significant":   { css: "significant",  meaning: "Could affect a conclusion, be hard to spot, or affect a person.", todo: "Only use AI for this if the firm has approved and tested it." },
+  "Significant":   { css: "significant",  meaning: "Could affect a conclusion, be hard to spot, or affect a person.", todo: "Only if the firm has approved and tested the tool for this. Check every item, tell your reviewer, and make the judgement yourself." },
   "Not permitted": { css: "notpermitted", meaning: "Against firm policy, e.g. client data in a personal AI account.", todo: "Don't." },
 };
 
@@ -196,7 +202,7 @@ const SWITCH_OPTIONS = {
 // A worked example of one task whose rating changes with the switch
 const SWITCH_EXAMPLE = { task: "Summarising a client's contract",
   ratings: { personal: "Not permitted", cloud: "Significant", local: "Medium" },
-  why: "Here the main risk is a confidential contract leaving the firm, so keeping it on the laptop lowers the rating. The 24 tasks in this app get the same rating on cloud and local." };
+  why: "In this made-up example the firm's rule is that confidential contracts must not leave the laptop, so on a cloud tool it counts as higher risk. On local AI it is Medium, but check every point, because local models make more mistakes. The 24 tasks in this app get the same rating on cloud and local." };
 
 // The checker's three questions (answers are yes / no)
 const CHECKER_QUESTIONS = ["Does it use client or personal data?",
@@ -211,7 +217,7 @@ const HAND_FIRST_UP_TO = { "Low": 0, "Medium": 1, "Significant": 2 };
 //   minLevel: lowest level that should use AI for it. goodUse: what good AI use looks like.
 //   job: the prompt builder job it opens. spot: the Spot the mistake card it links to.
 const TASKS = [
-  { section: "Planning", task: "Industry research from public news", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "Background reading from public news; nothing relies on it.", goodUse: "Ask for the main risks and trends in, say, UK care homes, without naming the client. Check anything you use against a reliable source.", job: "Summarise a document", spot: "old-rule" },
+  { section: "Planning", task: "Industry research from public news", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "Background reading from public news; nothing relies on it.", goodUse: "Paste public news articles about the industry (e.g. UK care homes), without naming the client, and ask for a summary of the main risks and trends. Check anything you use against a reliable source.", job: "Summarise a document", spot: "old-rule" },
   { section: "Planning", task: "First draft of the planning memo", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Senior", reason: "Goes on file, so every point must be checked to the planning work.", goodUse: "Give it your own planning notes and ask for a first draft in the firm's memo headings. Check every point and add your own judgements.", job: "Draft a note", spot: "not-in-doc" },
   { section: "Planning", task: "Setting materiality", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "Materiality shapes the whole audit, and a poor figure could be hard to spot.", goodUse: "AI can show the sums for a benchmark you've chosen. The team picks the benchmark and figure, records why, and has it reviewed.", job: "Help me explain an issue to my senior", spot: "bad-total" },
 
@@ -260,7 +266,7 @@ const PITFALLS = [
     why: "AI predicts likely words rather than calculating, so a total can look right but be wrong. The real total is £41,500.", check: "Re-add every total yourself or in a spreadsheet." },
   { id: "extra-step", type: "Made-up info", terms: ["grounding"], name: "Extra process step not in the notes", task: "AI process flow for purchases, from walkthrough notes",
     source: "<p>Purchase invoices arrive by email. The accounts assistant enters them on the system. The finance manager approves any payment over £5,000. Payments are made weekly by BACS.</p>",
-    sentences: ["Invoices arrive by email to the accounts inbox.", "The accounts assistant enters each invoice on the system.", "Each invoice is matched to a signed goods received note before entry.", "Payments over £5,000 are approved by the finance manager.", "Payments are made weekly by BACS."], wrong: 2,
+    sentences: ["Purchase invoices arrive by email.", "The accounts assistant enters each invoice on the system.", "Each invoice is matched to a signed goods received note before entry.", "Payments over £5,000 are approved by the finance manager.", "Payments are made weekly by BACS."], wrong: 2,
     why: "AI fills gaps with what is typical, so it can add a control the client doesn't have.", check: "Trace every step in the flow back to the walkthrough notes." },
   { id: "not-in-doc", type: "Made-up info", terms: ["hallucination", "grounding"], name: "Confident answer to something not in the document", task: "AI answer: 'Do the board minutes mention any legal claims?'",
     source: "<p>Puddleby Widgets Ltd, board meeting, 14 January: 1. Budget for next year approved. 2. New warehouse lease discussed. 3. Dividend of £20,000 approved.</p>",
@@ -268,10 +274,10 @@ const PITFALLS = [
     why: "AI is built to give an answer, so it may invent one instead of saying 'not found'.", check: "Ask it to quote the exact text it relied on, and to say 'not found' if there is none." },
   { id: "name-variant", type: "Missed something", terms: ["related party"], name: "Related party missed because of a slightly different name", task: "AI related party check of the purchase ledger",
     source: "<p>Directors' interests: Mo Fizzlewick owns 60% of Fizzlewick Holdings Ltd.</p><p>Purchase ledger: Fizzlewick Hldgs Limited £86,000; Acme Paperclips Ltd £4,200; Bramble Office Supplies £2,900.</p>",
-    sentences: ["The purchase ledger was compared with the directors' interests.", "No related party suppliers were found.", "Acme Paperclips Ltd and Bramble Office Supplies have no link to any director.", "The largest supplier was Fizzlewick Hldgs Limited at £86,000."], wrong: 1,
+    sentences: ["The purchase ledger was compared with the directors' interests.", "No related party suppliers were found.", "Acme Paperclips Ltd and Bramble Office Supplies are not in the directors' interests.", "The largest supplier was Fizzlewick Hldgs Limited at £86,000."], wrong: 1,
     why: "AI can treat 'Fizzlewick Hldgs Limited' and 'Fizzlewick Holdings Ltd' as different companies.", check: "Search on the key word in each name (e.g. 'Fizzlewick'), not the full name." },
   { id: "old-rule", type: "Wrong judgement", terms: [], name: "Out-of-date rule presented as current", task: "AI answer: 'Is the client a small company?' (year starting 1 January 2026)", source: "",
-    sentences: ["The client has turnover of £12 million, a balance sheet total of £6 million and 40 staff.", "A company is small if it meets at least two of the three size tests.", "The staff limit is an average of 50 employees.", "The current small company limits are turnover of £10.2 million and a balance sheet total of £5.1 million."], wrong: 3,
+    sentences: ["The client has turnover of £12 million, a balance sheet total of £6 million and 40 staff.", "A company is small if it meets at least two of the three size tests (after its first year, usually in two years in a row).", "The staff limit is an average of 50 employees.", "The current small company limits are turnover of £10.2 million and a balance sheet total of £5.1 million."], wrong: 3,
     why: "AI learns from older material, so it can give an old rule as current. For years starting on or after 6 April 2025 the limits are £15 million and £7.5 million.", check: "Confirm the rule and its start date with a current official source such as GOV.UK." },
   { id: "personal-chatbot", type: "Data or privacy slip", terms: ["approved tool"], name: "Client name pasted into a personal chatbot", task: "What a team member did with a client email", source: "",
     sentences: ["Jamie needed to tidy up a long email about late documents.", "Jamie used the firm-approved cloud tool for a first draft.", "For a second opinion, Jamie pasted the full email, including the client name 'Moonbeam Bakeries Ltd', into a free chatbot on a personal phone.", "Jamie checked the final email before sending it."], wrong: 2,
@@ -299,7 +305,7 @@ const TOOLS_PLACEHOLDER = "Placeholder: replace with the firm's real list before
 const TOOL_STATUSES = {
   "Approved":     "Use it for the tasks the firm allows.",
   "Pilot":        "Only for named pilot tasks, with extra checks.",
-  "Not approved": "Don't use it for firm or client work.",
+  "Not approved": "Not approved for client work: only for tasks with no client or personal data.",
 };
 const APPROVED_TOOLS = [
   { name: "Microsoft 365 Copilot", status: "Approved",     where: "cloud",    note: "Placeholder status." },
@@ -311,24 +317,26 @@ const APPROVED_TOOLS = [
 // START HERE: the six settle-in steps. screen = where the step's link goes.
 //   auto = the action that ticks the step by itself ("" = tick it yourself).
 const START_STEPS = [
-  { text: "Read the four levels",                                  help: "Low, Medium, Significant and Not permitted, and what to do for each.", screen: "home",   auto: "" },
+  { text: "Read the four ratings",                                 help: "Low, Medium, Significant and Not permitted, and what to do for each.", screen: "home",   auto: "" },
   { text: "Check the approved tools list",                         help: "See which tools you can use, and for what.",                           screen: "tools",  auto: "tools" },
   { text: "Try one Low task with made-up data",                    help: "Pick a Low task and try it with made-up figures, never client data.",  screen: "tasks",  auto: "" },
-  { text: "Play Spot the mistake",                                 help: "Eight short cards: find the sentence the AI got wrong.",               screen: "game",   auto: "game" },
+  { text: "Play Spot the mistake",                                 help: "Eight short cards: find the mistake in each.",                        screen: "game",   auto: "game" },
   { text: "Report one mistake or near miss from a practice task",  help: "Log anything the AI got wrong while you practised.",                   screen: "report", auto: "report" },
   { text: "Write your AI use note",                                help: "A short, printable note of what you used AI for and what you checked.", screen: "note",   auto: "note" },
 ];
 
 // PROMPT BUILDER. group "write" = help putting your own thoughts into words; "doc" = work with a pasted document.
 //   ask = the hint in the "In your own words" box. format = the default "Answer as" (0 bullets, 1 table, 2 paragraphs).
+//   ownFacts: false = the job needs the AI to add facts, so the 'don't add facts' rule is left out.
+//   asksFirst: true = the job already asks questions, so the 'If my notes are unclear' dropdown is hidden.
 const PROMPT_JOBS = [
   { group: "write", name: "Help me write an email", instruction: "Turn my rough notes into a clear, polite email.", ask: "e.g. need bank letter still, chased twice, audit deadline Friday, keep it friendly", format: 0 },
   { group: "write", name: "Help me reply to a review point", instruction: "Turn my rough notes into a clear, professional reply to a review point: what I did, what I found and where it is on file.", ask: "e.g. reviewer asked why sample was 10, I used the firm's table, see WP C3", format: 0 },
   { group: "write", name: "Help me explain an issue to my senior", instruction: "Help me explain the issue in my notes clearly and briefly to my senior: what happened, why it matters and what I suggest.", ask: "e.g. invoices don't match orders for 3 items, not sure if it matters", format: 0 },
   { group: "write", name: "Help me ask the client a tricky question", instruction: "Help me word a polite, clear question to the client about the issue in my notes, without sounding accusatory.", ask: "e.g. big payment to a director's company, no invoice on file", format: 0 },
-  { group: "write", name: "Help me plan a task", instruction: "Help me break the task in my notes into small steps, in a sensible order, with anything I should check first.", ask: "e.g. first time doing the payroll section, don't know where to start", format: 0 },
-  { group: "write", name: "I'm not sure what to ask", instruction: "I'm not sure how to ask for what I need. Ask me up to 3 short questions to work out what I need, then suggest a clear request I could use.", ask: "e.g. something about accruals looks off but can't put my finger on it", format: 0 },
-  { group: "write", name: "Explain a term", instruction: "Explain the term in my notes in plain English, with a simple made-up example.", ask: "e.g. what does 'break clause' mean in a lease?", format: 0 },
+  { group: "write", name: "Help me plan a task", instruction: "Help me break the task in my notes into small steps, in a sensible order, with anything I should check first.", ownFacts: false, ask: "e.g. first time doing the payroll section, don't know where to start", format: 0 },
+  { group: "write", name: "I'm not sure what to ask", instruction: "I'm not sure how to ask for what I need. Ask me up to 3 short questions to work out what I need, then suggest a clear request I could use.", asksFirst: true, ask: "e.g. something about accruals looks off but can't put my finger on it", format: 0 },
+  { group: "write", name: "Explain a term", instruction: "Explain the term in my notes in plain English, with a simple example, clearly labelled as made-up.", ownFacts: false, ask: "e.g. what does 'break clause' mean in a lease?", format: 0 },
   { group: "doc", name: "Summarise a document", instruction: "Summarise the document below, covering every important point.", ask: "e.g. focus on dates, amounts and obligations", format: 0 },
   { group: "doc", name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears.", ask: "e.g. the total accruals at the year end", format: 0 },
   { group: "doc", name: "Draft a note", instruction: "Draft a short, clear note based only on the document below.", ask: "e.g. a file note of the key points from this meeting", format: 2 },
@@ -387,7 +395,7 @@ const CLIENT_REQUESTS = [
   { name: "Fixed asset register", detail: "the fixed asset register for the period, showing additions, disposals and depreciation" },
   { name: "Payroll reports", detail: "the payroll summary for each month of the period and the year-end payroll reconciliation" },
   { name: "Board minutes", detail: "copies of all board minutes for the period and up to today" },
-  { name: "Supplier statements", detail: "supplier statements at the period end for your five largest suppliers" },
+  { name: "Supplier statements", detail: "supplier statements at the period end for these suppliers: [list the suppliers you have chosen]" },
 ];
 const REQUEST_FORMATS = ["Excel", "PDF", "CSV"];
 const REQUEST_DEADLINES = ["within 5 working days", "within 10 working days", "by the date we agreed at planning"];
@@ -549,6 +557,12 @@ function clearSaved() {             // delete everything this app saved in this 
   } catch (e) { storageWorks = false; return false; }
 }
 
+// Another tab of this app saved or cleared something: forget the copy in memory, so the next read and save use
+// what's saved now (no redraw, so nothing half-typed here is lost)
+window.addEventListener("storage", e => {
+  if (!e.key || (e.key.startsWith(STORE) && e.key !== STORE + "test")) Object.keys(memory).forEach(k => delete memory[k]);
+});
+
 function loadList(key) {            // a saved list, or an empty one if it's missing or damaged
   const list = load(key, []);
   return Array.isArray(list) ? list : [];
@@ -594,7 +608,7 @@ function isISO(s) { return typeof s === "string" && /^\d{4}-\d{2}-\d{2}$/.test(s
 function daysBetween(a, b) { return dayNo(b) - dayNo(a); }
 function weekNo(iso) { return Math.floor((dayNo(iso) - dayNo("2026-01-05")) / 7); }   // weeks since Monday 5 Jan 2026
 function formatDate(iso) { if (!isISO(iso)) return ""; const p = iso.split("-").map(Number); return p[2] + " " + MONTHS[p[1] - 1] + " " + p[0]; }
-function newId(prefix) { return prefix + "-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 6); }
+function newId(prefix) { return prefix + "-" + Math.random().toString(36).slice(2, 10) + Math.random().toString(36).slice(2, 6); }   // random, so it holds no time
 
 // ---------- Ratings and "for you" verdicts ----------
 function verdictFor(task, lvl, where) {   // what someone at this level should do with this task
@@ -603,7 +617,7 @@ function verdictFor(task, lvl, where) {   // what someone at this level should d
     why: task.ratings.cloud === "Not permitted" ? "Don't use AI for this." : "Not with a personal account: use a firm-approved tool." };
   if (lvl < need) return { key: "notyet", say: need === 3 ? "Not yet, ask your manager" : "Not yet, ask your senior", why: "Needs " + task.minLevel + " or above." };
   if (lvl <= HAND_FIRST_UP_TO[rating]) return { key: "byhand", say: "Do it by hand first",
-    why: rating === "Significant" ? "High risk: do it yourself first and get sign-off before using AI."
+    why: rating === "Significant" ? "High risk: do it yourself first, and ask your manager before using AI."
        : rating === "Low" ? "Try it yourself first, then compare with AI's answer." : "So you can tell when AI gets it wrong." };
   return { key: "goahead", say: "Go ahead", why: "Follow the rating's 'what to do'." };
 }
@@ -614,8 +628,9 @@ function checkerRating(answers, where) {  // the checker's three yes/no answers 
   if (where === "personal" && couldMatter) return { rating: "Not permitted", reason: "Risky work needs a firm-approved, tested tool, and a personal account isn't one." };
   if (couldMatter) return { rating: "Significant", reason: "A mistake could matter and might be missed, so the tool must be approved and tested for this." };
   if (onFile) return { rating: "Medium", reason: "It goes on file or is relied on, so every item must be checked to source." };
-  return { rating: "Low", reason: clientData ? "Nothing relies on it. Client data is only fine here because the tool is firm-approved."
-                                           : "It only helps you think or draft, and nothing relies on it." };
+  if (!clientData) return { rating: "Low", reason: "It only helps you think or draft, and nothing relies on it." };
+  return { rating: "Low", reason: where === "local" ? "Nothing relies on it. Client data is only fine here if the firm has approved this local tool."
+                                                  : "Nothing relies on it. Client data is only fine here because the tool is firm-approved." };
 }
 
 function settingsPrompt(lvl) {     // the AI settings prompt for a level
@@ -650,7 +665,7 @@ function getAnonId() {             // a random code so a manager can tell files 
 }
 
 function makeExport(madeWith) {    // madeWith = "basic" or "final"
-  const out = { app: EXPORT_APP, version: EXPORT_VERSION, madeWith, exportedOn: todayISO(), anonId: getAnonId(),
+  const out = { app: EXPORT_APP, version: EXPORT_VERSION, madeWith, exportedOn: todayISO(), exportedAt: new Date().toISOString(), anonId: getAnonId(),
     level: load("levelSet", false) ? (LEVELS[load("level", 0)] || "") : "",
     reports: loadReports().filter(r => !r.example).map(r => ({ id: r.id, date: r.date, section: r.section, type: r.type,
       wrong: r.wrong, caught: r.caught, impact: r.impact, context: r.context, task: r.task })) };
@@ -692,17 +707,19 @@ function normaliseExport(obj) {    // check a loaded file; bad parts are skipped
   const clean = (list, max, fn) => {
     if (!Array.isArray(list)) return null;
     const out = list.slice(0, max).map(fn).filter(Boolean);
-    skipped += Math.min(list.length, max) - out.length;
+    skipped += list.length - out.length;   // bad items and any past the limit
     return out;
   };
   const reports = clean(obj.reports, 1000, r => { const c = cleanReport(r); return c && !c.example ? c : null; }) || [];
+  const notes = clean(obj.notes, 500, cleanNote), pilots = clean(obj.pilots, 50, cleanPilot);   // before 'skipped' is used below
   const steps = Array.isArray(obj.steps) && obj.steps.length === START_STEPS.length && obj.steps.every(v => typeof v === "boolean") ? obj.steps : null;
   return { ok: true, skipped, newer: obj.version > EXPORT_VERSION, person: {
     anonId: obj.anonId, madeWith: obj.madeWith === "final" ? "final" : "basic",
-    exportedOn: isISO(obj.exportedOn) ? obj.exportedOn : "", level: LEVELS.includes(obj.level) ? obj.level : "",
+    exportedOn: isISO(obj.exportedOn) ? obj.exportedOn : "",
+    exportedAt: typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]{5,12}Z$/.test(obj.exportedAt) ? obj.exportedAt : "", level: LEVELS.includes(obj.level) ? obj.level : "",
     reports, steps, picks: validPicks(obj.game && obj.game.picks),
     settingsCopiedOn: isISO(obj.settingsCopiedOn) ? obj.settingsCopiedOn : ("settingsCopiedOn" in obj ? "" : null),
-    notes: clean(obj.notes, 500, cleanNote), pilots: clean(obj.pilots, 50, cleanPilot) } };
+    notes, pilots } };
 }
 
 function readExport(text) {        // text from a file -> checked person (or a plain-English problem)
@@ -712,12 +729,12 @@ function readExport(text) {        // text from a file -> checked person (or a p
 }
 
 function mergePeople(people) {     // one entry per person: each part comes from their latest file that has it
-  const byId = {};
+  const byId = Object.create(null);   // a plain lookup, so codes such as 'constructor' are safe
   people.forEach(p => (byId[p.anonId] = byId[p.anonId] || []).push(p));
   return Object.values(byId).map(files => {
-    files.sort((a, b) => (a.exportedOn || "").localeCompare(b.exportedOn || ""));
+    files.sort((a, b) => (a.exportedAt || a.exportedOn || "").localeCompare(b.exportedAt || b.exportedOn || ""));   // oldest file first
     const latest = key => { for (let i = files.length - 1; i >= 0; i--) if (files[i][key] !== null && files[i][key] !== undefined) return files[i][key]; return null; };
-    const seen = {}, reports = [];
+    const seen = Object.create(null), reports = [];
     files.forEach(f => f.reports.forEach(r => { if (!seen[r.id]) { seen[r.id] = true; reports.push(r); } }));
     return { anonId: files[0].anonId, madeWith: files.some(f => f.madeWith === "final") ? "final" : "basic",
              exportedOn: files[files.length - 1].exportedOn, level: latest("level") || "", reports,
@@ -779,7 +796,17 @@ function printBlock(html) {         // print only this content, plus the footer 
 window.addEventListener("afterprint", () => document.body.classList.remove("printing"));
 
 // ---------- Redrawing ----------
-function render(navHtml, screenHtml) {   // redraw the page, keeping keyboard focus on the same button or box
+// One message area that stays on the page, so screen readers read out each new message
+const sayBox = document.createElement("p");
+sayBox.id = "say"; sayBox.className = "hidden-say"; sayBox.setAttribute("role", "status");
+document.body.appendChild(sayBox);
+function announce(text) {          // read a message out (cleared first, so the same message is read again)
+  sayBox.textContent = "";
+  const words = new DOMParser().parseFromString(String(text || ""), "text/html").body.textContent;   // just the words, never run as page code
+  setTimeout(() => { sayBox.textContent = words.replace(/\s+/g, " ").trim(); }, 50);
+}
+
+function render(navHtml, screenHtml, say) {   // redraw the page, keeping keyboard focus on the same button or box; say = a message to read out
   const id = document.activeElement && document.activeElement.id;
   document.getElementById("nav").innerHTML = navHtml;
   document.getElementById("screen").innerHTML = screenHtml;
@@ -787,6 +814,7 @@ function render(navHtml, screenHtml) {   // redraw the page, keeping keyboard fo
   document.body.classList.remove("printing");
   const again = id && document.getElementById(id);
   if (again) again.focus({ preventScroll: true });
+  if (say) announce(say);
 }
 
 function focusHeading(title) {      // after moving to a new screen: go to the top and put keyboard focus on the heading
@@ -841,11 +869,11 @@ function go(name) {         // move to another tab
   focusHeading(document.querySelector("#screen h1").textContent + " · " + APP_TITLE);
 }
 
-function draw() {           // redraw the current tab and the row of tabs
+function draw(say) {        // redraw the current tab and the row of tabs; say = a message to read out to screen readers
   const nav = `<div class="tabs">` + TABS.map(t => `<button id="tab-${t[0]}"${t[0] === tab ? ' aria-current="page"' : ""}
                 onclick="go('${t[0]}')">${safe(t[1])}</button>`).join("") + `</div>`;
   const example = isExample ? `<p class="exampleline" id="exampleLine"><b>Showing made-up example team.</b> None of these figures are real.</p>` : "";
-  render(nav, checkData() + checkTeamData() + example + TABS.find(t => t[0] === tab)[2]());
+  render(nav, checkData() + checkTeamData() + example + TABS.find(t => t[0] === tab)[2](), say);
 }
 
 function emptyBox() {       // shown on every tab until some data is loaded
@@ -890,8 +918,9 @@ function tile(key, title, shown, sub, value) {   // one headline figure; value (
 }
 
 // ---------- Dates: the trend ends at the newest date in the files, not today ----------
-function latestDate() {
-  return people.flatMap(p => [p.exportedOn].concat(p.reports.map(r => r.date))).filter(isISO).sort().pop() || todayISO();
+function latestDate() {     // dates after tomorrow (a wrong clock or a typo) are ignored
+  const limit = addDays(todayISO(), 1);
+  return people.flatMap(p => [p.exportedOn].concat(p.reports.map(r => r.date))).filter(d => isISO(d) && d <= limit).sort().pop() || todayISO();
 }
 function weeks() {          // reports in each of the last 8 weeks (weeks start on Monday)
   const end = latestDate(), last = weekNo(end), counts = [0, 0, 0, 0, 0, 0, 0, 0];
@@ -936,7 +965,7 @@ async function loadFiles(fileList) {
     items.push([file.name, result]);
   }
   results = filesMessage(addFiles(items));
-  draw();
+  draw(results);
 }
 
 function addFiles(items) {  // keeps the files that passed the checks and says what happened to each
@@ -975,34 +1004,37 @@ document.addEventListener("drop", e => {
 function loadPasted() {     // the fallback: text pasted from a file
   const text = document.getElementById("pasteText").value;
   results = text.trim() ? filesMessage(addFiles([["Pasted text", readExport(text)]])) : "<p>Paste the text of a staff file into the box first.</p>";
-  draw();
+  draw(results);
 }
 
 function loadExample() {    // the made-up team replaces anything loaded
   loaded = exampleTeam(); people = mergePeople(loaded); isExample = true; square = null; confirming = false;
   results = "";
-  draw();
+  draw("Showing the made-up example team.");
 }
 
 function loadThisBrowser() {   // what the staff app saved in this same browser, read as if it were a file
+  Object.keys(memory).forEach(k => delete memory[k]);   // read what's saved now, not an older copy (this page saves nothing itself)
   if (!/^[a-z0-9-]{4,40}$/.test(load("anonId", ""))) memory.anonId = "this-browser";   // a stand-in code, so this page saves nothing
   const final = ["steps", "picks", "notes", "pilots"].some(k => load(k, null) !== null);   // was the final staff app used here?
   const data = makeExport(final ? "final" : "basic");
+  delete data.exportedAt;   // so the same data read twice counts as already loaded
   if (!final && !data.reports.length && !data.level && !load("settingsCopiedOn", "")) {
     results = `<p><b>Nothing found.</b> The staff app hasn't saved anything in this browser, or it was used in a different browser.</p>`;
   } else {
-    const c = addFiles([["This browser", readExport(JSON.stringify(data))]]);
+    const c = addFiles([["This browser", readExport(JSON.stringify(data))]]), why = c.skipped.length ? c.skipped[0][1] : "";
     results = c.added ? `<p><b>Added the staff data saved in this browser${c.replaced ? ", replacing the older copy" : ""}.</b></p>`
+                      : why && !why.includes("already") ? `<p><b>${why}</b></p>`   // the data couldn't be read: say why
                       : `<p><b>The staff data from this browser is already loaded.</b></p>`;
   }
-  draw();
+  draw(results);
 }
 
 function askClear() { confirming = true; draw(); document.getElementById("confirmNo").focus(); }
 function clearLoaded() {
   loaded = []; people = []; isExample = false; square = null; confirming = false;
   results = "<p>Loaded data removed from this page. Your files haven't changed.</p>";
-  draw();
+  draw(results);
   document.getElementById("fileInput").focus();
 }
 
@@ -1028,7 +1060,7 @@ function overviewScreen() {
 
   // What this suggests: up to 4 lines, most important first. A small sample always gets its warning.
   const lines = [];
-  if (slips) lines.push(`${plural(slips, "data or privacy slip")} ${slips === 1 ? "was" : "were"} reported: follow the firm's data incident process if real client data was involved.`);
+  if (slips) lines.push(`${plural(slips, "data or privacy slip")} ${slips === 1 ? "was" : "were"} reported: follow the firm's data incident process if real client or personal data was involved.`);
   if (hot) lines.push(`The hotspot is ${hot} (${plural(top.max, "report")}). Remind the team to ${TYPE_ADVICE[hot.split(" / ")[1]]}.`);
   const big = MISTAKE_TYPES.map((t, i) => [t, byType[i]]).filter(x => x[1] >= SMALL.typeMin && x[1] >= SMALL.typeShare * R.length).sort((a, b) => b[1] - a[1])[0];
   if (big) lines.push(`${big[0]} is ${Math.round(100 * big[1] / R.length)}% of all reports (${big[1]} of ${R.length}).` + (hot.endsWith(" / " + big[0]) ? "" : ` Remind the team to ${TYPE_ADVICE[big[0]]}.`));
@@ -1038,7 +1070,7 @@ function overviewScreen() {
   const shown = lines.slice(0, few ? 3 : 4).concat(few ? [`These figures come from only ${plural(people.length, "person", "people")} and ${plural(R.length, "report")}, so treat them as early signs, not conclusions.`] : []);
 
   return `<h1>Overview</h1>
-    <p class="grey">Team figures from the files staff sent in. Nothing here points at one person.</p>
+    <p class="grey">Team figures from the files staff sent in. ${people.length >= SMALL.group ? "Nothing here points at one person." : "With fewer than " + SMALL.group + " people, these figures may be one person's."}</p>
     <div class="tiles">
       ${tile("people", "People", people.length, plural(files, "file") + (files > people.length ? "; " + plural(files - people.length, "older file") + " replaced" : ""))}
       ${tile("reports", "Reports", R.length, range)}
@@ -1094,7 +1126,7 @@ function dataScreen() {
   const now = !people.length ? "<b>No data loaded yet.</b>" : isExample ? `<b>Showing the made-up example team: ${sizes}.</b> Loading staff files will replace it.`
     : `<b>Loaded: ${sizes}</b> (from ${plural(files, "file")}).`;
   return `<h1>Data</h1>
-    <p class="grey">Load the files staff save with 'Send to my manager'. The files have no names in them.
+    <p class="grey">Load the files staff save with 'Send to my manager'. The app adds no names to the files.
       Nothing you load is saved: it stays on this page until you close it.</p>
     <p class="box" id="loadedNow">${now}</p>
     <h2>Load staff files</h2>
@@ -1116,7 +1148,7 @@ function dataScreen() {
       : `<p><button class="plain" id="clearBtn" onclick="askClear()">Clear loaded data</button></p>`}
     <details id="howBox"${panels.how ? " open" : ""} ontoggle="panels.how = this.open"><summary>How staff send their file</summary>
       <ol><li>In the staff app, they open <b>Send to my manager</b> (on Report a mistake, or Settings in the final version).</li>
-        <li>They press <b>Save the file</b>. It saves a file such as ai-suite-for-my-manager-2026-10-30.json, with no names in it.</li>
+        <li>They press <b>Save the file</b>. It saves a file such as ai-suite-for-my-manager-2026-10-30.json; the app adds no names to it.</li>
         <li>They email or share the file with you, and you load it here.</li></ol>
       <p class="small">If someone sends more than one file, their newest file is used, and the reports from all of their files are kept (each counted once).</p></details>`;
 }
