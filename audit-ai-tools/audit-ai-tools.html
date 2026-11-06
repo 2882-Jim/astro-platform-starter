@@ -48,6 +48,8 @@
   .found { outline: 3px solid #1f4e79; }
   .switch { border: 1px solid #d6d6d6; border-radius: 8px; padding: 8px 12px 10px; margin: 16px 0 0; }
   .switch legend { font-weight: bold; }
+  .testing { border: 1px dashed #999; border-radius: 8px; padding: 6px 10px; font-size: 15px; }
+  .testing select { width: auto; padding: 2px 6px; margin: 0 6px; }
   .switch label { display: inline-block; border: 1px solid #bbb; border-radius: 6px; padding: 4px 10px; margin: 4px 4px 0 0; }
   .switch label:has(input:checked) { border-color: #1f4e79; background: #e8f0f8; font-weight: bold; }
   input[type=search], textarea, select { width: 100%; padding: 8px 10px; border: 1px solid #999; border-radius: 6px; }
@@ -68,6 +70,9 @@
   .heat td.cell { text-align: center; min-width: 64px; cursor: pointer; font-weight: bold; }
   .heat th[scope=row] { text-align: left; }
   #promptOut { min-height: 220px; }
+  #settingsOut { min-height: 150px; }
+  .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); column-gap: 16px; }  /* 2 columns on a laptop */
+  .two p { margin: 6px 0; }
   footer.wrap { margin-top: 32px; border-top: 1px solid #d6d6d6; padding: 12px 16px 24px; font-size: 15px; color: #555; }
   @media print { .topnav, .noprint { display: none; } }
 </style>
@@ -207,34 +212,54 @@ const PROMPT_JOBS = [
   { name: "Tidy my wording", instruction: "Make my text below clearer and shorter without changing its meaning or any facts.", ask: "e.g. reply to a review point" },
 ];
 
-// Rules that go into EVERY prompt (the user can't untick these)
+// Rules that go into EVERY prompt
 const PROMPT_ALWAYS = ["Use only the document below. Don't use outside knowledge or guess.",
                        "If something isn't in the document, say \"not found\".",
                        "Never invent figures, names, dates or references to standards.",
+                       "Show your working for any calculation.",
+                       "At the end, list anything you're unsure about.",
                        "Write in UK English."];
 
-// Optional rules: [tick-box label, rule written into the prompt, ticked to start with?]
-const PROMPT_OPTIONS = [
-  ["Quote the exact line for each point", "Quote the exact line from the document for each point.", true],
-  ["Give the page, clause or note number", "Give the page, clause or note number for each point.", true],
-  ["Show the working for any calculation", "Show your working for any calculation, step by step.", true],
-  ["List anything you're unsure about", "At the end, list anything you're unsure about.", true],
-  ["Keep it short (under 200 words)", "Keep the answer under 200 words.", false],
-  ["Write for the client, not the audit team", "Write for the client: plain words, no audit jargon.", false],
+// The prompt builder's dropdowns. Each option is [what the user sees, what goes into the prompt].
+const PROMPT_CHOICES = [
+  { id: "evidence", label: "Evidence", options: [["Quote the line and give the page", "Quote the exact line and give the page, clause or note number for each point."],
+                                                 ["Quote the line only", "Quote the exact line from the document for each point."],
+                                                 ["Page reference only", "Give the page, clause or note number for each point."]] },
+  { id: "format",   label: "Answer as", options: [["Bullet points", "Answer in bullet points."], ["A table", "Answer in a table."], ["Short paragraphs", "Answer in short paragraphs."]] },
+  { id: "length",   label: "Length", options: [["Normal", ""], ["Short (under 200 words)", "Keep it under 200 words."], ["Detailed", "Be thorough and cover every point."]] },
+  { id: "audience", label: "Written for", options: [["The audit team", ""], ["The client", "Write for the client: plain words, no audit jargon."]] },
 ];
 
-const PROMPT_FORMATS = ["Bullet points", "A table", "Short paragraphs"];
-
-// The preset loaded at the top of the prompt for each level (same order as LEVELS)
+// The AI settings prompt for each level (same order as LEVELS). Paste it into your AI tool's
+// settings / custom instructions. SETTINGS_RULES are added to every level's settings.
 const PROMPT_PRESETS = [
   "I am a trainee auditor. Explain each point simply. Don't give audit conclusions: flag anything that needs a senior's judgement instead.",
   "I am a part-qualified auditor. Don't give audit conclusions: flag anything that needs a senior's judgement.",
   "I am an audit senior. Point out anything I may have missed and challenge my reasoning. Don't give a final conclusion; I will form it.",
   "I am an audit manager. Be concise and challenge my reasoning. The conclusion stays mine.",
 ];
+const SETTINGS_RULES = "Never invent figures, names, dates or references to standards. Say \"not found\" rather than guess. Write in UK English.";
 
 const BEFORE_YOU_USE = ["Check every quote against the source", "Recheck every number",
                         "Check names and dates", "Tell your reviewer AI was used"];
+
+// =====================================================================
+// DATA: CLIENT REQUESTS  (no AI needed: pick what you need and copy the email)
+// =====================================================================
+const CLIENT_REQUESTS = [
+  { name: "Accruals listing", detail: "a listing of all accruals at the period end, with a short description and the supporting invoice or calculation for each" },
+  { name: "General ledger (GL) export", detail: "a full export of the general ledger for the period, including journal numbers, dates, descriptions and the user who posted each entry" },
+  { name: "Trial balance", detail: "the final trial balance at the period end" },
+  { name: "Bank statements", detail: "bank statements for every account covering the last month of the period and the first month after it" },
+  { name: "Aged debtors listing", detail: "an aged debtors listing at the period end that agrees to the trial balance" },
+  { name: "Aged creditors listing", detail: "an aged creditors listing at the period end that agrees to the trial balance" },
+  { name: "Fixed asset register", detail: "the fixed asset register for the period, showing additions, disposals and depreciation" },
+  { name: "Payroll reports", detail: "the payroll summary for each month of the period and the year-end payroll reconciliation" },
+  { name: "Board minutes", detail: "copies of all board minutes for the period and up to today" },
+  { name: "Supplier statements", detail: "supplier statements at the period end for your five largest suppliers" },
+];
+const REQUEST_FORMATS = ["Excel", "PDF", "CSV"];
+const REQUEST_DEADLINES = ["within 5 working days", "within 10 working days", "by the date we agreed at planning"];
 
 // Made-up reports for "Load example data" on the Heat map: [section number, type number, what went wrong]
 const EXAMPLE_REPORTS = [
@@ -257,7 +282,7 @@ let screen = "home";      // which screen is showing
 let sectionNo = 0;        // which section is open (0 to 7)
 let where = "cloud";      // the "Where does the AI run?" switch
 let answers = [];         // checker answers so far (true = yes)
-let level = -1;           // My level choice (-1 = not chosen)
+let level = 0;            // the user's level (0 = Trainee); set by the testing dropdown on Home
 let gameNo = 0;           // which game card is showing
 let picks = [];           // the sentence picked on each game card (-1 = not yet)
 let heatCell = null;      // the heat map square clicked: [section, type]
@@ -292,6 +317,10 @@ function switchHtml() {   // the "Where does the AI run?" switch
              onchange="where = this.value; draw()"> ${WHERE[key].name}</label>`;
   }
   return html + `</fieldset><p class="small">${WHERE[where].note}</p>`;
+}
+
+function levelFor() {    // the small line saying which level is set (from the testing dropdown on Home)
+  return `<p class="small">Level: <b>${LEVELS[level]}</b> · <a href="#" onclick="go('home'); return false">change on Home</a></p>`;
 }
 
 function ratingsFor() {   // the small line on other screens saying which switch option is in use
@@ -346,6 +375,10 @@ function homeScreen() {
     <p class="grey">Tools to help auditors see which uses of AI are fine, which are risky, and what to do about each.</p>
     ${switchHtml()}
     <p class="small">This choice sets every rating in the app.</p>
+    <p class="testing"><label for="testLevel">For testing: level</label>
+      <select id="testLevel" onchange="level = Number(this.value)">${LEVELS.map((name, n) =>
+        `<option value="${n}" ${n === level ? "selected" : ""}>${name}</option>`).join("")}</select>
+      <span class="small">Sets the level in every tool.</span></p>
     <h2>The four ratings</h2>${key}
     <button class="btn big" onclick="go('tasks')">Start</button>
     <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>`;
@@ -439,10 +472,13 @@ function checkerScreen() {
 // SCREEN 4: My level (Go ahead / Do it by hand first / Not yet)
 // =====================================================================
 function levelScreen() {
-  let html = ratingsFor() + `<h1>What can I do right now?</h1>
-    <p class="warn">Draft example for discussion, not firm policy.</p><h2>Pick your level</h2>`;
-  LEVELS.forEach((name, n) => html += `<button class="plain ${n === level ? "on" : ""}" onclick="level = ${n}; draw()">${name}</button>`);
-  if (level < 0) return html;
+  let html = levelFor() + ratingsFor() + `<h1>What can I do right now?</h1>
+    <p class="warn">Draft example for discussion, not firm policy.</p>
+    <div class="box"><h2>Your AI settings prompt</h2>
+      <p class="small">This should be in your AI tool's settings (custom instructions) right now:</p>
+      <textarea id="settingsOut" readonly>${settingsPrompt()}</textarea>
+      <button class="plain" onclick="copyText('settingsOut', 'settingsMsg')">Copy</button> <span id="settingsMsg" class="small"></span>
+      <p class="small"><b>Tip:</b> update weekly please.</p></div>`;
 
   let goAhead = "", byHand = "", notYet = "";
   TASKS.forEach(function (t) {
@@ -572,62 +608,110 @@ function cheatScreen() {
 // =====================================================================
 // SCREEN 8: Prompt builder
 // =====================================================================
+let promptMode = "ai";   // "ai" = AI prompt, "client" = client request (no AI needed)
+
 function promptScreen() {
-  if (level < 0) level = 0;   // start on the lowest level's preset until one is picked
+  const picker = `<label for="mode"><b>What are you making?</b></label>
+    <select id="mode" onchange="promptMode = this.value; draw()">
+      <option value="ai" ${promptMode === "ai" ? "selected" : ""}>AI prompt</option>
+      <option value="client" ${promptMode === "client" ? "selected" : ""}>Client request (no AI needed)</option></select>`;
+  return `<h1>Prompt builder</h1>` + levelFor() + picker + (promptMode === "ai" ? aiPromptForm() : clientRequestForm());
+}
+
+// The AI prompt form: all dropdowns, plus the text box
+function aiPromptForm() {
   // A personal account can't take client data, so say so loudly
   const personal = where === "personal"
     ? `<p class="warn"><b>You chose Personal account on Home.</b> Only use made-up or public text here: no client data at all.</p>` : "";
-  return `<h1>Safe prompt builder</h1>
-    <p class="grey">Builds a careful prompt that keeps the AI to your document.</p>${personal}
-    <label for="lvl"><b>Your level</b></label>
-    <select id="lvl" onchange="level = Number(this.value); document.getElementById('preset').textContent = PROMPT_PRESETS[level]">
-      ${LEVELS.map((name, n) => `<option value="${n}" ${n === level ? "selected" : ""}>${name}</option>`).join("")}</select>
-    <p class="small">Preset loaded for your level:</p><p class="box" id="preset">${PROMPT_PRESETS[level]}</p>
-    <label for="job"><b>What's the job?</b></label>
-    <select id="job" onchange="document.getElementById('ask').placeholder = PROMPT_JOBS[this.value].ask">${options(PROMPT_JOBS.map(j => j.name))}</select>
+  let choices = "";
+  PROMPT_CHOICES.forEach(c => choices += `<p><label for="${c.id}"><b>${c.label}</b></label><select id="${c.id}">${options(c.options.map(o => o[0]))}</select></p>`);
+  return `${personal}
+    <p><label for="job"><b>What's the job?</b></label>
+      <select id="job" onchange="document.getElementById('ask').placeholder = PROMPT_JOBS[this.value].ask">${options(PROMPT_JOBS.map(j => j.name))}</select></p>
     <p><label for="ask"><b>What exactly do you need?</b> <span class="small">(optional)</span></label>
       <input id="ask" type="search" placeholder="${PROMPT_JOBS[0].ask}"></p>
-    <label for="format"><b>Answer as</b></label><select id="format">${options(PROMPT_FORMATS)}</select>
+    <div class="two">${choices}
+      <p><label for="loaded"><b>Settings prompt loaded in your AI tool?</b></label>
+        <select id="loaded"><option value="no">No / not sure: add it</option><option value="yes">Yes: leave it out</option></select></p>
+    </div>
     <p class="warn">Remove client names first. Only paste what your firm's policy allows in this tool.</p>
     <label for="source"><b>Paste the source text</b></label><textarea id="source" style="min-height: 160px"></textarea>
-    <h2>Always in every prompt</h2>
-    ${PROMPT_ALWAYS.map(r => `<p><label><input type="checkbox" checked disabled> ${r}</label></p>`).join("")}
-    <h2>Your options</h2>
-    ${PROMPT_OPTIONS.map((o, i) => `<p><label><input type="checkbox" id="opt${i}" ${o[2] ? "checked" : ""}> ${o[0]}</label></p>`).join("")}
-    <button class="btn" onclick="buildPrompt()">Build my prompt</button>
+    <details><summary class="small">Always included: ${PROMPT_ALWAYS.length} safety rules</summary>
+      <ul class="small">${PROMPT_ALWAYS.map(r => `<li>${r}</li>`).join("")}</ul></details>
+    <p><button class="btn" onclick="buildPrompt()">Build my prompt</button></p>
     <div id="built" hidden>
       <h2>Your prompt</h2><textarea id="promptOut" readonly></textarea>
-      <button class="btn" onclick="copyPrompt()">Copy</button> <span id="copyMsg" class="small"></span>
-      <h2>Before you use the answer</h2>
-      ${BEFORE_YOU_USE.map(c => `<p><label><input type="checkbox"> ${c}</label></p>`).join("")}
+      <button class="btn" onclick="copyText('promptOut', 'copyMsg')">Copy</button> <span id="copyMsg" class="small"></span>
+      <h2>Before you use the answer</h2><ul>${BEFORE_YOU_USE.map(c => `<li>${c}</li>`).join("")}</ul>
     </div>`;
 }
 
 function buildPrompt() {
   const value = id => document.getElementById(id).value.trim();
   const job = PROMPT_JOBS[value("job")];
-  const text = value("source") || "[paste your document here]";
-  // Every prompt gets the "always" rules, then whichever options are ticked
-  const rules = PROMPT_ALWAYS.concat(PROMPT_OPTIONS.filter((o, i) => document.getElementById("opt" + i).checked).map(o => o[1]));
+  // Every prompt gets the "always" rules, then one line from each dropdown (blank ones are skipped)
+  const rules = PROMPT_ALWAYS.concat(PROMPT_CHOICES.map(c => c.options[value(c.id)][1]).filter(r => r));
 
-  let prompt = PROMPT_PRESETS[level] + "\n\n";           // 1. the preset for your level
-  prompt += "Task: " + job.instruction + "\n";            // 2. the job
+  let prompt = "";
+  if (value("loaded") === "no") prompt += settingsPrompt() + "\n\n";   // 1. the level's settings, if not loaded
+  prompt += "Task: " + job.instruction + "\n";                          // 2. the job
   if (value("ask")) prompt += "Specifically: " + value("ask") + "\n";
-  prompt += "Answer as: " + PROMPT_FORMATS[value("format")].toLowerCase() + ".\n\n";
-  prompt += "Rules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n";   // 3. the rules
-  prompt += "--- DOCUMENT START ---\n" + text + "\n--- DOCUMENT END ---";  // 4. the document
+  prompt += "\nRules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n"; // 3. the rules
+  prompt += "--- DOCUMENT START ---\n" + (value("source") || "[paste your document here]") + "\n--- DOCUMENT END ---";
   document.getElementById("promptOut").value = prompt;
   document.getElementById("copyMsg").textContent = "";
   document.getElementById("built").hidden = false;
 }
 
-async function copyPrompt() {
-  const box = document.getElementById("promptOut"), msg = document.getElementById("copyMsg");
+// The client request form: pick what you need, and it writes the email. No AI is used.
+function clientRequestForm() {
+  const items = CLIENT_REQUESTS.map(r => r.name);
+  return `<p class="small">A ready-made email template, so no AI (and no AI tokens) needed.</p>
+    <div class="two">
+      <p><label for="item1"><b>What do you need?</b></label><select id="item1">${options(items)}</select></p>
+      <p><label for="item2"><b>Also ask for</b></label><select id="item2"><option value="">Nothing else</option>${options(items)}</select></p>
+      <p><label for="item3"><b>And</b></label><select id="item3"><option value="">Nothing else</option>${options(items)}</select></p>
+      <p><label for="period"><b>Period end</b></label><input id="period" type="search" placeholder="e.g. 31 March 2026"></p>
+      <p><label for="fileType"><b>Format</b></label><select id="fileType">${options(REQUEST_FORMATS)}</select></p>
+      <p><label for="deadline"><b>When by</b></label><select id="deadline">${options(REQUEST_DEADLINES)}</select></p>
+    </div>
+    <p><button class="btn" onclick="buildRequest()">Write my request</button></p>
+    <div id="built" hidden>
+      <h2>Your request</h2><textarea id="promptOut" readonly></textarea>
+      <button class="btn" onclick="copyText('promptOut', 'copyMsg')">Copy</button> <span id="copyMsg" class="small"></span>
+      <p class="small">Check the names and dates before you send it.</p>
+    </div>`;
+}
+
+function buildRequest() {
+  const value = id => document.getElementById(id).value;
+  // Collect the chosen items, skipping "Nothing else" and repeats
+  let picked = [];
+  ["item1", "item2", "item3"].forEach(id => { if (value(id) !== "" && !picked.includes(value(id))) picked.push(value(id)); });
+  const lines = picked.map(i => "- " + CLIENT_REQUESTS[i].name + ": " + CLIENT_REQUESTS[i].detail + ".").join("\n");
+  const period = value("period").trim() || "[period end]";
+  document.getElementById("promptOut").value =
+    "Dear [client contact],\n\n" +
+    "As part of our audit for the period ended " + period + ", please could you send us:\n" + lines + "\n\n" +
+    "Please send these as " + REQUEST_FORMATS[value("fileType")] + " files " + REQUEST_DEADLINES[value("deadline")] + ". " +
+    "If anything is unclear, or you can't provide something, just let me know.\n\nMany thanks,\n[your name]";
+  document.getElementById("copyMsg").textContent = "";
+  document.getElementById("built").hidden = false;
+}
+
+// The AI settings prompt for the current level (used on My level and in the prompt builder)
+function settingsPrompt() {
+  return PROMPT_PRESETS[level] + " " + SETTINGS_RULES;
+}
+
+// Copy the text in a box. If the browser blocks copying, select it so it can be copied by hand.
+async function copyText(boxId, msgId) {
+  const box = document.getElementById(boxId), msg = document.getElementById(msgId);
   try {
     await navigator.clipboard.writeText(box.value);
     msg.textContent = "Copied.";
   } catch (e) {
-    box.select();   // copying failed, so select the text for the user to copy by hand
+    box.select();
     msg.textContent = "Press Ctrl+C (or Cmd+C on a Mac) to copy.";
   }
 }
