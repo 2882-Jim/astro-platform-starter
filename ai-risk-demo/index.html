@@ -41,7 +41,7 @@
            font-size: 1.2rem; margin: 8px 0 16px; }
 
   /* Sections page buttons */
-  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); grid-auto-rows: 1fr; gap: 12px; }
   .section-btn { background: #fff; border: 1px solid #d6d6d6; border-radius: 8px; padding: 20px 16px;
                  text-align: left; font-weight: 600; }
   .section-btn:hover, .result:hover { border-color: #1f4e79; }
@@ -57,7 +57,7 @@
   /* Back / Home / Next bar */
   nav { display: flex; gap: 8px; align-items: center; margin-top: 24px; padding-top: 12px;
         padding-bottom: 12px; border-top: 1px solid #d6d6d6; }
-  nav button { background: #1f4e79; color: #fff; border: 0; border-radius: 6px; padding: 10px 18px; }
+  nav button { background: #1f4e79; color: #fff; border: 0; border-radius: 6px; padding: 10px 12px; }
   nav button:disabled { background: #bbb; cursor: default; }
   #position { flex: 1; text-align: center; }
   .note { padding-bottom: 24px; }
@@ -71,7 +71,9 @@
   <div id="results"></div>
 </header>
 
-<main id="page"></main>
+<!-- This message only shows if the script below has a typo and can't run -->
+<main id="page"><p>The page didn't load. There's probably a typo in the task list (often a missing comma,
+  or a " inside the text). Undo your last change and refresh.</p></main>
 
 <nav>
   <button id="back">Back</button>
@@ -85,18 +87,20 @@
 <script>
 // =====================================================================
 // 1. THE TASK LIST  (edit tasks here, one line per task)
-//    section: must match a name in SECTIONS below exactly
-//    rating:  "low", "medium", "significant" or "notpermitted"
-//    Keep text inside "double quotes". Use ' (not ") inside the text.
+//    section: must match a name in SECTIONS below exactly, same capitals
+//    rating:  "low", "medium", "significant" or "notpermitted" (small letters, no spaces)
+//    task = card title, reason = one-line reason, example = text shown under "See more"
+//    Every line ends with a comma. Keep text inside "double quotes".
+//    Inside the text, use ' (not ") and don't use < or > (write [client name] instead).
 // =====================================================================
 const TASKS = [
   { section: "Planning", rating: "low", task: "Brainstorm risks to consider for a client in an unfamiliar industry", reason: "Ideas to prompt your thinking; your risk assessment is done and recorded separately.", example: "Ask the firm's AI tool for common risks in, say, a small housebuilder. Use the list as prompts, then do and record the risk assessment yourself. Nothing from the chat goes on file." },
-  { section: "Planning", rating: "medium", task: "Summarise board minutes into a planning note", reason: "Goes on file, so every point must be checked back to the minutes.", example: "Ask the firm's approved tool for a bullet summary with page numbers. Tick every bullet against the minutes and correct anything wrong before filing." },
-  { section: "Planning", rating: "significant", task: "Ask AI to set the materiality figure", reason: "Materiality shapes the whole audit, and a poor figure could be hard to spot.", example: "The audit team still chooses the benchmark and the figure, records why, and has it reviewed. AI output can be one input, never the decision." },
+  { section: "Planning", rating: "medium", task: "Summarise board minutes into a planning note", reason: "Goes on file, so every point must be checked back to the minutes.", example: "Ask the firm's approved tool for a bullet summary with page numbers. Tick every bullet against the minutes, correct anything wrong, then read the minutes yourself to check nothing important is missing." },
+  { section: "Planning", rating: "significant", task: "Use AI to suggest a materiality figure", reason: "Materiality shapes the whole audit, and a poor figure could be hard to spot.", example: "The audit team still chooses the benchmark and the figure, records why, and has it reviewed. AI output can be one input, never the decision." },
 
   { section: "Walkthroughs and controls", rating: "low", task: "Draft questions to ask in a walkthrough meeting", reason: "Helps you prepare; the evidence comes from the walkthrough itself.", example: "Describe the process in general terms and ask for questions covering each step. Edit the list to fit what you already know about the client." },
   { section: "Walkthroughs and controls", rating: "medium", task: "Turn your walkthrough notes into a tidy process write-up", reason: "Goes on file; every step must match your notes and the client's documents.", example: "Give the firm's approved tool your own notes and ask for a step-by-step write-up. Check each step against your notes and the documents you saw, and delete anything you didn't see." },
-  { section: "Walkthroughs and controls", rating: "significant", task: "Ask AI whether a control is well designed and working", reason: "That is an audit conclusion, and a confident wrong answer would be hard to spot.", example: "AI can point out possible gaps for you to look into. You decide whether the control works, based on your own testing, and record why." },
+  { section: "Walkthroughs and controls", rating: "significant", task: "Use AI to help judge whether a control is well designed and working", reason: "That is an audit conclusion, and a confident wrong answer would be hard to spot.", example: "AI can point out possible gaps for you to look into. You decide whether the control works, based on your own testing, and record why." },
 
   { section: "Revenue", rating: "low", task: "Explain a revenue recognition term you're unsure about", reason: "For your own understanding; nothing on file relies on it.", example: "Ask for a plain-English explanation with a simple example. Check it against the accounting standard or firm guidance before you rely on it in your work." },
   { section: "Revenue", rating: "medium", task: "Pull key terms from sales contracts into a schedule", reason: "Goes on file; every term must be checked to the contract.", example: "Use the firm's approved tool to list price, payment and delivery terms for each contract. Check every entry against the contract itself." },
@@ -115,12 +119,12 @@ const TASKS = [
   { section: "Cash and bank", rating: "notpermitted", task: "Use AI to make up a bank confirmation that hasn't arrived", reason: "Making up evidence is never allowed; the file would be false.", example: "Don't do this. Chase the bank, tell your manager, and agree with them what other work to do if it still doesn't arrive." },
 
   { section: "Related parties", rating: "low", task: "List the kinds of related parties to ask the directors about", reason: "A prompt for your questions; the answers come from the directors and records.", example: "Ask for typical examples (close family, companies the directors control, key managers). Use them to plan your questions, then record the answers yourself." },
-  { section: "Related parties", rating: "medium", task: "Summarise public records of the directors' other companies", reason: "Goes on file; every company and date must be checked to the public record.", example: "Give the firm's approved tool the Companies House records you've downloaded. Check every company name, role and date against those records." },
+  { section: "Related parties", rating: "medium", task: "Summarise public records of the directors' other companies", reason: "Goes on file; every company and date must be checked to the public record.", example: "Give the firm's approved tool the Companies House records you've downloaded. Check every company name, role and date against those records, and check no company has been left out." },
   { section: "Related parties", rating: "significant", task: "Use AI to scan the ledgers for related-party transactions", reason: "If it misses one you're unlikely to notice, and the disclosures could be wrong.", example: "Give it the full list of known related parties, keep a record of what it searched, and still do your usual enquiries and checks." },
 
   { section: "Accounts and disclosures", rating: "low", task: "Spot typos and formatting slips in the draft accounts", reason: "A tidy-up aid; the figures and disclosures are checked separately.", example: "Use the firm's approved tool to point out spelling, layout and numbering slips. Make the fixes yourself, and don't let it change figures or policy wording." },
   { section: "Accounts and disclosures", rating: "medium", task: "Check that figures in the notes agree to the main statements", reason: "Goes on file; every match or mismatch must be checked by you.", example: "Ask the firm's approved tool to list each note figure next to the matching statement figure. Check every pair yourself and follow up any differences." },
-  { section: "Accounts and disclosures", rating: "significant", task: "Ask AI whether the going concern basis is appropriate", reason: "A key conclusion; a confident wrong answer would be hard to spot.", example: "Use AI only to challenge your own work. The team does the going concern assessment, records the evidence and reaches its own conclusion." },
+  { section: "Accounts and disclosures", rating: "significant", task: "Use AI to help evaluate management's going concern assessment", reason: "A key conclusion; a confident wrong answer would be hard to spot.", example: "Use AI only to challenge your own work. Management makes the going concern assessment; the team evaluates it, records the evidence and reaches its own conclusion." },
 ];
 
 // =====================================================================
@@ -136,6 +140,11 @@ const LEVELS = {
 // 3. THE AUDIT AREAS, in the order they appear
 const SECTIONS = ["Planning", "Walkthroughs and controls", "Revenue", "Purchases", "Payroll",
                   "Cash and bank", "Related parties", "Accounts and disclosures"];
+
+// Safety check: if a task's section or rating is misspelt, say which task
+TASKS.forEach(function (t) {
+  if (!SECTIONS.includes(t.section) || !LEVELS[t.rating]) alert("Check the section and rating spelling for: " + t.task);
+});
 
 // =====================================================================
 // 4. HOW THE PAGES WORK
@@ -225,16 +234,18 @@ function toggleMore(button) {
   button.setAttribute("aria-expanded", !box.hidden);
 }
 
-// Search: runs on every key press. Ignores capital letters, and every
-// word typed must appear in the task, its reason or its section name.
+// Search: runs on every key press and ignores capital letters. Every word
+// typed must match the start of a word in the task, its reason, its section
+// or its rating (so "low" finds Low tasks, not "allowed").
+// Hyphens count as spaces, so "year end" finds "year-end".
 searchBox.addEventListener("input", function () {
-  const words = searchBox.value.toLowerCase().split(" ").filter(w => w !== "");
+  const words = searchBox.value.toLowerCase().replace(/-/g, " ").split(/\s+/).filter(w => w !== "");
   if (words.length === 0) { results.innerHTML = ""; return; }
 
   let html = "";
   TASKS.forEach(function (t, i) {
-    const text = (t.task + " " + t.reason + " " + t.section).toLowerCase();
-    if (words.every(w => text.includes(w))) {
+    const text = " " + (t.task + " " + t.reason + " " + t.section + " " + LEVELS[t.rating].label).toLowerCase().replace(/-/g, " ");
+    if (words.every(w => text.includes(" " + w))) {
       html += `<button class="result" onclick="openTask(${i})">${t.task}<br>
                <small>${t.section} · <span class="label ${t.rating}">${LEVELS[t.rating].label}</span></small></button>`;
     }
