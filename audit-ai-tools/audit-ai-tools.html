@@ -1,0 +1,591 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Audit AI tools</title>
+<style>
+  /* ---------- Look and feel ---------- */
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; color: #1a1a1a; background: #fff; }
+  .wrap { max-width: 820px; margin: 0 auto; padding: 0 16px; }
+  h1 { font-size: 30px; margin: 20px 0 8px; }
+  h2 { font-size: 20px; margin: 18px 0 8px; }
+  .grey, .small { color: #555; }
+  .small { font-size: 15px; }
+  button, select, input, textarea { font: inherit; }
+  button { cursor: pointer; }
+
+  /* Top navigation bar */
+  .topnav { border-bottom: 1px solid #d6d6d6; background: #f6f7f9; }
+  .topnav .wrap { display: flex; flex-wrap: wrap; gap: 6px; padding-top: 10px; padding-bottom: 10px; }
+  .topnav button { background: #fff; color: #1f4e79; border: 1px solid #1f4e79; border-radius: 6px; padding: 6px 10px; font-size: 15px; }
+  .topnav button.on { background: #1f4e79; color: #fff; }
+
+  /* Buttons */
+  .btn { background: #1f4e79; color: #fff; border: 0; border-radius: 8px; padding: 12px 20px; margin: 0 8px 10px 0; }
+  .btn:disabled { background: #bbb; cursor: default; }
+  .big { font-size: 21px; padding: 14px 28px; }
+  .plain { background: #fff; color: #1f4e79; border: 1px solid #1f4e79; border-radius: 6px; padding: 6px 14px; margin: 0 6px 6px 0; }
+  .plain.on { background: #1f4e79; color: #fff; }
+  .list-btn { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid #d6d6d6; border-radius: 8px; padding: 12px 16px; margin-bottom: 8px; }
+  .list-btn:hover, .plain:hover { border-color: #1f4e79; }
+
+  /* Rating labels: the word is always written on the label */
+  .label { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 15px; font-weight: bold; color: #fff; white-space: nowrap; }
+  .low { background: #00796b; }                            /* blue-green */
+  .medium { background: #f2b100; color: #1a1a1a; }         /* amber */
+  .significant { background: #c62828; }                    /* red */
+  .notpermitted { background: #424242; }                   /* dark grey */
+
+  /* Boxes and bits */
+  .box { border: 1px solid #d6d6d6; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+  .box h2 { margin-top: 0; }
+  .key { display: flex; gap: 12px; align-items: flex-start; }
+  .key .label { min-width: 120px; text-align: center; }
+  .warn { background: #fff4d6; border-left: 4px solid #f2b100; padding: 8px 12px; }
+  .example { background: #f6f7f9; border-radius: 6px; padding: 4px 12px; margin-top: 10px; }
+  .found { outline: 3px solid #1f4e79; }
+  .switch { border: 1px solid #d6d6d6; border-radius: 8px; padding: 8px 12px 10px; margin: 16px 0 0; }
+  .switch legend { font-weight: bold; }
+  .switch label { display: inline-block; border: 1px solid #bbb; border-radius: 6px; padding: 4px 10px; margin: 4px 4px 0 0; }
+  .switch label:has(input:checked) { border-color: #1f4e79; background: #e8f0f8; font-weight: bold; }
+  input[type=search], textarea, select { width: 100%; padding: 8px 10px; border: 1px solid #999; border-radius: 6px; }
+  textarea { min-height: 80px; }
+  .form label { display: block; font-weight: bold; margin-top: 12px; }
+  .entry p { margin: 4px 0; white-space: pre-wrap; }
+  .sectionbar { display: flex; gap: 8px; align-items: center; margin-top: 16px; }
+  .sectionbar span { flex: 1; text-align: center; color: #555; }
+  .sectionbar .btn { padding: 10px 12px; margin: 0; }
+  .sentence { display: block; width: 100%; text-align: left; background: #fff; border: 2px dashed #1f4e79; border-radius: 6px; padding: 8px 12px; margin-bottom: 8px; }
+  .sentence.wrong { border: 2px solid #c62828; background: #fdecea; }
+  .sentence.picked { background: #e8f0f8; }
+  .source { background: #f6f7f9; border-radius: 6px; padding: 4px 12px; margin-bottom: 10px; }
+  .source td { padding: 2px 12px 2px 0; }
+  .scroll { overflow-x: auto; }
+  table.heat { border-collapse: collapse; }
+  .heat th, .heat td { border: 1px solid #d6d6d6; padding: 6px 8px; font-size: 15px; }
+  .heat td.cell { text-align: center; min-width: 64px; cursor: pointer; font-weight: bold; }
+  .heat th[scope=row] { text-align: left; }
+  #promptOut { min-height: 220px; }
+  footer { margin-top: 28px; border-top: 1px solid #d6d6d6; padding: 12px 0 24px; font-size: 15px; color: #555; }
+  @media print { .topnav, .noprint { display: none; } }
+</style>
+</head>
+<body>
+
+<!-- Navigation bar (the same on every screen) -->
+<div class="topnav"><div class="wrap" id="nav"></div></div>
+
+<!-- Each screen is drawn in here. This message only shows if the script has a typo. -->
+<main class="wrap" id="screen"><p>The page didn't load. There's probably a typo in the data
+  (often a missing comma, or a " inside the text). Undo your last change and refresh.</p></main>
+
+<footer class="wrap">Prototype only: made-up examples and draft ratings. No client data.</footer>
+
+<script>
+// =====================================================================
+// DATA: SECTIONS, MISTAKE TYPES, LEVELS, RATINGS, WHERE THE AI RUNS
+// =====================================================================
+const SECTIONS = ["Planning", "Walkthroughs and controls", "Revenue", "Purchases", "Payroll",
+                  "Cash and bank", "Related parties", "Accounts and disclosures"];
+
+const MISTAKE_TYPES = ["Made-up info", "Missed something", "Wrong number", "Wrong judgement", "Data/privacy slip"];
+
+const LEVELS = ["Trainee (NQ1)", "NQ2", "Senior", "Manager"];  // lowest to highest
+
+// css = colour class; meaning and todo are shown on the key and the cards
+const RATINGS = {
+  "Low":           { css: "low",          meaning: "Helps you think or draft; nothing relies on it.", todo: "Normal review." },
+  "Medium":        { css: "medium",       meaning: "Goes on file, but every item is checked to source.", todo: "Check every item, and tell your reviewer you used AI." },
+  "Significant":   { css: "significant",  meaning: "Could affect a conclusion, be hard to spot, or affect a person.", todo: "Only use AI for this if the firm has approved and tested it." },
+  "Not permitted": { css: "notpermitted", meaning: "Against firm policy, e.g. client data in a personal AI account.", todo: "Don't." },
+};
+
+// The "Where does the AI run?" switch: label and the line shown under it
+const WHERE = {
+  personal: { name: "Personal account", note: "Not approved by the firm. Never put client or personal data in: you can't control where it goes." },
+  cloud:    { name: "Firm-approved cloud tool", note: "Data leaves the laptop but stays under the firm's agreement with the provider. Use it only for tasks the firm allows." },
+  local:    { name: "Local AI on this laptop", note: "Data stays on the laptop, but the tool still needs firm approval, and smaller local models make more mistakes, so check everything." },
+};
+
+// The checker's three questions, and how far up the levels each rating is done by hand first
+// (0 = Trainee only, 1 = up to NQ2, 2 = up to Senior). Lower levels get more by-hand tasks.
+const CHECKER_QUESTIONS = ["Does it use client or personal data?",
+                           "Will the output go on file or be relied on?",
+                           "Could a mistake affect a conclusion, be hard to spot, or affect a person?"];
+const HAND_FIRST_UP_TO = { "Low": 0, "Medium": 1, "Significant": 2 };
+
+// =====================================================================
+// DATA: TASKS  (one line per task, 3 per section)
+//   ratings: personal / cloud / local, each "Low", "Medium", "Significant" or "Not permitted"
+//   minLevel: one of the LEVELS above. more = the "See more" text.
+//   Use ' (not ") inside the text, and no < or >.
+// =====================================================================
+const TASKS = [
+  { section: "Planning", task: "Industry research for a new client's sector", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "Background reading from public information; nothing relies on it.", more: "Ask for the main risks and trends in, say, UK care homes, without naming the client. Check anything you use against a reliable source." },
+  { section: "Planning", task: "First draft of the planning memo", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Senior", reason: "Goes on file, so every point must be checked to the planning work.", more: "Give it your own planning notes and ask for a first draft in the firm's memo headings. Check every point and add your own judgements." },
+  { section: "Planning", task: "Setting materiality", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "Materiality shapes the whole audit, and a poor figure could be hard to spot.", more: "AI can show the sums for a benchmark you've chosen. The team picks the benchmark and figure, records why, and has it reviewed." },
+
+  { section: "Walkthroughs and controls", task: "Process notes from meeting notes", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "Goes on file; every step must match what you were told.", more: "Paste your own meeting notes and ask for tidy process notes. Check each line against your notes and delete anything you weren't told." },
+  { section: "Walkthroughs and controls", task: "Process flow from notes", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "AI can add 'typical' steps the client doesn't have, so trace each one.", more: "Ask for a numbered flow using only your notes. Trace every step back to the notes before it goes on file." },
+  { section: "Walkthroughs and controls", task: "Concluding on control design", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Senior", reason: "That is an audit conclusion, and a confident wrong answer would be hard to spot.", more: "AI can list questions to challenge your view. You decide whether the control is well designed, and record why." },
+
+  { section: "Revenue", task: "Pulling invoice details from scanned PDFs", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "Goes on file; every date and amount must be checked to the invoice.", more: "Ask for a table of invoice number, date, customer and amount. Check every row against the PDF." },
+  { section: "Revenue", task: "Flagging unusual sales near the year end", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Senior", reason: "It shapes what gets tested; if it misses something, you probably won't notice.", more: "Agree the criteria with your manager first, record what was asked and found, and still do your normal cut-off testing." },
+  { section: "Revenue", task: "Deciding if revenue is recognised correctly", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "A judgement call: AI can challenge your thinking, but the conclusion must be yours.", more: "Use AI to list points to consider for the contract terms, then reach and record your own view against the standard." },
+
+  { section: "Purchases", task: "Drafting supplier statement requests", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "A template letter; no client data needed, and you check it before sending.", more: "Ask for a short, polite request template with blanks for the supplier and date. Fill the blanks in yourself." },
+  { section: "Purchases", task: "Matching invoices to the ledger", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "Goes on file; every match must be checked to the invoice and ledger.", more: "Ask for a table of matched and unmatched items. Check every match yourself and follow up the unmatched ones." },
+  { section: "Purchases", task: "Searching for unrecorded liabilities", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Senior", reason: "A missed item would be hard to spot and could change the conclusion.", more: "Use it alongside, not instead of, your usual review of payments after the year end, and record what it was asked." },
+
+  { section: "Payroll", task: "Explaining a payroll report layout, using a made-up example", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "For your own understanding, with made-up figures; nothing relies on it.", more: "Type a made-up payslip layout and ask what each column means. Never paste a real report." },
+  { section: "Payroll", task: "Excel formula to recalculate pay for a sample", ratings: { personal: "Medium", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "The recalculation goes on file, so test the formula on a case you've worked out by hand.", more: "Describe the columns without real data and ask for the formula. Test it on one employee you've calculated by hand first." },
+  { section: "Payroll", task: "Analysing employees' pay data", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "It affects named people, and mistakes would be hard to spot.", more: "Treat each flag as a question, not a finding. Check it to payroll records and discuss it with the client before forming any view about a person." },
+
+  { section: "Cash and bank", task: "Drafting a bank confirmation request", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "Wording help only; the request follows the firm's process and you check it.", more: "Ask for a clear covering note with blanks for the bank and accounts. Follow the firm's usual confirmation process." },
+  { section: "Cash and bank", task: "Pulling balances from bank statements", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "Goes on file; every balance must be checked to the statement.", more: "Ask for a table of account, date and closing balance. Check every balance to the statement and the bank confirmation." },
+  { section: "Cash and bank", task: "Spotting old reconciling items", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "NQ2", reason: "Goes on file; check every item it lists, and scan the reconciliation yourself too.", more: "Ask it to list items older than three months with dates. Check each one and read the reconciliation for any it missed." },
+
+  { section: "Related parties", task: "Explaining what counts as a related party", ratings: { personal: "Low", cloud: "Low", local: "Low" }, minLevel: "Trainee (NQ1)", reason: "For your own understanding; check it against the standard before relying on it.", more: "Ask for a plain-English explanation with made-up examples, then check it against the accounting standard." },
+  { section: "Related parties", task: "Finding directors' other companies on Companies House", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "NQ2", reason: "Goes on file; every company and date must be checked to the public record.", more: "Give it the Companies House records you've downloaded. Check every name, role and date, and check none is missing." },
+  { section: "Related parties", task: "Background checks on a director", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "It affects a real person, and wrong information could be hard to spot.", more: "Only with a firm-approved, tested tool and a clear reason. Check every finding to a reliable source before it goes anywhere." },
+
+  { section: "Accounts and disclosures", task: "First pass against the disclosure checklist", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "NQ2", reason: "Goes on file; every answer must be checked to the accounts.", more: "Ask it to mark each item met, not met or not found, quoting the line. Check every answer and look again at any 'met' without a quote." },
+  { section: "Accounts and disclosures", task: "Finding every place a figure appears", ratings: { personal: "Not permitted", cloud: "Medium", local: "Medium" }, minLevel: "Trainee (NQ1)", reason: "Goes on file; check each place it lists, and search the accounts yourself too.", more: "Ask for every page and note where, say, £1,234,000 appears. Check each one and do your own search for any it missed." },
+  { section: "Accounts and disclosures", task: "Drafting the going concern conclusion", ratings: { personal: "Not permitted", cloud: "Significant", local: "Significant" }, minLevel: "Manager", reason: "A key conclusion; a confident wrong answer would be hard to spot.", more: "Management makes the going concern assessment; the team evaluates it. AI may tidy your wording, but the conclusion and evidence are yours." },
+];
+
+// =====================================================================
+// DATA: PITFALLS  (the Spot the mistake game: one wrong sentence each)
+//   wrong = position of the wrong sentence, counting from 0
+// =====================================================================
+const PITFALLS = [
+  { name: "Invented standard paragraph number", task: "AI summary of the firm's revenue testing approach", source: "",
+    sentences: ["The team should test a sample of sales invoices back to delivery notes.", "Sales either side of the year end should be checked for cut-off.", "This testing is required by ISA (UK) 9999, paragraph 412.7(z).", "Any differences found should be recorded and evaluated."], wrong: 2,
+    why: "There is no ISA (UK) 9999: AI copies the pattern of a reference, not the source.", check: "Look up every standard and paragraph reference in the real standard." },
+  { name: "Missed item in the middle of a long document", task: "AI summary of a 12-page office lease",
+    source: "<p>Clause 2: Term of 10 years from 1 March 2024.</p><p>Clause 9: Rent reviewed every 5 years.</p><p>Clause 14: The tenant may end the lease on 1 March 2029 by giving 6 months' notice.</p><p>Clause 22: Rent of £48,000 a year, paid quarterly.</p>",
+    sentences: ["The lease runs for 10 years from 1 March 2024.", "Rent is £48,000 a year, paid quarterly.", "There are no break clauses in the lease.", "Rent is reviewed every five years."], wrong: 2,
+    why: "AI tends to focus on the start and end of long text and can skip the middle (clause 14 is a break clause).", check: "Ask for a clause reference for each point and read the middle sections yourself." },
+  { name: "Arithmetic error in a total", task: "AI total of the year-end accruals list",
+    source: "<table><tr><td>Audit fee</td><td>£12,500</td></tr><tr><td>Electricity</td><td>£3,240</td></tr><tr><td>Staff bonus</td><td>£18,000</td></tr><tr><td>Rent</td><td>£7,760</td></tr></table>",
+    sentences: ["There are four accruals on the list.", "The largest accrual is the staff bonus of £18,000.", "The total of the accruals is £43,500.", "The smallest accrual is electricity at £3,240."], wrong: 2,
+    why: "AI predicts likely words rather than calculating, so a total can look right but be wrong (it's £41,500).", check: "Re-add every total yourself or in a spreadsheet." },
+  { name: "Extra process step not in the notes", task: "AI process flow for purchases, from walkthrough notes",
+    source: "<p>Purchase invoices arrive by email. The accounts assistant enters them on the system. The finance manager approves any payment over £5,000. Payments are made weekly by BACS.</p>",
+    sentences: ["Invoices arrive by email to the accounts inbox.", "The accounts assistant enters each invoice on the system.", "Each invoice is matched to a signed goods received note before entry.", "Payments over £5,000 are approved by the finance manager.", "Payments are made weekly by BACS."], wrong: 2,
+    why: "AI fills gaps with what is typical, so it can add a control the client doesn't have.", check: "Trace every step in the flow back to the walkthrough notes." },
+  { name: "Confident answer to something not in the document", task: "AI answer: 'Do the board minutes mention any legal claims?'",
+    source: "<p>Puddleby Widgets Ltd, board meeting, 14 January: 1. Budget for next year approved. 2. New warehouse lease discussed. 3. Dividend of £20,000 approved.</p>",
+    sentences: ["The minutes record approval of next year's budget.", "A new warehouse lease was discussed.", "A dividend of £20,000 was approved.", "The directors noted a legal claim from a former supplier, expected to settle for about £15,000."], wrong: 3,
+    why: "AI is built to give an answer, so it may invent one instead of saying 'not found'.", check: "Ask it to quote the exact text it relied on, and to say 'not found' if there is none." },
+  { name: "Related party missed because of a slightly different name", task: "AI related party check of the purchase ledger",
+    source: "<p>Directors' interests: Mo Fizzlewick owns 60% of Fizzlewick Holdings Ltd.</p><p>Purchase ledger: Fizzlewick Hldgs Limited £86,000; Acme Paperclips Ltd £4,200; Bramble Office Supplies £2,900.</p>",
+    sentences: ["The purchase ledger was compared with the directors' interests.", "Acme Paperclips Ltd and Bramble Office Supplies have no link to any director.", "No related party suppliers were found.", "The largest supplier was Fizzlewick Hldgs Limited at £86,000."], wrong: 2,
+    why: "AI can treat 'Fizzlewick Hldgs Limited' and 'Fizzlewick Holdings Ltd' as different companies.", check: "Search on the key word in each name (e.g. 'Fizzlewick'), not the full name." },
+  { name: "Out-of-date rule presented as current", task: "AI answer: 'Is the client a small company?' (year starting 1 January 2026)", source: "",
+    sentences: ["The client has turnover of £12 million, a balance sheet total of £6 million and 40 staff.", "A company is small if it meets at least two of the three size tests.", "The current small company limits are turnover of £10.2 million and a balance sheet total of £5.1 million.", "The staff limit is an average of 50 employees."], wrong: 2,
+    why: "AI learns from older material: for years starting on or after 6 April 2025 the limits rose to £15 million and £7.5 million.", check: "Confirm the rule and its start date with a current official source such as gov.uk." },
+  { name: "Client name pasted into a personal chatbot", task: "What a team member did with a client email", source: "",
+    sentences: ["Jamie needed to tidy up a long email about late documents.", "Jamie used the firm's approved AI tool, which keeps data inside the firm.", "For a second opinion, Jamie pasted the full email, including the client name 'Moonbeam Bakeries Ltd', into a free chatbot on a personal phone.", "Jamie checked the final email before sending it."], wrong: 2,
+    why: "A people mistake: a personal chatbot may keep or reuse what's typed, and the firm has no control over it.", check: "Use only firm-approved tools for client work; never put client names into personal accounts." },
+];
+
+// =====================================================================
+// DATA: PROMPT_JOBS  (the Prompt builder)
+// =====================================================================
+const PROMPT_JOBS = [
+  { name: "Summarise a document", instruction: "Summarise the document below in short bullet points, covering every important point." },
+  { name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears." },
+  { name: "Draft a note", instruction: "Draft a short, clear note based only on the document below, in plain UK English." },
+  { name: "Check a list against a checklist", instruction: "Check the list in the document below against the checklist. Mark each checklist item met, not met or not found." },
+];
+const PROMPT_RULES = ["Use only this document. Do not use outside knowledge.",
+                      "Quote the exact line from the document for each point.",
+                      "If it isn't in the document, say \"not found\". Do not guess.",
+                      "At the end, list anything you're unsure about."];
+const PROMPT_RULE_LABELS = ["Use only this document", "Quote the exact line for each point",
+                            "If it isn't in the document, say \"not found\"", "List anything you're unsure about"];
+const BEFORE_YOU_USE = ["Check every quote against the source", "Recheck every number",
+                        "Check names and dates", "Tell your reviewer AI was used"];
+
+// Made-up reports for "Load example data" on the Heat map: [section number, type number, what went wrong]
+const EXAMPLE_REPORTS = [
+  [2, 2, "Invoice total read as £1,850; the PDF says £1,580."], [2, 2, "VAT added twice in the sales schedule."],
+  [2, 2, "Year-end sales total out by £2,000."], [2, 2, "Credit note shown as a sale."], [2, 2, "Wrong invoice date copied from a scan."],
+  [2, 1, "Missed a large sale on 31 March."], [0, 0, "Quoted a standard paragraph that doesn't exist."],
+  [0, 3, "Suggested materiality on the wrong benchmark."], [1, 1, "Process flow left out the approval step."],
+  [1, 0, "Process flow added a control the client doesn't have."], [3, 1, "Missed an unrecorded invoice from April."],
+  [3, 2, "Matched an invoice to the wrong ledger line."], [4, 4, "Payroll file pasted into a personal chatbot."],
+  [4, 2, "Recalculated pay formula ignored overtime."], [5, 1, "Missed a reconciling item from last year."],
+  [5, 2, "Bank balance copied from the wrong month."], [6, 1, "Missed a director's company with a shortened name."],
+  [6, 4, "Director's home address put into a prompt."], [7, 0, "Said a disclosure was met with no quote to support it."],
+  [7, 1, "Missed a note where the figure also appears."],
+];
+
+// =====================================================================
+// APP STATE (what the user has chosen so far, not data)
+// =====================================================================
+let screen = "home";      // which screen is showing
+let sectionNo = 0;        // which section is open (0 to 7)
+let where = "cloud";      // the "Where does the AI run?" switch
+let answers = [];         // checker answers so far (true = yes)
+let level = -1;           // My level choice (-1 = not chosen)
+let gameNo = 0;           // which game card is showing
+let picks = [];           // the sentence picked on each game card (-1 = not yet)
+let heatCell = null;      // the heat map square clicked: [section, type]
+
+// Safety check: warn about a misspelt section, rating or level in TASKS
+TASKS.forEach(function (t) {
+  const r = t.ratings || {};
+  if (!SECTIONS.includes(t.section) || !RATINGS[r.personal] || !RATINGS[r.cloud] || !RATINGS[r.local] || !LEVELS.includes(t.minLevel)) {
+    alert("Check the spelling in this task: " + t.task);
+  }
+});
+
+// =====================================================================
+// HELPERS used by several screens
+// =====================================================================
+function label(rating) {  // a coloured rating label with the word on it
+  return `<span class="label ${RATINGS[rating].css}">${rating}</span>`;
+}
+
+function safe(text) {     // stops typed text being treated as page code
+  return String(text || "").replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+function options(list) {  // turns a list into dropdown options
+  return list.map((item, i) => `<option value="${i}">${item}</option>`).join("");
+}
+
+function switchHtml() {   // the "Where does the AI run?" switch
+  let html = `<fieldset class="switch"><legend>Where does the AI run?</legend>`;
+  for (const key in WHERE) {
+    html += `<label><input type="radio" name="where" value="${key}" ${key === where ? "checked" : ""}
+             onchange="where = this.value; draw()"> ${WHERE[key].name}</label>`;
+  }
+  return html + `</fieldset><p class="small">${WHERE[where].note}</p>`;
+}
+
+// Saved mistake reports (shared by Report a mistake and the Heat map)
+function loadReports() {
+  try { return JSON.parse(localStorage.getItem("auditAiReports")) || []; } catch (e) { return []; }
+}
+function saveReports(list) {
+  try { localStorage.setItem("auditAiReports", JSON.stringify(list)); }
+  catch (e) { alert("Sorry, this browser won't let the page save."); }
+}
+function clearReports() {
+  if (confirm("Delete every saved report? This empties the log and the heat map.")) { saveReports([]); heatCell = null; draw(); }
+}
+function today() {
+  return new Date().toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" });
+}
+
+// =====================================================================
+// NAVIGATION: the top bar, and draw() which shows the current screen
+// =====================================================================
+const NAV = [["home", "Home"], ["tasks", "Check a task"], ["level", "My level"], ["report", "Report a mistake"],
+             ["heat", "Heat map"], ["game", "Spot the mistake"], ["prompt", "Prompt builder"]];
+
+function go(name) { screen = name; draw(); window.scrollTo(0, 0); }
+
+function draw() {
+  document.getElementById("nav").innerHTML = NAV.map(n =>
+    `<button class="${screen === n[0] || (screen === "section" && n[0] === "tasks") ? "on" : ""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("");
+  const screens = { home: homeScreen, tasks: tasksScreen, section: sectionScreen, checker: checkerScreen, level: levelScreen,
+                    report: reportScreen, heat: heatScreen, game: gameScreen, cheat: cheatScreen, prompt: promptScreen };
+  document.getElementById("screen").innerHTML = screens[screen]();
+}
+
+// Arrow keys move between sections (but not while typing in a box)
+document.addEventListener("keydown", function (e) {
+  if (screen !== "section" || ["INPUT", "TEXTAREA", "SELECT"].includes(e.target.tagName)) return;
+  if (e.key === "ArrowRight" && sectionNo < SECTIONS.length - 1) { sectionNo++; draw(); }
+  if (e.key === "ArrowLeft" && sectionNo > 0) { sectionNo--; draw(); }
+});
+
+// =====================================================================
+// SCREEN 1: Home
+// =====================================================================
+function homeScreen() {
+  let key = "";
+  for (const r in RATINGS) key += `<div class="box key">${label(r)}<div>${RATINGS[r].meaning}</div></div>`;
+  return `<h1>Can I use AI for this?</h1>
+    <p class="grey">Tools to help auditors see which uses of AI are fine, which are risky, and what to do about each.</p>
+    <h2>The four ratings</h2>${key}
+    <button class="btn big" onclick="go('tasks')">Start</button>
+    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>
+    <button class="btn big" onclick="go('level')">My level</button>
+    <button class="btn big" onclick="go('report')">Report a mistake</button>
+    <button class="btn big" onclick="go('heat')">Heat map</button>
+    <button class="btn big" onclick="go('game')">Spot the mistake</button>
+    <button class="btn big" onclick="go('prompt')">Prompt builder</button>`;
+}
+
+// =====================================================================
+// SCREEN 2: Check a task (section list), plus the shared search box
+// =====================================================================
+function searchHtml() {
+  return `<p><label for="search"><b>Search all tasks</b></label>
+    <input id="search" type="search" placeholder="e.g. payroll, invoices, bank" autocomplete="off" oninput="search(this.value)"></p>
+    <div id="results"></div>`;
+}
+
+function search(typed) {   // ignores capitals; every word typed must appear in the task or its section
+  const words = typed.toLowerCase().split(/\s+/).filter(w => w);
+  let html = "";
+  TASKS.forEach(function (t, i) {
+    const text = (t.task + " " + t.section).toLowerCase();
+    if (words.length && words.every(w => text.includes(w))) {
+      html += `<button class="list-btn" onclick="openTask(${i})">${t.task}<br><span class="small">${t.section}</span> ${label(t.ratings[where])}</button>`;
+    }
+  });
+  if (words.length && !html) html = `<p class="small">No tasks found. Try a different word.</p>`;
+  document.getElementById("results").innerHTML = html;
+}
+
+function openTask(i) {     // open a search result's section and highlight the task
+  sectionNo = SECTIONS.indexOf(TASKS[i].section);
+  go("section");
+  const card = document.getElementById("task-" + i);
+  card.classList.add("found");
+  card.scrollIntoView({ block: "center" });
+}
+
+function tasksScreen() {
+  let buttons = "";
+  SECTIONS.forEach((name, s) => buttons += `<button class="list-btn" onclick="sectionNo = ${s}; go('section')"><b>${name}</b></button>`);
+  return switchHtml() + searchHtml() + `<h1>Check a task</h1>
+    <p class="warn">Draft ratings for discussion, not firm policy.</p>${buttons}`;
+}
+
+// =====================================================================
+// SCREEN 2b: One section's task cards (Back / Home / Next, arrow keys)
+// =====================================================================
+function sectionScreen() {
+  const name = SECTIONS[sectionNo];
+  let cards = "";
+  TASKS.forEach(function (t, i) {
+    if (t.section !== name) return;
+    const rating = t.ratings[where];
+    // If it's only Not permitted because of the personal account, say so
+    const reason = (rating === "Not permitted" && t.ratings.cloud !== "Not permitted") ? "Client work must stay out of personal AI accounts." : t.reason;
+    cards += `<div class="box" id="task-${i}"><h2>${t.task}</h2>${label(rating)}<p>${reason}</p>
+      <button class="plain" onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden">See more</button>
+      <div class="example" hidden><p><b>Good AI use looks like:</b> ${t.more}</p><p><b>What to do:</b> ${RATINGS[rating].todo}</p></div></div>`;
+  });
+  return switchHtml() + searchHtml() + `<h1>${name}</h1>
+    <p class="warn">Draft ratings for discussion, not firm policy.</p>${cards}
+    <div class="sectionbar">
+      <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('tasks')">Back</button>
+      <button class="btn" onclick="go('home')">Home</button>
+      <span>Section ${sectionNo + 1} of ${SECTIONS.length}</span>
+      <button class="btn" onclick="sectionNo++; draw()" ${sectionNo === SECTIONS.length - 1 ? "disabled" : ""}>Next</button>
+    </div><p class="small">Tip: the left and right arrow keys move between sections.</p>`;
+}
+
+// =====================================================================
+// SCREEN 3: Can I use AI for this? (three yes/no questions)
+// =====================================================================
+function checkerScreen() {
+  if (answers.length < CHECKER_QUESTIONS.length) {
+    return switchHtml() + `<h1>Can I use AI for this?</h1>
+      <p class="grey">Question ${answers.length + 1} of ${CHECKER_QUESTIONS.length}</p>
+      <h2>${CHECKER_QUESTIONS[answers.length]}</h2>
+      <button class="btn big" onclick="answers.push(true); draw()">Yes</button>
+      <button class="btn big" onclick="answers.push(false); draw()">No</button>`;
+  }
+  const [clientData, onFile, couldMatter] = answers;
+  let rating = "Low", reason = "It only helps you think or draft, and nothing relies on it.";
+  if (onFile) { rating = "Medium"; reason = "It goes on file or is relied on, so every item must be checked to source."; }
+  if (couldMatter) { rating = "Significant"; reason = "A mistake could matter and might be missed, so the tool must be approved and tested for this."; }
+  if (where === "personal" && couldMatter) { rating = "Not permitted"; reason = "Risky work needs a firm-approved, tested tool, and a personal account isn't one."; }
+  if (where === "personal" && clientData) { rating = "Not permitted"; reason = "Client or personal data must never go into a personal AI account."; }
+  return switchHtml() + `<h1>Suggested rating</h1>
+    <div class="box">${label(rating)}<p>${reason}</p><p><b>What to do:</b> ${RATINGS[rating].todo}</p>
+    <p class="small">Based on your answers, for: ${WHERE[where].name}.</p></div>
+    <button class="btn" onclick="answers = []; draw()">Start again</button>`;
+}
+
+// =====================================================================
+// SCREEN 4: My level (Go ahead / Do it by hand first / Not yet)
+// =====================================================================
+function levelScreen() {
+  let html = switchHtml() + `<h1>What can I do right now?</h1>
+    <p class="warn">Draft example for discussion, not firm policy.</p><h2>Pick your level</h2>`;
+  LEVELS.forEach((name, n) => html += `<button class="plain ${n === level ? "on" : ""}" onclick="level = ${n}; draw()">${name}</button>`);
+  if (level < 0) return html;
+
+  let goAhead = "", byHand = "", notYet = "";
+  TASKS.forEach(function (t) {
+    const rating = t.ratings[where];
+    const line = `<li>${t.task} ${label(rating)}`;
+    if (rating === "Not permitted") notYet += line + `<br><span class="small">Not permitted with a ${WHERE[where].name.toLowerCase()}.</span></li>`;
+    else if (level < LEVELS.indexOf(t.minLevel)) notYet += line + `<br><span class="small">Needs ${t.minLevel} or above: ask your senior.</span></li>`;
+    else if (level <= HAND_FIRST_UP_TO[rating]) byHand += line + `<br><span class="small">${rating === "Significant"
+        ? "High risk: do it yourself first and get sign-off before using AI." : "Do it yourself first so you can tell when AI gets it wrong."}</span></li>`;
+    else goAhead += line + "</li>";
+  });
+  return html + `<p class="small">Showing ${LEVELS[level]}, for: ${WHERE[where].name}.</p>
+    <div class="box"><h2>Go ahead</h2><ul>${goAhead || "<li>Nothing yet.</li>"}</ul></div>
+    <div class="box"><h2>Do it by hand first</h2><ul>${byHand || "<li>Nothing.</li>"}</ul></div>
+    <div class="box"><h2>Not yet, ask your senior</h2><ul>${notYet || "<li>Nothing.</li>"}</ul></div>`;
+}
+
+// =====================================================================
+// SCREEN 5: Report a mistake (form, then the saved list)
+// =====================================================================
+function reportScreen() {
+  let list = "";
+  loadReports().forEach(r => list += `<div class="box entry"><p class="small">${safe(r.date)} · ${SECTIONS[r.section]} · ${MISTAKE_TYPES[r.type]}</p>
+    <p><b>What went wrong:</b> ${safe(r.wrong)}</p><p><b>How it was caught:</b> ${safe(r.caught)}</p><p><b>What could have happened:</b> ${safe(r.impact)}</p></div>`);
+  return `<h1>Report an AI mistake</h1>
+    <p class="warn">No client names or data. Describe the mistake, not the client.</p>
+    <div class="form">
+      <label for="wrong">What went wrong?</label><textarea id="wrong"></textarea>
+      <label for="caught">How was it caught?</label><textarea id="caught"></textarea>
+      <label for="impact">What could have happened?</label><textarea id="impact"></textarea>
+      <label for="type">Type of mistake</label><select id="type">${options(MISTAKE_TYPES)}</select>
+      <label for="section">Audit section</label><select id="section">${options(SECTIONS)}</select>
+    </div><br>
+    <button class="btn" onclick="saveReport()">Save</button>
+    <h2>Saved reports (newest first)</h2>
+    <button class="plain" onclick="clearReports()">Clear all</button>
+    ${list || "<p>No reports yet.</p>"}`;
+}
+
+function saveReport() {
+  const value = id => document.getElementById(id).value.trim();
+  if (!value("wrong")) { alert("Please say what went wrong."); return; }
+  const list = loadReports();
+  list.unshift({ date: today(), section: Number(value("section")), type: Number(value("type")),
+                 wrong: value("wrong"), caught: value("caught"), impact: value("impact") });  // newest first
+  saveReports(list);
+  draw();
+}
+
+// =====================================================================
+// SCREEN 6: Heat map (sections down the side, mistake types across the top)
+// =====================================================================
+function heatScreen() {
+  const reports = loadReports();
+  // Count the reports in each square
+  const counts = SECTIONS.map(() => MISTAKE_TYPES.map(() => 0));
+  reports.forEach(r => counts[r.section][r.type]++);
+  let max = 0, top = "";
+  counts.forEach((row, s) => row.forEach((n, t) => { if (n > max) { max = n; top = SECTIONS[s] + " / " + MISTAKE_TYPES[t]; } }));
+
+  let table = `<tr><th>Section</th>${MISTAKE_TYPES.map(t => `<th>${t}</th>`).join("")}</tr>`;
+  counts.forEach(function (row, s) {
+    table += `<tr><th scope="row">${SECTIONS[s]}</th>`;
+    row.forEach(function (n, t) {
+      const shade = max ? n / max : 0;   // 0 = white, 1 = darkest blue
+      table += `<td class="cell" onclick="heatCell = [${s}, ${t}]; draw()" title="${SECTIONS[s]} / ${MISTAKE_TYPES[t]}"
+                style="background: rgba(31, 78, 121, ${shade}); color: ${shade > 0.5 ? "#fff" : "#1a1a1a"}">${n}</td>`;
+    });
+    table += "</tr>";
+  });
+
+  let picked = "";
+  if (heatCell) {
+    const matches = reports.filter(r => r.section === heatCell[0] && r.type === heatCell[1]);
+    picked = `<h2>${SECTIONS[heatCell[0]]} / ${MISTAKE_TYPES[heatCell[1]]}</h2>` + (matches.map(r =>
+      `<div class="box entry"><p class="small">${safe(r.date)}</p><p>${safe(r.wrong)}</p></div>`).join("") || "<p>No reports in this square.</p>");
+  }
+  return `<h1>Heat map</h1>
+    <p class="grey">Where AI mistakes have been reported. Darker blue means more reports. Click a square to see them.</p>
+    <button class="btn" onclick="loadExamples()">Load example data</button>
+    <button class="plain" onclick="clearReports()">Clear</button>
+    <div class="scroll"><table class="heat">${table}</table></div>
+    <p><b>${max ? "Most reports: " + top : "No reports yet."}</b></p>
+    <p class="small">Uses the same saved reports as Report a mistake.</p>${picked}`;
+}
+
+function loadExamples() {   // adds the made-up reports to the same saved list
+  const list = loadReports();
+  EXAMPLE_REPORTS.forEach(e => list.push({ date: today() + " (example)", section: e[0], type: e[1], wrong: e[2], caught: "Made-up example", impact: "Made-up example" }));
+  saveReports(list);
+  draw();
+}
+
+// =====================================================================
+// SCREEN 7: Spot the mistake (one card at a time, then the cheat sheet)
+// =====================================================================
+function gameScreen() {
+  if (picks.length !== PITFALLS.length) picks = PITFALLS.map(() => -1);
+  const p = PITFALLS[gameNo], pick = picks[gameNo], score = picks.filter((x, i) => x === PITFALLS[i].wrong).length;
+  let html = `<h1>Spot the AI mistake</h1>
+    <p class="grey">One sentence in each piece of made-up AI output is wrong. Click it.</p>
+    <p><b>Card ${gameNo + 1} of ${PITFALLS.length}</b> · ${score} of ${PITFALLS.length} spotted</p>
+    <h2>${p.task}</h2>${p.source ? `<div class="source"><p class="small">Source (made-up):</p>${p.source}</div>` : ""}`;
+  p.sentences.forEach(function (s, i) {
+    const style = pick >= 0 && i === p.wrong ? "wrong" : (i === pick ? "picked" : "");
+    html += `<button class="sentence ${style}" onclick="if (picks[gameNo] < 0) { picks[gameNo] = ${i}; draw(); }">${s}</button>`;
+  });
+  if (pick >= 0) {
+    html += `<div class="box"><p><b>${pick === p.wrong ? "Well spotted!" : "Not quite: the wrong sentence is outlined in red."}</b></p>
+      <p><b>Pitfall:</b> ${p.name}</p><p><b>Why AI does this:</b> ${p.why}</p><p><b>Check that catches it:</b> ${p.check}</p></div>`;
+  }
+  const last = gameNo === PITFALLS.length - 1;
+  return html + `<button class="btn" onclick="gameNo--; draw()" ${gameNo === 0 ? "disabled" : ""}>Back</button>
+    <button class="btn" onclick="${last ? "go('cheat')" : "gameNo++; draw()"}">${last ? "See cheat sheet" : "Next"}</button>
+    <p class="small">Training demo: made-up examples, no client data.</p>`;
+}
+
+function cheatScreen() {
+  const score = picks.filter((x, i) => x === PITFALLS[i].wrong).length;
+  return `<h1>AI pitfalls cheat sheet</h1><p>You spotted ${score} of ${PITFALLS.length}.</p>
+    <ol>${PITFALLS.map(p => `<li><b>${p.name}</b><br>Check: ${p.check}</li>`).join("")}</ol>
+    <div class="noprint"><button class="btn" onclick="window.print()">Print</button>
+    <button class="plain" onclick="picks = []; gameNo = 0; go('game')">Play again</button></div>
+    <p class="small">Training demo: made-up examples, no client data.</p>`;
+}
+
+// =====================================================================
+// SCREEN 8: Prompt builder
+// =====================================================================
+function promptScreen() {
+  return `<h1>Safe prompt builder</h1>
+    <p class="grey">Builds a careful prompt that keeps the AI to your document.</p>
+    <label for="job"><b>What's the job?</b></label><select id="job">${options(PROMPT_JOBS.map(j => j.name))}</select>
+    <p class="warn">Remove client names first. Only paste what your firm's policy allows in this tool.</p>
+    <label for="source"><b>Paste the source text</b></label><textarea id="source" style="min-height: 160px"></textarea>
+    ${PROMPT_RULE_LABELS.map((r, i) => `<p><label><input type="checkbox" id="rule${i}" checked> ${r}</label></p>`).join("")}
+    <button class="btn" onclick="buildPrompt()">Build my prompt</button>
+    <div id="built" hidden>
+      <h2>Your prompt</h2><textarea id="promptOut" readonly></textarea>
+      <button class="btn" onclick="copyPrompt()">Copy</button> <span id="copyMsg" class="small"></span>
+      <h2>Before you use the answer</h2>
+      ${BEFORE_YOU_USE.map(c => `<p><label><input type="checkbox"> ${c}</label></p>`).join("")}
+    </div>`;
+}
+
+function buildPrompt() {
+  const job = PROMPT_JOBS[document.getElementById("job").value];
+  const text = document.getElementById("source").value.trim() || "[paste your document here]";
+  const rules = PROMPT_RULES.filter((r, i) => document.getElementById("rule" + i).checked);
+  let prompt = job.instruction + "\n\n";
+  if (rules.length) prompt += "Rules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n";
+  prompt += "--- DOCUMENT START ---\n" + text + "\n--- DOCUMENT END ---";
+  document.getElementById("promptOut").value = prompt;
+  document.getElementById("copyMsg").textContent = "";
+  document.getElementById("built").hidden = false;
+}
+
+async function copyPrompt() {
+  const box = document.getElementById("promptOut"), msg = document.getElementById("copyMsg");
+  try {
+    await navigator.clipboard.writeText(box.value);
+    msg.textContent = "Copied.";
+  } catch (e) {
+    box.select();   // copying failed, so select the text for the user to copy by hand
+    msg.textContent = "Press Ctrl+C (or Cmd+C on a Mac) to copy.";
+  }
+}
+
+draw();  // show the Home screen
+</script>
+</body>
+</html>
