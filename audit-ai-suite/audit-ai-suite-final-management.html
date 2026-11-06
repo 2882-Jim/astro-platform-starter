@@ -155,104 +155,78 @@
   @media print { .bar .fill, .bar .track, .tile, .exampleline { print-color-adjust: exact; -webkit-print-color-adjust: exact; } }   /* bars keep their colour on paper */
   /* ===== MANAGEMENT CSS END ===== */
   /* ===== FINAL MANAGEMENT DASHBOARD: its own extra styles ===== */
-  /* Chart panels: calm dark navy, soft bright accents (3Blue1Brown-style). Text on them is at least 4.5:1. */
-  body.mgmt { --navy: #0f1b2d; --navy2: #1b2b44; --ink: #eef2f8; --soft: #aebbd0; --blue: #58c4dd; --gold: #f4d35e; --coral: #fc8a7a; --green: #8fd18a; }
-  .viz { background: var(--navy); color: var(--ink); border-radius: 14px; padding: 16px; margin: 14px 0 18px; border: 0; }
-  .viz figcaption, .viz h2 { font-weight: bold; font-size: 19px; margin: 0 0 10px; color: var(--ink); }
-  .viz .small, .viz p.small { color: var(--soft); }
-  .viz .take { margin: 10px 0 4px; font-size: 17px; }
-  .viz .take b { color: var(--gold); }
-  .viz .chart { display: block; max-width: 100%; height: auto; overflow: visible; }
-  .chart text { fill: var(--ink); font-family: Arial, sans-serif; }
-  .chart .lab { font-size: 15px; } .chart .val { font-size: 15px; font-weight: bold; } .chart .tick { font-size: 13px; fill: var(--soft); }
-  .chart .tick.hi { fill: var(--gold); font-weight: bold; } .chart .cum-lab { fill: var(--gold); font-size: 15px; font-weight: bold; }
-  .chart .grid { stroke: #2c3e5c; stroke-width: 1; } .chart .axis { stroke: #5b6f8f; stroke-width: 1.5; }
-  .chart .track { fill: var(--navy2); } .chart .bar { fill: var(--blue); }
-  .chart .cum { fill: none; stroke: var(--gold); stroke-width: 2.5; } .chart .cum-dot { fill: var(--gold); stroke: var(--navy); stroke-width: 2; }
-  .chart .line { fill: none; stroke: var(--blue); stroke-width: 3; stroke-linecap: round; } .chart .area { fill: rgba(88, 196, 221, 0.16); }
-  .chart .shade { fill: rgba(244, 211, 94, 0.09); }
-  .chart .dot { fill: var(--blue); stroke: var(--navy); stroke-width: 2; } .chart .dot.hot { fill: var(--coral); }
-  .chart .dot.good { fill: var(--green); } .chart .dot.mid { fill: var(--gold); } .chart .dot.old { fill: var(--coral); }
-  .chart .hit { fill: transparent; } .chart .stem { stroke: #6f88ad; stroke-width: 2.5; stroke-linecap: round; }
-  .chart .zone.good { fill: rgba(143, 209, 138, 0.13); } .chart .zone.mid { fill: rgba(244, 211, 94, 0.10); } .chart .zone.old { fill: rgba(252, 138, 122, 0.10); }
-  .chart .slope { stroke: var(--blue); stroke-width: 3.5; stroke-linecap: round; } .chart .slope.up { stroke: var(--coral); }
-  .chart .pie-back { fill: var(--navy2); stroke: #5b6f8f; stroke-width: 1.5; } .chart .pie { fill: var(--blue); }
-  .legend { display: block; font-size: 14px; color: var(--soft); margin-top: 4px; }
-  .legend i { display: inline-block; vertical-align: middle; margin: 0 4px 0 10px; }
-  .legend i:first-child { margin-left: 0; }
-  .key-bar { width: 18px; height: 10px; border-radius: 3px; background: var(--blue); }
-  .key-line { width: 18px; height: 3px; background: var(--gold); }
+  /* Plain report style: white page, thin grey lines, one purple for the bars. No animation. */
+  body.mgmt { --panel: #f5f5f5; }
+  body.mgmt .wrap { max-width: 1120px; }
 
-  /* "Show the maths": a quiet fold-out under each chart */
-  .maths { margin-top: 8px; border-top: 1px solid #2c3e5c; }
-  .maths summary { min-height: 44px; display: flex; align-items: center; cursor: pointer; color: var(--gold); font-size: 16px; font-weight: bold; }
-  .maths summary:focus-visible, .viz button:focus-visible { outline: 3px solid var(--gold); outline-offset: 2px; }
-  .maths .sum { padding: 4px 0 6px; }
-  .maths .eq { display: block; font-family: Georgia, "Times New Roman", serif; font-size: 17px; padding: 3px 0; color: var(--ink); }
+  /* The row of slicers */
+  .slicers { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 8px 12px; background: var(--panel);
+             border: 1px solid var(--line); border-radius: 4px; padding: 10px 12px; margin: 8px 0 4px; }
+  .slicer label { display: block; font-size: 14px; font-weight: bold; color: #333; }
+  .slicer select { background: #fff; font-size: 16px; }
+  .filterline { font-size: 15px; margin: 4px 0 10px; }
+  .filterline .link { min-height: 44px; }
+  .scope { font-size: 16px; border-left: 4px solid var(--theme); padding: 4px 10px; margin: 8px 0 12px; }
 
-  /* Overview: the story of four big numbers, and the Start here rings */
-  .story { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 14px; }
-  .story-item { display: flex; flex-direction: column; border-left: 3px solid var(--blue); padding: 2px 0 2px 12px; }
-  .story-item:nth-child(2) { border-color: var(--gold); } .story-item:nth-child(3) { border-color: var(--green); } .story-item:nth-child(4) { border-color: var(--coral); }
-  .bignum { font-size: 44px; line-height: 1.1; font-variant-numeric: tabular-nums; }
-  .bignum.words { font-size: 22px; padding: 10px 0 6px; }
-  .story .lbl { font-weight: bold; } .story .sub { font-size: 15px; color: var(--soft); }
-  .rings { display: grid; grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)); gap: 12px 10px; }
-  .ring { display: flex; flex-direction: column; align-items: center; text-align: center; font-size: 15px; }
-  .ring svg text { fill: var(--ink); font-size: 19px; font-weight: bold; }
-  .ring-back { fill: none; stroke: var(--navy2); stroke-width: 9; }
-  .ring-arc { fill: none; stroke: var(--blue); stroke-width: 9; stroke-linecap: round; }
-  .ring-n { font-weight: bold; color: var(--ink); }
+  /* KPI cards */
+  .kpis { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 10px; margin-bottom: 8px; }
+  .kpi { border: 1px solid var(--line); border-radius: 4px; padding: 10px 14px; background: #fff; }
+  .kpi .kt { display: block; font-size: 15px; color: #333; }
+  .kpi b { display: block; font-size: 32px; line-height: 1.2; margin: 2px 0; }
+  .kpi b.words { font-size: 20px; }
+  .kpi .ks { display: block; font-size: 14px; color: var(--muted); }
+  .suggests li { margin-bottom: 6px; }
 
-  /* Heat map on the dark panel: one blue, dark to bright (numbers always readable) */
-  .viz table.grid { color: var(--ink); }
-  .viz .grid th, .viz .grid td { border-color: #2c3e5c; }
-  .viz .grid caption { color: var(--soft); }
-  body.mgmt .viz .h0 { background: #142338; } body.mgmt .viz .h1 { background: #1b3a57; } body.mgmt .viz .h2 { background: #1f5478; } body.mgmt .viz .h3 { background: #236b94; }
-  body.mgmt .viz .h4 { background: #58c4dd; }
-  .viz button.cell { color: #fff; } .viz .h0 button.cell { color: #8193ad; } .viz .h4 button.cell { color: #0f1b2d; }
-  .viz button.cell:focus-visible { outline: 3px solid var(--gold); outline-offset: -3px; }
+  /* Visuals: plain boxes with a title, side by side when there's room */
+  .charts { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 12px; margin: 12px 0 6px; }
+  .visual { border: 1px solid var(--line); border-radius: 4px; padding: 10px 14px; background: #fff; min-width: 0; }
+  .visual h2 { font-size: 17px; margin: 0 0 6px; }
+  .visual .small { margin: 0 0 4px; }
+  .charts.four { grid-template-columns: repeat(auto-fit, minmax(420px, 1fr)); }
+  @media (max-width: 520px) { .charts, .charts.four { grid-template-columns: 1fr; } .visual { padding: 8px 10px; } .maps button.cell { min-width: 44px; } .kpi b { font-size: 26px; } }
 
-  /* Learning */
-  .never { margin: 4px 0 0; color: var(--soft); }
-  .never b { color: var(--ink); }
-  .flags li.flag-on { border-left: 4px solid #c62828; padding-left: 8px; }
-  .rules { font-size: 15px; }
-  .rrow { display: grid; grid-template-columns: 1fr repeat(3, 64px); align-items: center; gap: 4px; padding: 3px 0; border-bottom: 1px solid #1e2f4a; }
-  .rhead { font-size: 13px; color: var(--soft); align-items: end; line-height: 1.2; }
-  .rhead span:not(:first-child), .rrow > span:not(:first-child) { text-align: center; }
-  .rsec { padding: 10px 0 2px; color: var(--gold); font-weight: bold; }
-  .rdot { display: inline-flex; width: 26px; height: 26px; border-radius: 50%; align-items: center; justify-content: center;
-          font-style: normal; font-weight: bold; font-size: 13px; color: #fff; box-shadow: 0 0 0 2px var(--navy), 0 0 0 3px #8193ad; }
-  .rdot.medium { color: #1a1a1a; }
-  .rkey { display: flex; flex-wrap: wrap; gap: 6px 16px; margin: 0 0 6px; font-size: 15px; }
-  .rkey span { display: inline-flex; align-items: center; gap: 6px; }
-  @media (max-width: 480px) { .rrow { grid-template-columns: 1fr repeat(3, 44px); } }
+  /* Bars: each is a button; the number sits after the bar */
+  .pbars { margin: 2px 0; }
+  .pbar { display: grid; grid-template-columns: minmax(96px, 38%) 1fr 5.8em; gap: 8px; align-items: center; width: 100%;
+          background: #fff; border: 1px solid transparent; border-radius: 3px; padding: 2px 4px; text-align: left; color: var(--text); font-size: 15px; }
+  .pbar:hover { background: var(--tint); }
+  .pbar[aria-pressed="true"] { border: 2px solid var(--theme); background: var(--tint); font-weight: bold; }
+  .pbar .pt { display: block; height: 18px; background: #ececec; }
+  .pbar .pf { display: block; height: 100%; background: var(--theme); }
+  .pbar .pn { min-width: 3.2em; text-align: right; font-variant-numeric: tabular-nums; }
+  @media (max-width: 480px) { .pbar { grid-template-columns: 1fr auto; } .pbar .pt { grid-column: 1 / -1; grid-row: 2; } }
 
-  /* Pilots: one panel each, side by side on a wide screen */
-  .pilots { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 0 14px; }
-  .pilot { margin: 8px 0; }
-  .pilot h2 { margin-top: 0; }
-  .pilot p { margin: 6px 0; }
-  .howto { border-left: 5px solid var(--theme); background: var(--tint); }
-  .howto ol { padding-left: 22px; margin: 6px 0; }
-  .btn.big { display: inline-block; }
+  /* Heat maps side by side */
+  .maps { display: grid; grid-template-columns: repeat(auto-fit, minmax(460px, 1fr)); gap: 12px; margin: 8px 0; }
+  @media (max-width: 520px) { .maps { grid-template-columns: 1fr; } }
+  .maps .grid { width: 100%; }
+  .maps button.cell { min-width: 52px; }
+  .most { margin: 4px 0 0; font-size: 15px; }
 
-  /* Build-ups: they play once when a tab opens (#screen gets "play"), and never when motion is turned down */
-  .play .gx { transform-box: fill-box; transform-origin: left center; animation: growx 0.9s cubic-bezier(.2, .7, .2, 1) both; }
-  .play .pop { transform-box: fill-box; transform-origin: center; animation: pop 0.5s ease-out both; }
-  .play .fade, .play .story-item { animation: fade 0.9s ease-out both; }
-  .play .ring-arc { animation: ring 1.1s cubic-bezier(.2, .7, .2, 1) both; }
-  .play .cellwrap { animation: fade 0.8s ease-out both; }
-  .play .draw { stroke-dasharray: 1000; stroke-dashoffset: 0; animation: drawlong 1.2s ease-in-out both; }
-  @keyframes growx { from { transform: scaleX(0); } }
-  @keyframes drawlong { from { stroke-dashoffset: 1000; } }
-  @keyframes pop { from { transform: scale(0); opacity: 0; } }
-  @keyframes fade { from { opacity: 0; transform: translateY(6px); } }
-  @keyframes ring { from { stroke-dasharray: 0 100; } }
-  @media (prefers-reduced-motion: reduce) { .play * { animation: none !important; } }
-  @media print { .viz, .viz * { print-color-adjust: exact; -webkit-print-color-adjust: exact; } .maths:not([open]) { display: none; } }
-  @media (max-width: 480px) { .bignum { font-size: 34px; } }
+  /* The reports table: scrolls inside its box, headings stay in view */
+  .tablebox { max-height: 560px; overflow: auto; border: 1px solid var(--line); margin: 6px 0 12px; }
+  .rtable { margin: 0; width: 100%; }
+  .rtable caption { padding: 6px 8px; }
+  #groupName { max-width: 420px; }
+  .rtable thead th { position: sticky; top: 0; background: var(--panel); z-index: 1; padding: 0; }
+  .rtable td { font-size: 15px; }
+  .rtable td:last-child { min-width: 220px; }
+  button.sort { width: 100%; background: none; border: 0; text-align: left; font-weight: bold; padding: 6px 8px; color: var(--text); white-space: nowrap; }
+  .grid th { background: var(--panel); }
+  details { border-top: 1px solid var(--line); margin-top: 8px; }
+  details > summary { font-weight: bold; }
+  .flags li { margin-bottom: 4px; }
+
+  /* This week */
+  .weekpick select { max-width: 360px; }
+  .task { display: grid; grid-template-columns: auto 1fr 190px; gap: 6px 12px; align-items: start; border-bottom: 1px solid var(--line); padding: 8px 0; }
+  .task > input[type=checkbox] { width: 26px; height: 26px; margin: 9px 0 0; }
+  .task .taskbody .small { display: block; }
+  .task .taskfor label { display: block; }
+  .task textarea { min-height: 44px; resize: vertical; field-sizing: content; }   /* grows to fit its words */
+  .task.off textarea { color: var(--muted); text-decoration: line-through; }
+  @media (max-width: 600px) { .task { grid-template-columns: auto 1fr; } .task .taskfor { grid-column: 2; } }
+  @media print { .slicers, .filterline { display: none; } }
 </style>
 </head>
 <body class="mgmt">
@@ -850,7 +824,13 @@ function makeExport(madeWith) {    // madeWith = "basic" or "final"
     out.notes = loadList("notes").map(cleanNote).filter(Boolean);
     out.pilots = loadList("pilots").map(cleanPilot).filter(Boolean);
   }
+  const team = cleanTeam(load("team", ""));
+  if (team) out.team = team;       // optional: a team or office, never a name
   return out;
+}
+
+function cleanTeam(t) {           // "Team or office": plain text, up to 60 characters
+  return cut(typeof t === "string" ? t.replace(/[\u0000-\u001f]/g, " ") : "", 60);
 }
 
 function cleanNote(n) {            // an AI use note: reviewer role only, never a name
@@ -893,13 +873,28 @@ function normaliseExport(obj) {    // check a loaded file; bad parts are skipped
     exportedAt: typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]{5,12}Z$/.test(obj.exportedAt) ? obj.exportedAt : "", level: LEVELS.includes(obj.level) ? obj.level : "",
     reports, steps, picks: validPicks(obj.game && obj.game.picks),
     settingsCopiedOn: isISO(obj.settingsCopiedOn) ? obj.settingsCopiedOn : ("settingsCopiedOn" in obj ? "" : null),
-    notes, pilots } };
+    notes, pilots, team: cleanTeam(obj.team), group: "" } };
 }
 
-function readExport(text) {        // text from a file -> checked person (or a plain-English problem)
+function readExport(text) {        // text from a file -> checked people (or a plain-English problem)
   if (typeof text !== "string" || text.length > 1000000) return { ok: false, problem: "This file is too big to be from this app." };
-  try { return normaliseExport(JSON.parse(text)); }
+  let obj;
+  try { obj = JSON.parse(text); }
   catch (e) { return { ok: false, problem: "This file couldn't be read. Is it the file from 'Send to my manager'?" }; }
+  if (!obj || typeof obj !== "object" || obj.kind !== "group") {   // one person's file
+    const r = normaliseExport(obj);
+    if (r.ok) r.people = [r.person];
+    return r;
+  }
+  // A group file: { app, version, kind: "group", name, people: [one person's file, ...] }. Each person is checked on their own.
+  if (obj.app !== EXPORT_APP) return { ok: false, problem: "This file wasn't made by this app." };
+  const name = cleanTeam(obj.name) || "Unnamed group";
+  if (!Array.isArray(obj.people)) return { ok: false, problem: "This group file has no people in it." };
+  const checked = obj.people.slice(0, 500).map(normaliseExport), list = checked.filter(r => r.ok).map(r => r.person);
+  if (!list.length) return { ok: false, problem: "None of the people in this group file could be read." };
+  list.forEach(p => { p.group = name; });
+  return { ok: true, group: name, people: list, newer: obj.version > EXPORT_VERSION || checked.some(r => r.newer),
+           skipped: checked.reduce((n, r) => n + (r.ok ? r.skipped : 1), 0) + Math.max(0, obj.people.length - 500) };
 }
 
 function mergePeople(people) {     // one entry per person: each part comes from their latest file that has it
@@ -913,7 +908,8 @@ function mergePeople(people) {     // one entry per person: each part comes from
     return { anonId: files[0].anonId, madeWith: files.some(f => f.madeWith === "final") ? "final" : "basic",
              exportedOn: files[files.length - 1].exportedOn, level: latest("level") || "", reports,
              steps: latest("steps"), picks: latest("picks"), settingsCopiedOn: latest("settingsCopiedOn"),
-             notes: latest("notes"), pilots: latest("pilots"), files: files.length };
+             notes: latest("notes"), pilots: latest("pilots"), team: latest("team") || "", group: latest("group") || "",
+             source: latest("source") || "", files: files.length };
   });
 }
 
@@ -1036,6 +1032,7 @@ function checkData() {
 // ---------- What's loaded and what the user has picked (in memory only, never saved) ----------
 let loaded = [];            // every file that passed the checks
 let people = [];            // the same files merged: one entry per person
+let fromFiles = [];         // each file loaded: [name, true if it's a group file]
 let isExample = false;      // true while the made-up example team is showing
 let tab = "overview";       // which tab is showing
 let square = null;          // the heat map square picked: [section, type]
@@ -1120,9 +1117,9 @@ function trendText(t) {     // the last 4 weeks against the 4 before (needs 10 o
 }
 const CAVEAT = "More reports can mean more AI use or better checking, not just more mistakes.";
 
-function levelGroups() {    // people per level. A level with under 3 people joins the level next to it, so no small group
-                            // can be singled out (not even by subtracting the others from the total)
-  const groups = LEVELS.concat("").map(l => ({ names: [l || "level not set"], list: people.filter(p => p.level === l) })).filter(g => g.list.length);
+function levelGroups(from) {   // people per level (of everyone, or of the list given). A level with under 3 people joins the level
+                               // next to it, so no small group can be singled out (not even by subtracting the others from the total)
+  const groups = LEVELS.concat("").map(l => ({ names: [l || "level not set"], list: (from || people).filter(p => p.level === l) })).filter(g => g.list.length);
   const bands = [];
   groups.forEach(g => {
     const last = bands[bands.length - 1];
@@ -1152,12 +1149,17 @@ async function loadFiles(fileList) {
 }
 
 function addFiles(items) {  // keeps the files that passed the checks and says what happened to each
-  if (isExample && items.some(x => x[1].ok)) { loaded = []; people = []; isExample = false; }   // never mix the example team with real files
-  const before = loaded.length - people.length, c = { added: 0, skipped: [], newer: 0, leftOut: 0 };
+  if (isExample && items.some(x => x[1].ok)) { loaded = []; people = []; fromFiles = []; isExample = false; }   // never mix the example team with real files
+  const before = loaded.length - people.length, c = { added: 0, skipped: [], newer: 0, leftOut: 0, groups: [] };
+  const plain = x => JSON.stringify(Object.assign({}, x, { source: undefined }));   // a person's data, wherever it was loaded from
   items.forEach(([name, r]) => {
     if (!r.ok) return c.skipped.push([name, r.problem]);
-    if (loaded.some(f => JSON.stringify(f) === JSON.stringify(r.person))) return c.skipped.push([name, "This file is already loaded."]);
-    loaded.push(r.person); c.added++; c.newer += r.newer ? 1 : 0; c.leftOut += r.skipped;
+    const fresh = r.people.filter(p => !loaded.some(f => plain(f) === plain(p)));
+    if (!fresh.length) return c.skipped.push([name, r.group ? "This group file is already loaded." : "This file is already loaded."]);
+    fresh.forEach(p => { p.source = r.group || name; loaded.push(p); });   // a group's people are tagged with the group's name
+    fromFiles.push([r.group || name, !!r.group]);
+    if (r.group) c.groups.push([r.group, fresh.length]);
+    c.added++; c.newer += r.newer ? 1 : 0; c.leftOut += r.skipped;
   });
   people = mergePeople(loaded);
   c.replaced = loaded.length - people.length - before;   // someone's second file: their newest parts are used
@@ -1166,7 +1168,7 @@ function addFiles(items) {  // keeps the files that passed the checks and says w
 }
 
 function filesMessage(c) {  // e.g. "3 files loaded; 1 older file replaced; 1 file skipped (x.txt): ..."
-  const parts = [plural(c.added, "file") + " loaded"];
+  const parts = [plural(c.added, "file") + " loaded" + (c.groups.length ? " (" + c.groups.map(g => safe(g[0]) + ": a group of " + plural(g[1], "person", "people")).join("; ") + ")" : "")];
   if (c.replaced) parts.push(plural(c.replaced, "older file") + " replaced");
   if (c.skipped.length === 1) parts.push(`1 file skipped (${safe(c.skipped[0][0])}): ${c.skipped[0][1]}`);
   if (c.skipped.length > 1) parts.push(plural(c.skipped.length, "file") + " skipped:");
@@ -1191,7 +1193,8 @@ function loadPasted() {     // the fallback: text pasted from a file
 }
 
 function loadExample() {    // the made-up team replaces anything loaded
-  loaded = exampleTeam(); people = mergePeople(loaded); isExample = true; square = null; confirming = false;
+  loaded = exampleTeam().map(p => Object.assign(p, { group: "Example team", source: "Example team" }));
+  people = mergePeople(loaded); fromFiles = [["Example team", true]]; isExample = true; square = null; confirming = false;
   results = "";
   draw("Showing the made-up example team.");
 }
@@ -1215,7 +1218,7 @@ function loadThisBrowser() {   // what the staff app saved in this same browser,
 
 function askClear() { confirming = true; draw(); document.getElementById("confirmNo").focus(); }
 function clearLoaded() {
-  loaded = []; people = []; isExample = false; square = null; confirming = false;
+  loaded = []; people = []; fromFiles = []; isExample = false; square = null; confirming = false;
   results = "<p>Loaded data removed from this page. Your files haven't changed.</p>";
   draw(results);
   document.getElementById("fileInput").focus();
@@ -1306,14 +1309,16 @@ function pickCell(s, t) {   // pick a heat map square: its reports show under th
 // =====================================================================
 function dataScreen() {
   const files = people.reduce((n, p) => n + p.files, 0), sizes = plural(people.length, "person", "people") + ", " + plural(allReports().length, "report");
+  const groups = fromFiles.filter(f => f[1]).length, singles = fromFiles.length - groups;
+  const from = groups ? plural(groups, "group file") + (singles ? " and " + plural(singles, "file") : "") : plural(files, "file");
   const now = !people.length ? "<b>No data loaded yet.</b>" : isExample ? `<b>Showing the made-up example team: ${sizes}.</b> Loading staff files will replace it.`
-    : `<b>Loaded: ${sizes}</b> (from ${plural(files, "file")}).`;
+    : `<b>Loaded: ${sizes}</b> (from ${from}).`;
   return `<h1>Data</h1>
-    <p class="grey">Load the files staff save with 'Send to my manager'. The app adds no names to the files.
+    <p class="grey">Load the files staff save with 'Send to my manager', or a group file (several people in one file). The app adds no names to the files.
       Nothing you load is saved: it stays on this page until you close it.</p>
     <p class="box" id="loadedNow">${now}</p>
     <h2>Load staff files</h2>
-    <label class="lab" for="fileInput">Choose one or more files (or drag them onto the box)</label>
+    <label class="lab" for="fileInput">Choose one or more files, or group files (or drag them onto the box)</label>
     <input type="file" id="fileInput" multiple accept=".json,application/json,.txt,text/plain" onchange="loadFiles(this.files)">
     <details id="pasteBox"${panels.paste ? " open" : ""} ontoggle="panels.paste = this.open"><summary>Can't load files? Paste a file's text</summary>
       <div class="field"><label for="pasteText">Open the file in a text editor (such as Notepad), copy all of it, and paste it here</label>
@@ -1339,408 +1344,461 @@ function dataScreen() {
 // ===== MANAGEMENT CORE END =====
 
 // =====================================================================
-// FINAL MANAGEMENT DASHBOARD: 5 tabs (Overview, Mistakes, Learning, Pilots, Data).
+// FINAL MANAGEMENT DASHBOARD: plain and simple, like a Power BI report.
+//   A row of slicers at the top (Group or file, Level, Section, Mistake type, Dates) filters every figure.
+//   Clicking a bar or a heat map square drills into a table of the matching reports.
+//   5 tabs: Overview · Heat maps · Drill-down · This week · Data
 // Loading, merging and the small-number rules are in MANAGEMENT CORE above.
-// This file draws the final-only charts: calm dark panels, drawn with inline SVG,
-// that build up gently when a tab opens (not when motion is turned down), each
-// with a one-line takeaway and a "Show the maths" fold-out.
 // =====================================================================
 
 // The tabs: [id, name, the function that draws it]
-const TABS = [["overview", "Overview", storyScreen], ["mistakes", "Mistakes", mistakesFinal], ["learning", "Learning", learningScreen],
-  ["pilots", "Pilots", pilotsScreen], ["data", "Data", dataFinal]];
+const TABS = [["overview", "Overview", overviewFinal], ["heat", "Heat maps", heatMaps], ["drill", "Drill-down", drillScreen],
+  ["week", "This week", weekScreen], ["data", "Data", dataFinal]];
 
-// Small lookups for AI use notes
+// ---------- What the manager has picked (in memory only, never saved) ----------
+const ALL_SLICE = { group: "", level: "", section: "", type: "", range: "", team: "" };
+let slice = Object.assign({}, ALL_SLICE);   // "" = all; otherwise the name picked
+let sortBy = { key: "month", dir: -1 };     // the drill-down table's sort: newest first
+let pick = null;            // the heat map square picked: { map: "sel" or "all", s, t }
+let week = null;            // This week's tasks: [{ on, text, level, why }], made from the data the first time the tab opens
+let weekStart = 0;          // 0 = this week, 1 = next week
+let weekMsg = "", groupMsg = "";
+let slicedFor = -1;         // how many files were loaded when the slicers were last checked
+const RANGES = [["", "All dates"], ["4", "Last 4 weeks"], ["8", "Last 8 weeks"], ["12", "Last 12 weeks"]];
+
+const coreGo = go;
+go = function (name) { pick = null; coreGo(name); };   // a new tab starts with no square picked
+
+// ---------- Small lookups ----------
+const pct = (n, of) => Math.round(100 * n / of);
 const toolOf = n => APPROVED_TOOLS.find(t => t.name === n.tool);
 const taskOf = n => TASKS.find(t => t.task === n.task);
-const isSignificant = t => Object.values(t.ratings).includes("Significant");
-const pct = (n, of) => Math.round(100 * n / of);
-const r1 = v => Math.round(v * 10) / 10;                       // SVG coordinates to 1 decimal place
-const calm = () => window.matchMedia && matchMedia("(prefers-reduced-motion: reduce)").matches;
+const score = p => p.picks.filter((v, i) => v === PITFALLS[i].wrong).length;
+const teamOf = p => p.team || p.group || "Team not given";
+const andList = n => n.length === 1 ? n[0] : n.slice(0, -1).join(", ") + " and " + n[n.length - 1];
+function mondayOf(iso) { return addDays("2026-01-05", 7 * weekNo(iso)); }   // weekNo counts weeks from Monday 5 Jan 2026
 
-// ---------- Build-ups: they play once when a tab opens, then everything stays still ----------
-const coreGo = go;
-go = function (name) { coreGo(name); play(); };   // every tab change plays its build-up
-let playing;
-function play() {
-  const s = document.getElementById("screen");
-  s.classList.remove("play"); clearTimeout(playing);
-  if (calm()) return;                              // motion turned down: the final picture shows at once
-  void s.offsetWidth; s.classList.add("play");     // restart the CSS build-ups
-  playing = setTimeout(() => s.classList.remove("play"), 2200);   // so a later redraw doesn't play them again
-  const start = performance.now();
-  s.querySelectorAll("[data-count]").forEach(el => {   // big numbers count up from 0
-    const end = Number(el.dataset.count), dp = Number(el.dataset.dp || 0), after = el.dataset.after || "", final = el.textContent;
-    const step = now => { const t = Math.min(1, (now - start) / 1100), v = end * (1 - Math.pow(1 - t, 3));
-      el.textContent = t < 1 ? v.toFixed(dp) + after : final; if (t < 1) requestAnimationFrame(step); };
-    requestAnimationFrame(step);
+// ---------- The Group or file slicer: each group file, then each person's own file ----------
+function groupOptions() {
+  const opts = [], seen = Object.create(null);
+  people.forEach(p => {
+    const key = (p.group ? "g:" : "f:") + (p.group || p.source || p.anonId);
+    if (!seen[key]) { seen[key] = { key, group: !!p.group, name: p.group || p.source || "A file", list: [] }; opts.push(seen[key]); }
+    seen[key].list.push(p);
   });
+  opts.forEach(o => { o.label = o.group ? o.name : o.name + (o.list[0].team ? " · " + o.list[0].team : ""); });
+  return opts.filter(o => o.group).sort((a, b) => a.name.localeCompare(b.name)).concat(opts.filter(o => !o.group).sort((a, b) => a.name.localeCompare(b.name)));
 }
 
-// ---------- Chart sizes: drawn to the real width, so the text is never squashed ----------
-let lastRoom = 0, resizing;
-function room() { const s = document.getElementById("screen"); return lastRoom = Math.max(230, Math.min(760, (s ? s.clientWidth : 800) - 66)); }
-window.addEventListener("resize", () => { clearTimeout(resizing); resizing = setTimeout(() => { const old = lastRoom; if (room() !== old) draw(); }, 150); });
-
-// ---------- The pieces every chart uses ----------
-function panel(id, title, body, take, maths) {   // a dark chart panel: title, chart, takeaway, and the maths fold-out
-  return `<figure class="viz" id="viz-${id}"><figcaption>${title}</figcaption>${body}
-    ${take ? `<p class="take" id="take-${id}">${take}</p>` : ""}
-    ${maths ? `<details class="maths" id="maths-${id}"${panels["m-" + id] ? " open" : ""} ontoggle="panels['m-${id}'] = this.open">
-      <summary id="sum-${id}">Show the maths</summary><div class="sum">${maths}</div></details>` : ""}</figure>`;
+function teamBands(list) {  // teams of 3 or more people; smaller teams are pooled, so no one stands out
+  const by = Object.create(null);
+  list.forEach(p => (by[teamOf(p)] = by[teamOf(p)] || []).push(p));
+  const names = Object.keys(by).sort();
+  const shown = names.filter(n => by[n].length >= SMALL.group).map(n => ({ name: n, list: by[n] }));
+  const rest = names.filter(n => by[n].length < SMALL.group).flatMap(n => by[n]);
+  if (rest.length >= SMALL.group) shown.push({ name: "Other teams", list: rest });
+  else if (rest.length && shown.length) {   // 1 or 2 people left over: they join the smallest team shown
+    const small = shown.slice().sort((a, b) => a.list.length - b.list.length)[0];
+    small.name += " and other teams"; small.list = small.list.concat(rest);
+  } else if (rest.length) return [];        // too few people to show any team
+  return shown;
 }
-function count(n, shown, after) {   // a big number that counts up; shown = its final text
-  const dp = String(n).includes(".") ? 1 : 0;
-  return `<b class="bignum" data-count="${n}" data-dp="${dp}" data-after="${after || ""}">${shown}</b>`;
-}
-const svg = (w, h, inner, label) => `<svg class="chart" width="${w}" height="${h}" viewBox="0 0 ${w} ${h}" role="img" aria-label="${label}">${inner}</svg>`;
-const delay = ms => ` style="animation-delay:${ms}ms"`;
-const fit = (t, w) => { const max = Math.floor(w / 7.6); return t.length > max ? t.slice(0, max - 1).trimEnd() + "…" : t; };   // shortens a label to fit (the full name is in its tooltip)
-const ms = n => `<span class="eq">${n}</span>`;   // one line of working in the maths fold-out
 
-function smooth(pts, floor) {       // a smooth curve through the points that never dips below the floor line
-  let d = `M${pts[0]}`;
-  for (let i = 0; i < pts.length - 1; i++) {
-    const a = pts[i - 1] || pts[i], b = pts[i], c = pts[i + 1], e = pts[i + 2] || c;
-    const c1 = [r1(b[0] + (c[0] - a[0]) / 6), r1(Math.min(floor, b[1] + (c[1] - a[1]) / 6))];
-    const c2 = [r1(c[0] - (e[0] - b[0]) / 6), r1(Math.min(floor, c[1] - (e[1] - b[1]) / 6))];
-    d += ` C${c1} ${c2} ${c}`;
-  }
-  return d;
+// Everything the slicers pick: the people, their reports, and the level and team groups
+function current() {
+  if (slicedFor !== loaded.length) { slice = Object.assign({}, ALL_SLICE); slicedFor = loaded.length; week = null; }   // new files: start afresh
+  const opts = groupOptions(), g = opts.find(o => o.key === slice.group);
+  if (!g) slice.group = "";
+  let list = g ? g.list : people;
+  const one = !!g && !g.group && list.length === 1;   // one person's own file
+  const levels = one ? [{ name: list[0].level || "Level not set", list }] : levelGroups(list).shown;
+  const lb = levels.find(b => b.name === slice.level);
+  if (lb) list = lb.list; else slice.level = "";
+  const teams = one ? [{ name: teamOf(list[0]), list }] : teamBands(list);
+  const tb = teams.find(b => b.name === slice.team);
+  if (tb) list = tb.list; else slice.team = "";
+  const bandOf = (bands, p) => (bands.find(b => b.list.includes(p)) || { name: "Not shown" }).name;
+  const rowsOf = from => from.flatMap(p => p.reports.filter(keepReport).map(r => ({ r, p })));
+  const rows = rowsOf(list).map(x => Object.assign(x, { level: bandOf(levels, x.p), team: bandOf(teams, x.p) }));
+  const extra = [lb ? slice.level : "", tb ? slice.team : ""].filter(Boolean).join(" · ");
+  return { opts, g, one, list, levels, teams, rows, all: rowsOf(people), kind: !g && !lb && !tb ? "all" : one ? "one" : "group",
+           name: one ? "this person's file" : (g ? g.name : "the whole audit") + (extra ? " · " + extra : "") };
+}
+function keepReport(r) {    // the Section, Mistake type and Dates slicers
+  if (slice.section && r.section !== slice.section) return false;
+  if (slice.type && r.type !== slice.type) return false;
+  return !slice.range || r.date > addDays(latestDate(), -7 * Number(slice.range));
+}
+
+function setSlice(kind, i) {   // a slicer changed: i is the place in its list ("" = all)
+  const C = current(), lists = { group: C.opts.map(o => o.key), level: C.levels.map(b => b.name), team: C.teams.map(b => b.name),
+    section: SECTIONS, type: MISTAKE_TYPES, range: RANGES.slice(1).map(r => r[0]) };
+  slice[kind] = i === "" ? "" : lists[kind][Number(i)] || "";
+  if (kind === "group") { slice.level = ""; slice.team = ""; }   // a new group has its own levels and teams
+  if (kind === "level") slice.team = "";
+  pick = null;
+  draw("Filters changed.");
+}
+function clearSlices() { slice = Object.assign({}, ALL_SLICE); pick = null; draw("All filters cleared."); document.getElementById("sl-group").focus(); }
+
+function slicerBar(C) {     // the row of slicers: every tab except Data
+  const sel = (id, label, all, items, value) => `<div class="slicer"><label for="sl-${id}">${label}</label>
+    <select id="sl-${id}" onchange="setSlice('${id}', this.value)"><option value="">${all}</option>${items.map((t, i) =>
+      `<option value="${i}"${t[0] === value ? " selected" : ""}>${safe(t[1])}</option>`).join("")}</select></div>`;
+  const groups = C.opts.filter(o => o.group), files = C.opts.filter(o => !o.group);
+  const groupSel = `<div class="slicer"><label for="sl-group">Group or file</label><select id="sl-group" onchange="setSlice('group', this.value)">
+      <option value="">Whole audit (everything loaded)</option>`
+    + (groups.length ? `<optgroup label="Group files">${groups.map(o => `<option value="${C.opts.indexOf(o)}"${o.key === slice.group ? " selected" : ""}>${safe(o.label)}</option>`).join("")}</optgroup>` : "")
+    + (files.length ? `<optgroup label="One person's file">${files.map(o => `<option value="${C.opts.indexOf(o)}"${o.key === slice.group ? " selected" : ""}>${safe(o.label)}</option>`).join("")}</optgroup>` : "")
+    + `</select></div>`;
+  const on = Object.keys(slice).filter(k => slice[k]);
+  const words = { group: "Group or file", level: "Level", section: "Section", type: "Type", range: "Dates", team: "Team" };
+  const shown = k => k === "group" ? C.g.label : k === "range" ? RANGES.find(r => r[0] === slice.range)[1] : slice[k];
+  return `<div class="slicers" role="group" aria-label="Filters">${groupSel}
+      ${sel("level", "Level", "All levels", C.levels.map(b => [b.name, b.name]), slice.level)}
+      ${sel("section", "Section", "All sections", SECTIONS.map(s => [s, s]), slice.section)}
+      ${sel("type", "Mistake type", "All types", MISTAKE_TYPES.map(t => [t, t]), slice.type)}
+      ${sel("range", "Dates", "All dates", RANGES.slice(1), slice.range)}</div>
+    <p class="filterline" id="filterLine">${on.length ? "<b>Filters:</b> " + on.map(k => words[k] + " = " + safe(shown(k))).join(" · ")
+      + ` <button class="link" id="clearFilters" onclick="clearSlices()">Clear filters</button>` : "<b>No filters:</b> showing everything loaded."}</p>`;
+}
+
+// ---------- Plain bars: each one is a button that drills into the reports ----------
+//   rows: [name, number]; kind = the slicer it sets. Longest first, unless keepOrder.
+function pbars(kind, rows, total, keepOrder) {
+  const top = Math.max(1, ...rows.map(r => r[1])), list = keepOrder ? rows : rows.slice().sort((a, b) => b[1] - a[1]);
+  return `<div class="pbars">` + list.map(r => {
+    const i = rows.indexOf(r), picked = slice[kind] === r[0];
+    return `<button class="pbar" id="pb-${kind}-${i}" data-key="${kind}:${safe(r[0])}" data-value="${r[1]}" aria-pressed="${picked}"
+        onclick="drillBy('${kind}', ${i})"><span class="pl">${safe(r[0])}</span><span class="pt"><span class="pf" style="width:${Math.round(100 * r[1] / top)}%"></span></span>
+        <span class="pn">${r[1]}${total >= SMALL.barPercent && r[1] ? " (" + pct(r[1], total) + "%)" : ""}</span></button>`;
+  }).join("") + `</div>`;
+}
+function drillBy(kind, i) { // a bar was clicked: filter to it (or back to all), then show the matching reports
+  const C = current(), names = { type: MISTAKE_TYPES, section: SECTIONS, level: C.levels.map(b => b.name), team: C.teams.map(b => b.name) }[kind];
+  slice[kind] = slice[kind] === names[i] ? "" : names[i];
+  if (kind === "level") slice.team = "";
+  if (tab !== "drill") { go("drill"); return; }
+  draw("Filters changed."); document.getElementById("pb-" + kind + "-" + i).focus();
+}
+
+function card(key, title, value, sub, shown) {   // one KPI card; shown = the words, if not just the value
+  return `<div class="kpi" data-key="${key}" data-value="${safe(value)}"><span class="kt">${title}</span>
+    <b${shown && !/^[\d.]/.test(shown) ? ' class="words"' : ""}>${safe(shown == null ? value : shown)}</b>${sub ? `<span class="ks">${sub}</span>` : ""}</div>`;
+}
+
+// ---------- The figures for a group of people ----------
+function quizFigures(list) {   // Spot the mistake: the average of those who answered all 8, and the cards missed most
+  const G = list.filter(p => p.picks), fin = G.filter(p => p.picks.every(v => v >= 0));
+  const cards = PITFALLS.map((pf, i) => { const a = G.filter(p => p.picks[i] >= 0); return { pf, answered: a.length, missed: a.filter(p => p.picks[i] !== pf.wrong).length }; })
+    .filter(c => c.answered >= (list.length === 1 ? 1 : SMALL.average)).sort((a, b) => b.missed / b.answered - a.missed / a.answered || b.missed - a.missed);
+  const enough = list.length === 1 ? fin.length === 1 : fin.length >= SMALL.average;
+  return { G, fin, cards, avg: enough ? average(fin.map(score)) : "" };
+}
+function stepFigures(list) {
+  const D = list.filter(p => p.steps), done = p => p.steps.filter(Boolean).length;
+  const enough = list.length === 1 ? D.length === 1 : D.length >= SMALL.group;
+  return { D, enough, avg: enough ? average(D.map(done)) : "", per: START_STEPS.map((s, j) => D.filter(p => p.steps[j]).length) };
+}
+function noteFlags(list) {     // AI use notes to follow up (counted by task, never by person)
+  const notes = list.filter(p => p.notes).flatMap(p => p.notes);
+  return [["notapproved", "Named a tool that isn't approved", n => toolOf(n) && toolOf(n).status === "Not approved"],
+          ["notpermitted", "On a task that is Not permitted on the tool used", n => toolOf(n) && taskOf(n) && taskOf(n).ratings[toolOf(n).where] === "Not permitted"],
+          ["significant", "On a Significant task", n => taskOf(n) && Object.values(taskOf(n).ratings).includes("Significant")]]
+    .map(f => { const hits = notes.filter(f[2]), by = Object.create(null); hits.forEach(n => by[n.task] = (by[n.task] || 0) + 1);
+      return { key: f[0], name: f[1], n: hits.length, tasks: Object.keys(by).sort((a, b) => by[b] - by[a]).map(t => t + ": " + by[t]) }; });
+}
+function topOf(rows) {      // the busiest square, if one stands ahead with 3 or more reports
+  const top = topSquares(countReports(rows.map(x => x.r)));
+  return top.max >= SMALL.pattern && top.names.length === 1 ? { name: top.names[0], n: top.max } : null;
+}
+function compareLine(C) {   // the square where this group's share is furthest above the whole audit's
+  if (C.kind === "all" || C.rows.length < SMALL.barPercent || C.all.length < SMALL.barPercent) return null;
+  const a = countReports(C.rows.map(x => x.r)), b = countReports(C.all.map(x => x.r));
+  let best = null;
+  a.forEach((row, s) => row.forEach((n, t) => {
+    const diff = n / C.rows.length - b[s][t] / C.all.length;
+    if (n >= SMALL.pattern && diff >= 0.05 && (!best || diff > best.diff)) best = { s, t, n, diff, mine: pct(n, C.rows.length), them: pct(b[s][t], C.all.length) };
+  }));
+  return best;
+}
+
+function suggestLines(C) {  // "What this suggests": up to 3 lines, most important first
+  const R = C.rows.map(x => x.r), lines = [], slips = R.filter(r => r.type === "Data or privacy slip").length;
+  const flag = noteFlags(C.list)[0], hot = topOf(C.rows), cmp = compareLine(C);
+  if (slips) lines.push(`${plural(slips, "data or privacy slip")} ${slips === 1 ? "was" : "were"} reported: follow the firm's data incident process if real client or personal data was involved.`);
+  if (flag.n) lines.push(`${plural(flag.n, "AI use note")} ${flag.n === 1 ? "names" : "name"} a tool that isn't approved for client work (${safe(flag.tasks.join("; "))}). Follow it up by task, not by person.`);
+  if (hot) lines.push(`The hotspot is ${hot.name} (${plural(hot.n, "report")}). Remind ${C.one ? "them" : "the team"} to ${TYPE_ADVICE[hot.name.split(" / ")[1]]}.`);
+  if (cmp) lines.push(`${SECTIONS[cmp.s]} / ${MISTAKE_TYPES[cmp.t]} is ${cmp.mine}% of ${safe(C.name)}'s reports, against ${cmp.them}% across the whole audit.`);
+  const few = R.length < SMALL.fewReports || C.list.length < SMALL.fewPeople;
+  const end = C.one ? "These are one person's figures: use them for a one-to-one, not to compare with teams."
+    : few ? `These figures come from only ${plural(C.list.length, "person", "people")} and ${plural(R.length, "report")}, so treat them as early signs, not conclusions.` : "";
+  return lines.slice(0, end ? 2 : 3).concat(end ? [end] : []);
+}
+
+function scopeNote(C) {     // what is selected, and which figures apply
+  const finals = C.list.filter(p => p.steps).length, pilots = C.list.filter(p => p.pilots).flatMap(p => p.pilots).length;
+  const what = (C.kind === "all" ? `Showing <b>the whole audit</b>: ${plural(people.length, "person", "people")} from everything loaded.`
+    : C.one ? `Showing <b>one person's file</b> (${safe(C.g.name)}). This is one person: their own figures only.`
+    : `Showing <b>${safe(capital(C.name))}</b>: ${plural(C.list.length, "person", "people")}.`)
+    + (!C.one && C.list.length < SMALL.group ? ` With fewer than ${SMALL.group} people, these figures may be one person's.` : "");
+  const which = C.one ? (finals ? "Quiz and Start here figures are from their file." : "Their file is from the basic staff app, so it has reports only.")
+    : finals === C.list.length ? "Quiz and Start here figures use everyone selected."
+    : `Quiz and Start here figures come from the ${finals} of ${plural(C.list.length, "person", "people")} using the final staff app.`;
+  return `<p class="scope" id="scopeNote">${what} ${which} ${pilots ? `Pilots: ${pilots} (see Drill-down).` : "No pilots in these files."}</p>`;
 }
 
 // =====================================================================
-// TAB: Overview, told as a short story: 4 big numbers, then Start here progress
+// TAB: Overview: 4 KPI cards, what this suggests, and two clickable charts
 // =====================================================================
-function storyScreen() {
-  const core = overviewScreen();      // the shared Overview works out the tiles and "What this suggests"
-  if (!people.length) return core;
-  const grab = re => (core.match(re) || [""])[0];
-  const tileOf = k => grab(new RegExp(`<div class="tile" data-key="${k}"[\\s\\S]*?</div>`));
-  const subOf = k => (tileOf(k).match(/<span class="small">([\s\S]*?)<\/span>/) || ["", ""])[1];
-  const R = allReports(), G = people.filter(p => p.picks), fin = G.filter(p => p.picks.every(v => v >= 0));
-  const score = p => p.picks.filter((v, i) => v === PITFALLS[i].wrong).length;
-  const quizOk = G.length >= SMALL.group && fin.length >= SMALL.average, quiz = quizOk ? average(fin.map(score)) : "";
-  const list = people.filter(p => p.pilots).flatMap(p => p.pilots), saved = list.map(p => p.baselineMinutes - p.aiMinutes);
-  const medOk = list.length >= SMALL.average, med = medOk ? median(saved) : 0;
-  const item = (key, value, big, label, sub, d) => `<div class="story-item" data-key="${key}" data-value="${safe(value)}"${delay(d)}>${big}
-    <span class="lbl">${label}</span><span class="sub">${sub}</span></div>`;
-  const story = `<div class="story">
-      ${item("people", people.length, count(people.length, people.length), "People", subOf("people"), 0)}
-      ${item("reports", R.length, count(R.length, R.length), "Reports of AI mistakes", subOf("reports"), 120)}
-      ${item("quiz-average", quiz, quizOk ? count(Number(quiz), quiz + " of 8", " of 8") : `<b class="bignum words">Not enough yet</b>`, "Spot the mistake average",
-        quizOk ? "From the " + plural(fin.length, "person", "people") + " who finished all 8" : "Needs 3 people who finished", 240)}
-      ${item("minutes-saved", medOk ? med : "", medOk ? count(Math.abs(med), Math.abs(med)) : `<b class="bignum words">Not enough yet</b>`,
-        medOk && med < 0 ? "Minutes slower per task" : "Minutes saved per task", medOk ? "The typical pilot (the middle of " + list.length + ")" : "Needs 3 pilots", 360)}</div>`;
-  const maths = ms(`People = different reference codes in the files = ${people.length}`)
-    + ms(`Reports = each report counted once, even if it is in two files = ${R.length}`)
-    + (quizOk ? ms(`Average = (${fin.map(score).join(" + ")}) ÷ ${fin.length} = ${fin.map(score).reduce((a, b) => a + b, 0)} ÷ ${fin.length} = ${quiz} of 8`) : "")
-    + (medOk ? ms(`Minutes saved in each pilot, smallest first: ${saved.slice().sort((a, b) => a - b).join(", ")}. The middle one is ${med}`
-      + `${list.length % 2 ? "" : " (the halfway point of the two middle ones)"}. The middle is used so one big result can't skew it.`) : "");
-  return `<h1>Overview</h1>${grab(/<p class="grey">[\s\S]*?<\/p>/)}
-    ${panel("story", "The team at a glance", story, "", maths)}
-    <div class="tiles">${tileOf("top-type")}${tileOf("hotspot")}${tileOf("slips")}</div>
-    ${ringsHtml()}
-    ${grab(/<h2>What this suggests<\/h2>[\s\S]*<\/ul>/)}`;
-}
-
-function ringsHtml() {      // a readiness ring for each Start here step
-  const D = people.filter(p => p.steps);
-  if (D.length < SMALL.group) return `<h2>Start here steps</h2><p class="small" id="stepsWait">These come from the final staff app.
-    ${D.length} of ${plural(people.length, "person", "people")} ${D.length === 1 ? "has" : "have"} sent a file from it so far; the figures show once 3 have, so that none points at one person.</p>`;
-  const done = p => p.steps.filter(Boolean).length, all = D.filter(p => done(p) === START_STEPS.length).length, avg = average(D.map(done));
-  const rings = START_STEPS.map((s, j) => {
-    const n = D.filter(p => p.steps[j]).length, part = n / D.length;
-    return `<div class="ring" data-key="step:${j}" data-value="${n}"><svg width="92" height="92" viewBox="0 0 92 92" aria-hidden="true">
-        <circle cx="46" cy="46" r="38" class="ring-back"/><circle cx="46" cy="46" r="38" class="ring-arc" pathLength="100"
-        style="stroke-dasharray:${r1(100 * part)} 100;animation-delay:${j * 110}ms" transform="rotate(-90 46 46)"/>
-        <text x="46" y="52" text-anchor="middle">${D.length >= SMALL.percent ? pct(n, D.length) + "%" : n + "/" + D.length}</text></svg>
-      <span class="ring-n">${share(n, D.length)}</span><span>${j + 1}. ${s.text}</span></div>`;
-  }).join("");
-  const low = START_STEPS.map((s, j) => [j, D.filter(p => p.steps[j]).length]).sort((a, b) => a[1] - b[1])[0];
-  return `<h2>Start here steps</h2>` + panel("rings", "How far people have got with the 6 Start here steps", `<div class="rings">${rings}</div>`,
-    `<span data-key="steps-all" data-value="${all}">${share(all, D.length)} finished all 6</span>; <span data-key="steps-average" data-value="${avg}">on average ${avg} of 6 done</span>.
-     The step fewest have done is step ${low[0] + 1}.`,
-    START_STEPS.map((s, j) => { const n = D.filter(p => p.steps[j]).length; return ms(`Step ${j + 1}: ${n} ÷ ${D.length} = ${pct(n, D.length)}%`); }).join("")
-    + ms(`Average = steps ticked in all (${D.map(done).reduce((a, b) => a + b, 0)}) ÷ ${D.length} people = ${avg}`))
-    + `<p class="small">Based on ${D.length} of ${plural(people.length, "person", "people")} (the files from the final staff app). A % shows only when it is out of 5 or more.</p>`;
+function overviewFinal() {
+  if (!people.length) return noData("Overview");
+  const C = current(), R = C.rows.map(x => x.r), Q = quizFigures(C.list), S = stepFigures(C.list), dates = R.map(r => r.date).sort();
+  const range = !R.length ? "None match the filters" : month(dates[0]) === month(dates[R.length - 1]) ? month(dates[0]) : month(dates[0]) + " to " + month(dates[R.length - 1]);
+  const lines = suggestLines(C);
+  return `<h1>Overview</h1>${slicerBar(C)}${scopeNote(C)}
+    <div class="kpis">
+      ${card("people", "People", C.list.length, C.kind === "all" ? "Everything loaded" : C.one ? "One person's file" : "In this selection")}
+      ${card("reports", "Reports of AI mistakes", R.length, range)}
+      ${card("quiz-average", "Spot the mistake average", Q.avg, Q.avg ? (C.one ? "Their score" : "From " + plural(Q.fin.length, "person", "people") + " who did all 8") : C.one ? "Not all 8 cards done" : "Needs 3 people who did all 8", Q.avg ? Q.avg + " of 8" : "Not enough yet")}
+      ${card("steps-average", "Start here steps done", S.avg, S.enough ? (C.one ? "Their own ticks" : "Average of " + plural(S.D.length, "person", "people")) : C.one ? "Basic app: no steps" : "Needs 3 people", S.enough ? (C.one ? Number(S.avg).toFixed(0) : S.avg) + " of 6" : "Not enough yet")}
+    </div>
+    <h2>What this suggests</h2>
+    <ul class="suggests">${lines.map((l, i) => `<li id="suggest-${i}">${l}</li>`).join("") || "<li>Nothing stands out yet.</li>"}</ul>
+    <div class="charts">
+      <section class="visual"><h2>Reports by type</h2>${pbars("type", MISTAKE_TYPES.map(t => [t, R.filter(r => r.type === t).length]), R.length)}</section>
+      <section class="visual"><h2>Reports by section</h2>${pbars("section", SECTIONS.map(s => [s, R.filter(r => r.section === s).length]), R.length)}</section>
+    </div>
+    <p class="small">Pick a bar to see its reports on Drill-down. More reports can mean more AI use or better checking, not just more mistakes.</p>`;
 }
 
 // =====================================================================
-// TAB: Mistakes (heat map, Pareto, 8-week curve, levels, practice or real, top tasks)
+// TAB: Heat maps: the selected group or person beside the whole audit
 // =====================================================================
-function mistakesFinal() {
-  if (!people.length) return noData("Mistakes");
-  const R = allReports(), counts = countReports(R), top = topSquares(counts);
+function heatMaps() {
+  if (!people.length) return noData("Heat maps");
+  const C = current(), mine = countReports(C.rows.map(x => x.r)), all = countReports(C.all.map(x => x.r)), cmp = compareLine(C);
+  const most = (counts, id) => { const t = topSquares(counts);
+    return `<p class="most" id="${id}"><b>Most reports:</b> ${t.max ? safe(t.names.join(" and ")) + " (" + plural(t.max, "report") + (t.names.length > 1 ? " each" : "") + ")" : "none"}</p>`; };
+  const map = (key, title, sub, counts, fn) => `<section class="visual" id="map-${key}"><h2>${title}</h2><p class="small">${sub}</p>${heatTable(counts, fn, key)}${most(counts, "most-" + key)}</section>`;
+  const whole = map("all", "Whole audit", `${plural(people.length, "person", "people")} · ${plural(C.all.length, "report")}`, all, "pickAll");
   let list = "";
-  if (square) {             // the picked square's reports: what went wrong and the month, never who
-    const hits = R.filter(r => r.section === SECTIONS[square[0]] && r.type === MISTAKE_TYPES[square[1]]).sort((a, b) => b.date.localeCompare(a.date));
-    list = `<div id="squareList"><h2>${SECTIONS[square[0]]} / ${MISTAKE_TYPES[square[1]]}: ${plural(hits.length, "report")}</h2>` + (hits.length ? `<ul class="reports">` + hits.map(r =>
-      `<li><span class="small">${month(r.date)}</span> ${safe(r.wrong)}${r.caught ? `<br><span class="small">Caught by: ${safe(r.caught)}</span>` : ""}${r.impact ? `<br><span class="small">Could have: ${safe(r.impact)}</span>` : ""}</li>`).join("") + `</ul>`
-      : "<p>No reports in this square.</p>") + `</div>`;
+  if (pick) {               // the picked square's reports, in the same table as Drill-down
+    const rows = (pick.map === "sel" ? C.rows : C.all.map(x => Object.assign({}, x, { level: "", team: "" })))
+      .filter(x => x.r.section === SECTIONS[pick.s] && x.r.type === MISTAKE_TYPES[pick.t]);
+    list = `<section class="visual" id="squareList"><h2>${pick.map === "sel" ? safe(capital(C.name)) : "Whole audit"}: ${SECTIONS[pick.s]} / ${MISTAKE_TYPES[pick.t]}, ${plural(rows.length, "report")}</h2>
+      ${reportTable(rows, pick.map === "sel")}<button class="plain" id="closeSquare" onclick="pick = null; draw(); document.getElementById('${pick.map}-${pick.s}-${pick.t}').focus()">Close</button></section>`;
   }
-  const hot = top.max >= SMALL.pattern && top.names.length === 1;
-  const heat = panel("heat", "Where the mistakes were: audit section against type", heatTable(counts, "pickCell"),
-    hot ? `The brightest square is <b>${top.names[0]}</b>, with ${plural(top.max, "report")}. Pick any square to read its reports.` : "No single square stands out yet. Pick any square to read its reports.",
-    ms(`Each square counts the reports with that section and that type. There are ${SECTIONS.length} sections × ${MISTAKE_TYPES.length} types = ${SECTIONS.length * MISTAKE_TYPES.length} squares.`)
-    + ms(`Brightness = the square's count ÷ the biggest count (${top.max}), in 4 steps.`));
-  return `<h1>Mistakes</h1><p class="grey">Where AI mistakes were reported, which kinds matter most, and how it is changing.</p>
-    ${heat}${list}${paretoHtml(R)}
-    <h2>By section</h2>${bars(SECTIONS.map(s => countRow("section:" + s, s, R.filter(r => r.section === s).length, R.length)))}
-    ${trendHtml()}${levelsHtml()}${mistakesMore(R)}`;
+  return `<h1>Heat maps</h1>${slicerBar(C)}
+    <p class="grey">Where AI mistakes were reported, by audit section and type. Darker means more reports. Pick a square to see its reports.</p>
+    ${C.kind === "all" ? `<p class="scope" id="compareHint">Pick a group or one person's file in the <b>Group or file</b> slicer to compare it with the whole audit.</p><div class="maps one">${whole}</div>`
+      : `<div class="maps">${map("sel", safe(capital(C.name)), `${plural(C.list.length, "person", "people")} · ${plural(C.rows.length, "report")}`, mine, "pickSel")}${whole}</div>
+      <p id="compareLine">${cmp ? `<b>Higher share than the whole audit:</b> ${SECTIONS[cmp.s]} / ${MISTAKE_TYPES[cmp.t]} (${cmp.mine}% of these reports, against ${cmp.them}% across the audit).`
+        : "No square stands out against the whole audit" + (C.rows.length < SMALL.barPercent ? " (it needs 10 or more reports to compare)." : ".")}</p>`}
+    ${list}`;
 }
-function pickCell(s, t) {   // pick a heat map square: its reports show under the map
-  square = [s, t];
+function capital(t) { return t.charAt(0).toUpperCase() + t.slice(1); }
+function pickSel(s, t) { pickSquare("sel", s, t); }
+function pickAll(s, t) { pickSquare("all", s, t); }
+function pickSquare(map, s, t) {
+  pick = { map, s, t };
   draw();
   document.getElementById("squareList").scrollIntoView({ block: "nearest" });
-}
-
-function paretoHtml(R) {    // each type's share of reports (bars), and the running total (the yellow line)
-  const total = R.length, rows = MISTAKE_TYPES.map(t => [t, R.filter(r => r.type === t).length]).sort((a, b) => b[1] - a[1]);
-  const W = room(), pad = 8, axis = W - 2 * pad - 56, x = v => r1(pad + axis * v), rowH = 50, H = rows.length * rowH + 34, showPct = total >= SMALL.barPercent;
-  let run = 0;
-  const pts = [], g = rows.map(([t, n], i) => {
-    run += n; const y = 18 + i * rowH, share1 = total ? n / total : 0, cum = total ? run / total : 0;
-    pts.push([x(cum), y + 30]);
-    return `<g data-key="type:${t}" data-value="${n}"><title>${t}: ${n} report${n === 1 ? "" : "s"}</title>
-      <text x="${pad}" y="${y + 14}" class="lab">${t} <tspan class="val" dx="4">${n}${showPct && n ? " (" + pct(n, total) + "%)" : ""}</tspan></text>
-      <rect x="${pad}" y="${y + 22}" width="${axis}" height="16" rx="4" class="track"/>
-      ${n ? `<rect x="${pad}" y="${y + 22}" width="${Math.max(3, r1(axis * share1))}" height="16" rx="4" class="bar gx"${delay(i * 120)}/>` : ""}</g>`;
-  }).join("");
-  const cumLine = total ? `<path d="M${pts.join(" L")}" class="cum draw"/>`
-    + pts.map((p, i) => `<circle cx="${p[0]}" cy="${p[1]}" r="5" class="cum-dot pop"${delay(500 + i * 120)}/>`).join("")
-    + (showPct ? `<text x="${W - pad}" y="${pts[1][1] + 5}" class="cum-lab" text-anchor="end">${pct(rows[0][1] + rows[1][1], total)}%</text><text x="${W - pad}" y="${pts[1][1] - 13}" class="tick" text-anchor="end">top 2</text>` : "") : "";
-  const ticks = [0, 0.25, 0.5, 0.75, 1].map(v => `<line x1="${x(v)}" x2="${x(v)}" y1="14" y2="${H - 18}" class="grid"/><text x="${x(v)}" y="${H - 4}" class="tick" text-anchor="middle">${v * 100}%</text>`).join("");
-  const two = rows[0][1] + rows[1][1];
-  const take = !showPct ? `Too few reports to read a pattern yet (it needs ${SMALL.barPercent}).`
-    : `<b>${rows[0][0]}</b> and <b>${rows[1][0]}</b> are ${pct(two, total)}% of all reports: start there.`;
-  return panel("pareto", "Which kinds of mistake matter most", svg(W, H, ticks + g + cumLine, "Share of reports by type, largest first, with a running total"),
-    take + `<span class="legend"><i class="key-bar"></i> each type's share <i class="key-line"></i> running total</span>`,
-    ms(`Each bar = that type's reports ÷ all ${total} reports.`)
-    + (showPct ? ms(`Running total after the top 2 = (${rows[0][1]} + ${rows[1][1]}) ÷ ${total} = ${two} ÷ ${total} = ${pct(two, total)}%`) : "")
-    + ms("Most problems usually come from a few causes, so the yellow line climbs fast at first. Fixing the top types first does the most good."));
-}
-
-function trendHtml() {      // the last 8 weeks as a smooth curve; the last 4 weeks are shaded to compare with the 4 before
-  const wk = weeks(), trend = trendText(wk), W = room(), H = 230, L = 30, Rt = 12, top = 22, base = H - 40;
-  const max = Math.max(4, ...wk.counts), step = (W - L - Rt) / 7, x = i => r1(L + i * step), y = n => r1(base - (base - top) * n / max);
-  const pts = wk.counts.map((n, i) => [x(i), y(n)]), curve = smooth(pts, base);
-  const gridY = [0, Math.round(max / 2), max].map(v => `<line x1="${L}" x2="${W - Rt}" y1="${y(v)}" y2="${y(v)}" class="grid"/><text x="${L - 6}" y="${y(v) + 5}" class="tick" text-anchor="end">${v}</text>`).join("");
-  const every = W < 420 ? 2 : 1;
-  const labels = wk.starts.map((d, i) => i % every === (7 % every) ? `<text x="${x(i)}" y="${base + 20}" class="tick" text-anchor="middle">${formatDate(d).slice(0, -5)}</text>` : "").join("");
-  const shade = `<rect x="${r1(x(3.5))}" y="${top - 12}" width="${r1(W - Rt - x(3.5))}" height="${base - top + 12}" class="shade"/>
-    <text x="${r1(x(1.75))}" y="${top - 1}" class="tick" text-anchor="middle">4 weeks before: ${wk.before}</text>
-    <text x="${r1(x(5.6))}" y="${top - 1}" class="tick hi" text-anchor="middle">last 4 weeks: ${wk.recent}</text>`;
-  const dots = wk.counts.map((n, i) => `<g data-key="week:${wk.starts[i]}" data-value="${n}"><title>Week of ${formatDate(wk.starts[i])}: ${plural(n, "report")}</title>
-    <circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="11" class="hit"/><circle cx="${pts[i][0]}" cy="${pts[i][1]}" r="5" class="dot pop"${delay(400 + i * 90)}/></g>`).join("");
-  const body = svg(W, H + 8, shade + gridY + `<path d="${curve} L${x(7)},${base} L${x(0)},${base} Z" class="area fade"/><path d="${curve}" class="line draw"/>` + dots + labels,
-    "Reports per week for the last 8 weeks");
-  const ratio = wk.before ? r1(wk.recent / wk.before) : null;
-  return panel("trend", "Reports each week, last 8 weeks", body,
-    `<span id="trendLine">${trend || "Too few reports in these 8 weeks to describe a trend (it needs 10)."} ${CAVEAT}</span>`,
-    ms(`Weeks start on a Monday. The last week ends on ${formatDate(wk.end)}, the newest date in the files.`)
-    + ms(`Last 4 weeks: ${wk.counts.slice(4).join(" + ")} = ${wk.recent}. The 4 before: ${wk.counts.slice(0, 4).join(" + ")} = ${wk.before}.`)
-    + (ratio !== null ? ms(`${wk.recent} ÷ ${wk.before} = ${ratio}. 1.5 or more counts as "more"; 0.67 or less as "fewer"; anything between is "about the same".`) : ""))
-    + (wk.older ? `<p class="small" id="olderReports">${plural(wk.older, "older report")} not shown.</p>` : "");
-}
-
-function levelsHtml() {     // reports by level; small levels are joined (core rules)
-  const lv = levelGroups(), levels = lv.shown.map(g => { const n = g.list.reduce((a, p) => a + p.reports.length, 0);
-    return ["level:" + g.name, g.name + " · " + plural(g.list.length, "person", "people"), n, plural(n, "report")]; });
-  return `<h2>By level</h2><p class="small">Reports from each level, and how many people sent them.</p>${levels.length ? bars(levels, true) : ""}
-    ${lv.joined ? `<p class="small" id="levelJoined">Levels with fewer than 3 people are shown together with the level next to them, so no one can be singled out.</p>` : ""}
-    ${lv.hidden ? `<p class="small" id="levelHidden">Hidden: too few people to show without pointing at someone.</p>` : ""}`;
-}
-
-function mistakesMore(R) {  // practice or real work, and the tasks with most reports
-  const named = R.filter(r => r.task);
-  const context = [["practice", "Practice"], ["real", "Real work"], ["", "Not said"]].map(c => countRow("context:" + (c[0] || "none"), c[1], R.filter(r => r.context === c[0]).length, R.length));
-  const tasks = TASKS.map(t => ["task:" + t.task, t.task, named.filter(r => r.task === t.task).length]).filter(r => r[2]).sort((a, b) => b[2] - a[2]).slice(0, 5);
-  return `<div class="two"><div><h2>Practice or real work?</h2><p class="small">What staff were doing when the mistake happened.</p>${bars(context)}</div>
-    <div><h2>Top 5 tasks</h2><p class="small">Based on the ${named.length} of ${plural(R.length, "report")} that name a task.</p>
-    ${tasks.length ? bars(tasks) : "<p>No reports name a task yet.</p>"}</div></div>`;
+  announce(SECTIONS[s] + " / " + MISTAKE_TYPES[t] + ": the reports are shown below the maps.");
 }
 
 // =====================================================================
-// TAB: Learning (Spot the mistake, the settings prompt, AI use notes, and the rules)
+// TAB: Drill-down: small bar summaries, one sortable table, and two fold-outs
 // =====================================================================
-function learningScreen() {
-  if (!people.length) return noData("Learning") + rulesHtml();
-  const D = people.filter(p => p.steps);
-  if (D.length < SMALL.group) return `<h1>Learning</h1><p>These figures come from the final staff app. ${D.length} of ${plural(people.length, "person", "people")}
-    ${D.length === 1 ? "has" : "have"} sent a file from it so far; the figures show once 3 have, so that none points at one person.</p>` + rulesHtml();
-  return `<h1>Learning</h1><p class="grey">What people find hard, how fresh their AI settings are, and what their AI use notes flag.</p>${basedOn(D)}`
-    + gameHtml(D) + settingsHtml(D) + notesHtml(D) + rulesHtml();
+const COLUMNS = [["month", "Month"], ["team", "Team"], ["level", "Level"], ["section", "Section"], ["type", "Type"], ["wrong", "What went wrong"]];
+function reportTable(rows, withPeople) {   // the reports, by month only (never the day), sorted by the column picked
+  const cols = withPeople ? COLUMNS : COLUMNS.filter(c => c[0] !== "team" && c[0] !== "level");
+  const value = (x, k) => k === "month" ? x.r.date : k === "team" || k === "level" ? x[k] : x.r[k];
+  const sorted = rows.slice().sort((a, b) => sortBy.dir * String(value(a, sortBy.key)).localeCompare(String(value(b, sortBy.key))) || b.r.date.localeCompare(a.r.date));
+  if (!rows.length) return `<p id="noRows">No reports match these filters.</p>`;
+  return `<div class="tablebox"><table class="grid rtable"><caption>${plural(rows.length, "report")}. Pick a column heading to sort.</caption><thead><tr>${cols.map(c =>
+    `<th scope="col"${sortBy.key === c[0] ? ` aria-sort="${sortBy.dir > 0 ? "ascending" : "descending"}"` : ""}><button class="sort" id="sort-${c[0]}" onclick="sortTable('${c[0]}')">${c[1]}${sortBy.key === c[0] ? (sortBy.dir > 0 ? " ▲" : " ▼") : ""}</button></th>`).join("")}</tr></thead>
+    <tbody>${sorted.map(x => `<tr>${cols.map(c => `<td>${c[0] === "month" ? month(x.r.date) : safe(value(x, c[0]))}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
 }
-function partOf(D, title, list) {   // a section's heading, saying so if fewer files include this part
-  return `<h2>${title}</h2>` + (list.length < SMALL.group ? `<p class="small">Too few files include this yet to show it without pointing at someone.</p>`
-    : list.length !== D.length ? basedOn(list) : "");
+function sortTable(key) { sortBy = { key, dir: sortBy.key === key ? -sortBy.dir : key === "month" ? -1 : 1 }; draw(); }
+
+function drillScreen() {
+  if (!people.length) return noData("Drill-down");
+  const C = current(), R = C.rows.map(x => x.r);
+  const levelRows = C.levels.map(b => [b.name, C.rows.filter(x => b.list.includes(x.p)).length]);
+  const teamRows = C.teams.map(b => [b.name, C.rows.filter(x => b.list.includes(x.p)).length]);
+  return `<h1>Drill-down</h1>${slicerBar(C)}
+    <p class="grey">Pick a bar to filter by it (pick it again to undo). Every figure and the table below follow the filters.</p>
+    <div class="charts four">
+      <section class="visual"><h2>By type</h2>${pbars("type", MISTAKE_TYPES.map(t => [t, R.filter(r => r.type === t).length]), R.length)}</section>
+      <section class="visual"><h2>By section</h2>${pbars("section", SECTIONS.map(s => [s, R.filter(r => r.section === s).length]), R.length)}</section>
+      <section class="visual"><h2>By team</h2>${teamRows.length ? pbars("team", teamRows, R.length) : `<p class="small" id="teamsHidden">Hidden: too few people to show teams without pointing at someone.</p>`}</section>
+      <section class="visual"><h2>By level</h2>${levelRows.length ? pbars("level", levelRows, R.length, true) : `<p class="small" id="levelHidden">Hidden: too few people to show levels without pointing at someone.</p>`}</section>
+    </div>
+    <p class="small">Teams and levels with fewer than 3 people are joined with others, so no one can be singled out.</p>
+    <h2 id="tableHead">Reports</h2><p id="drillCount" data-value="${R.length}">${plural(R.length, "report")} match${R.length === 1 ? "es" : ""} these filters.</p>
+    ${reportTable(C.rows, true)}
+    ${learningBox(C)}${pilotsBox(C)}`;
 }
 
-function gameHtml(D) {      // Spot the mistake: a lollipop for each card, at the share of people who missed it
-  const G = people.filter(p => p.picks), head = partOf(D, "Spot the mistake: where people slip", G);
-  if (G.length < SMALL.group) return head;
-  const finished = G.filter(p => p.picks.every(v => v >= 0)), score = p => p.picks.filter((v, i) => v === PITFALLS[i].wrong).length;
-  const cards = PITFALLS.map((pf, i) => { const answered = G.filter(p => p.picks[i] >= 0); return { pf, answered: answered.length, missed: answered.filter(p => p.picks[i] !== pf.wrong).length }; })
-    .filter(c => c.answered >= SMALL.average).sort((a, b) => b.missed / b.answered - a.missed / a.answered);
-  const enough = finished.length >= SMALL.average, R = allReports();
-  const W = room(), pad = 8, axis = W - 2 * pad - 92, rowH = 50, H = cards.length * rowH + 30, x = v => r1(pad + axis * v);
-  const ticks = [0, 0.5, 1].map(v => `<line x1="${x(v)}" x2="${x(v)}" y1="10" y2="${H - 20}" class="grid"/><text x="${x(v)}" y="${H - 4}" class="tick" text-anchor="middle">${v * 100}%</text>`).join("");
-  const rows = cards.map((c, i) => { const y = 14 + i * rowH, part = c.missed / c.answered;
-    return `<g class="pitfall" data-key="pitfall:${c.pf.id}" data-value="${c.missed}"><title>${c.pf.name}: missed by ${c.missed} of ${c.answered}</title>
-      <text x="${pad}" y="${y + 12}" class="lab">${fit(c.pf.name, W - pad)}</text>
-      <line x1="${x(0)}" x2="${x(part)}" y1="${y + 30}" y2="${y + 30}" class="stem draw"${delay(i * 90)}/>
-      <circle cx="${x(part)}" cy="${y + 30}" r="7" class="${part >= 0.5 ? "dot hot" : "dot"} pop"${delay(350 + i * 90)}/>
-      <text x="${x(1) + 14}" y="${y + 35}" class="val share">${share(c.missed, c.answered)}</text></g>`; }).join("");
-  const worst = cards[0];
-  return head + `<div class="tiles">${tile("game-finished", "Finished all 8 cards", share(finished.length, G.length), "", finished.length)}
-      ${tile("game-average", "Average score", enough ? average(finished.map(score)) + " of 8" : "Not enough yet", enough ? "From those who finished" : "Needs 3 people who finished")}</div>`
-    + panel("slip", "The share of people who missed each card", svg(W, H, ticks + rows, "Share of people who missed each Spot the mistake card, most missed first"),
-      worst && worst.missed ? `<b>${worst.pf.name}</b> trips up the most people: ${share(worst.missed, worst.answered)} missed it.` : "No card has been missed yet.",
-      cards.map(c => ms(`${c.pf.name}: ${c.missed} missed ÷ ${c.answered} answered = ${pct(c.missed, c.answered)}%`)).join("")
-      + ms(`A card shows once ${SMALL.average} people have answered it. A % is written only when it is out of 5 or more.`))
-    + `<h3>The 3 missed most, and the check that catches each</h3>
-    <ol class="suggests">${cards.filter(c => c.missed).slice(0, 3).map(c => `<li data-key="top:${c.pf.id}"><b>${c.pf.name}.</b> ${c.pf.check}
-      <span class="small">${plural(R.filter(r => r.type === c.pf.type).length, "report")} of this type (${c.pf.type}) in the files.</span></li>`).join("") || "<li>No card has been missed yet.</li>"}</ol>`;
+function learningBox(C) {   // quiz misses, Start here, the settings prompt and AI use notes: only when the files have them
+  const Q = quizFigures(C.list), S = stepFigures(C.list), enough = C.one ? Q.G.length === 1 : Q.G.length >= SMALL.group;
+  if (!enough) return C.list.some(p => p.steps) ? `<p class="small" id="learnWait">Learning figures show once 3 people in this selection have sent a file from the final staff app.</p>` : "";
+  const P = C.list.filter(p => p.settingsCopiedOn !== null && p.exportedOn), age = p => p.settingsCopiedOn ? Math.max(0, daysBetween(p.settingsCopiedOn, p.exportedOn)) : null;
+  const fresh = [["week", "Within 7 days", a => a !== null && a <= 7], ["month", "8 to 30 days", a => a > 7 && a <= 30], ["older", "Over 30 days", a => a > 30], ["never", "Never copied", a => a === null]];
+  const of = n => share(n, Q.G.length);
+  return `<details id="learnBox"${panels.learn ? " open" : ""} ontoggle="panels.learn = this.open"><summary>Learning: quiz misses, Start here and the settings prompt</summary>
+    <p class="small">From ${C.one ? "this person's file" : plural(Q.G.length, "person", "people") + " using the final staff app"}. Quiz and Start here figures use everyone selected (section, type and dates don't apply).</p>
+    <div class="scroll"><table class="grid"><caption>Spot the mistake cards, missed most first</caption>
+      <tr><th scope="col">Card</th><th scope="col">Answered</th><th scope="col">Missed</th></tr>
+      ${Q.cards.map(c => `<tr data-key="card:${c.pf.id}" data-value="${c.missed}"><th scope="row">${c.pf.name}</th><td>${c.answered}</td><td>${share(c.missed, c.answered)}</td></tr>`).join("")}</table></div>
+    ${S.enough ? `<div class="scroll"><table class="grid"><caption>Start here steps done</caption><tr><th scope="col">Step</th><th scope="col">Done</th></tr>
+      ${START_STEPS.map((s, j) => `<tr data-key="step:${j}" data-value="${S.per[j]}"><th scope="row">${j + 1}. ${s.text}</th><td>${share(S.per[j], S.D.length)}</td></tr>`).join("")}</table></div>` : ""}
+    ${P.length ? `<div class="scroll"><table class="grid"><caption>When they last copied the AI settings prompt (counted from the day they sent their file)</caption>
+      <tr><th scope="col">Last copied</th><th scope="col">People</th></tr>${fresh.map(f => { const n = P.filter(p => f[2](age(p))).length;
+        return `<tr data-key="settings:${f[0]}" data-value="${n}"><th scope="row">${f[1]}</th><td>${share(n, P.length)}</td></tr>`; }).join("")}</table></div>` : ""}
+    <h3>AI use notes to follow up (by task, never by person)</h3>
+    <ul class="flags">${noteFlags(C.list).map(f => `<li data-key="flag:${f.key}" data-value="${f.n}"><b>${f.name}:</b> ${plural(f.n, "note")}${f.tasks.length ? " (" + safe(f.tasks.join("; ")) + ")" : ""}</li>`).join("")}</ul>
+    <p class="small">${of(Q.fin.length)} answered all 8 cards.</p></details>`;
 }
 
-function settingsHtml(D) {  // how fresh each person's AI settings prompt was, as dots on a timeline (stacked by week)
-  const S = people.filter(p => p.settingsCopiedOn !== null && p.exportedOn), head = partOf(D, "AI settings prompt: how fresh", S);
-  if (S.length < SMALL.group) return head;
-  const age = p => p.settingsCopiedOn ? Math.max(0, daysBetween(p.settingsCopiedOn, p.exportedOn)) : null;
-  const bands = [["week", "Within 7 days", a => a !== null && a <= 7], ["month", "8 to 30 days", a => a > 7 && a <= 30],
-                 ["older", "Over 30 days", a => a > 30], ["never", "Never copied", a => a === null]];
-  const n = b => S.filter(p => b[2](age(p))).length, ages = S.map(age).filter(a => a !== null);
-  const W = room(), pad = 14, far = Math.max(42, ...ages.map(a => a + 2)), x = d => r1(pad + (W - 2 * pad) * d / far), base = 120;
-  const stack = {};   // one dot per person, stacked in 7-day columns so no exact day is shown
-  const dots = ages.sort((a, b) => a - b).map((a, i) => { const col = Math.floor(a / 7), k = stack[col] = (stack[col] || 0) + 1;
-    return `<circle cx="${x(col * 7 + 3.5)}" cy="${base - 12 - (k - 1) * 15}" r="6" class="dot ${a <= 7 ? "good" : a <= 30 ? "mid" : "old"} pop"${delay(200 + i * 60)}/>`; }).join("");
-  const zone = (a, b, cls, label, key, val) => `<g data-key="settings:${key}" data-value="${val}"><rect x="${x(a)}" y="20" width="${r1(x(b) - x(a))}" height="${base - 20}" class="zone ${cls}"/>
-    <text x="${r1((x(a) + x(b)) / 2)}" y="${base + 22}" class="tick" text-anchor="middle">${plural(val, "person", "people")}</text></g>`;
-  const ticks = [0, 7, 30].map(d => `<text x="${x(d)}" y="14" class="tick" text-anchor="${d ? "middle" : "start"}">${d ? d + " days" : "today"}</text>`).join("");
-  const body = svg(W, base + 32, zone(0, 7, "good", n(bands[0]), "week", n(bands[0])) + zone(7, 30, "mid", n(bands[1]), "month", n(bands[1]))
-    + zone(30, far, "old", n(bands[2]), "older", n(bands[2])) + `<line x1="${pad}" x2="${W - pad}" y1="${base}" y2="${base}" class="axis"/>` + ticks + dots,
-    "How many days before sending their file people last copied the settings prompt")
-    + `<p class="never" data-key="settings:never" data-value="${n(bands[3])}">Never copied it: <b>${n(bands[3])}</b></p>`;
-  return head + panel("fresh", "Days since people last copied the settings prompt", body,
-    `It should go into their AI tool again every week. ${share(n(bands[0]), S.length)} did that in the 7 days before sending their file.`,
-    bands.map(b => ms(`${b[1]}: ${share(n(b), S.length)}`)).join("") + ms("Each dot is one person, placed in 7-day steps so no exact date shows. The bands are counted from the day they sent their file."));
-}
-
-function notesHtml(D) {     // AI use notes: how many, which tools, and anything to follow up (by task, never by person)
-  const N = people.filter(p => p.notes), head = partOf(D, "AI use notes: what to follow up", N);
-  if (N.length < SMALL.group) return head;
-  const notes = N.flatMap(p => p.notes), writers = N.filter(p => p.notes.length).length;
-  const status = Object.keys(TOOL_STATUSES).map(s => countRow("status:" + s, s, notes.filter(n => toolOf(n) && toolOf(n).status === s).length, notes.length))
-    .concat([countRow("status:Other", "Other tool", notes.filter(n => !toolOf(n)).length, notes.length)]);
-  const flags = [["notapproved", "Named a tool that isn't approved", n => toolOf(n) && toolOf(n).status === "Not approved"],
-                 ["notpermitted", "On a task that is Not permitted on the tool used", n => toolOf(n) && taskOf(n) && taskOf(n).ratings[toolOf(n).where] === "Not permitted"],
-                 ["significant", "On a Significant task", n => taskOf(n) && isSignificant(taskOf(n))]];
-  const flagList = flags.map(f => {
-    const hits = notes.filter(f[2]), byTask = {};
-    hits.forEach(n => byTask[n.task] = (byTask[n.task] || 0) + 1);
-    const tasks = Object.keys(byTask).sort((a, b) => byTask[b] - byTask[a]).map(t => safe(t) + ": " + byTask[t]).join("; ");
-    return `<li class="${hits.length && f[0] !== "significant" ? "flag-on" : ""}" data-key="flag:${f[0]}" data-value="${hits.length}"><b>${f[1]}:</b> ${plural(hits.length, "note")}${tasks ? " (" + tasks + ")" : ""}</li>`;
-  }).join("");
-  return `${head}<div class="tiles">${tile("notes", "AI use notes", notes.length, "")}${tile("note-writers", "People with at least one", share(writers, N.length), "", writers)}</div>
-    <h3>To follow up (counted by task, never by person)</h3><ul class="flags">${flagList}</ul>
-    <h3>By tool status</h3>${bars(status)}`;
-}
-
-function rulesHtml() {      // Rules at a glance: the 24 tasks x 3 kinds of tool as rating dots, then the register
-  const where = Object.keys(SWITCH_OPTIONS), letter = { Low: "L", Medium: "M", Significant: "S", "Not permitted": "✕" };
-  const N = people.filter(p => p.notes), notes = N.flatMap(p => p.notes);
-  const grid = `<div class="rules" role="table" aria-label="The rating of each task on each kind of tool">
-    <div class="rrow rhead" role="row"><span role="columnheader">Task</span>${where.map(w => `<span role="columnheader">${SWITCH_OPTIONS[w].name.replace("Firm-approved cloud tool", "Firm cloud tool").replace("Local AI on this laptop", "Local AI")}</span>`).join("")}</div>`
-    + SECTIONS.map(s => `<div class="rsec" role="row"><span role="rowheader">${s}</span></div>` + TASKS.filter(t => t.section === s).map((t, i) =>
-      `<div class="rrow" role="row" data-key="matrix:${safe(t.task)}"><span role="cell">${t.task}</span>${where.map(w =>
-        `<span role="cell"><i class="rdot ${RATINGS[t.ratings[w]].css}" title="${t.ratings[w]}" data-rating="${t.ratings[w]}">${letter[t.ratings[w]]}</i><span class="hidden-say">${t.ratings[w]}</span></span>`).join("")}</div>`).join("")).join("") + `</div>`;
-  const counts = `<div class="scroll"><table class="grid"><caption>How many of the ${TASKS.length} tasks get each rating, on each kind of tool</caption>
-      <tr><th scope="col">Rating</th>${where.map(w => `<th scope="col">${SWITCH_OPTIONS[w].name}</th>`).join("")}</tr>${Object.keys(RATINGS).map(r => `<tr><th scope="row">${label(r)}</th>${where.map(w => {
-        const n = TASKS.filter(t => t.ratings[w] === r).length; return `<td data-key="count:${r}:${w}" data-value="${n}">${n}</td>`; }).join("")}</tr>`).join("")}</table></div>`;
-  const perm = w => TASKS.filter(t => t.ratings[w] !== "Not permitted").length;
-  const significant = TASKS.filter(isSignificant).map(t => { const n = notes.filter(x => x.task === t.task).length;
-    return `<tr><th scope="row">${t.task}<br><span class="small">${t.section}</span></th><td>${t.reason}</td>${people.length ? `<td data-key="sig:${safe(t.task)}" data-value="${n}">${n}</td>` : ""}</tr>`; }).join("");
-  return `<h2 id="rules">Rules at a glance</h2><p class="warn">${TOOLS_PLACEHOLDER}</p>`
-    + panel("rules", `The ${TASKS.length} tasks × 3 kinds of tool`, `<p class="rkey">${Object.keys(RATINGS).map(r => `<span><i class="rdot ${RATINGS[r].css}">${letter[r]}</i> ${r}</span>`).join("")}</p>` + grid,
-      `A personal account is allowed for ${perm("personal")} of ${TASKS.length} tasks; a firm cloud tool for ${perm("cloud")}; local AI for ${perm("local")}.`,
-      where.map(w => ms(`${SWITCH_OPTIONS[w].name}: ` + Object.keys(RATINGS).map(r => `${TASKS.filter(t => t.ratings[w] === r).length} ${r}`).join(" + ") + ` = ${TASKS.length} tasks`)).join(""))
-    + counts
-    + `<details id="registerBox"${panels.register ? " open" : ""} ontoggle="panels.register = this.open"><summary>The tools register, Significant tasks and lowest levels</summary>
-    <h3>Approved tools</h3>
-    <div class="scroll"><table class="grid"><caption>The AI tools register</caption>
-      <tr><th scope="col">Tool</th><th scope="col">Status</th><th scope="col">Counts as</th><th scope="col">Note</th></tr>
-      ${APPROVED_TOOLS.map(t => `<tr data-key="tool:${t.name}" data-value="${t.status}"><th scope="row">${t.name}</th><td><span class="badge">${t.status}</span>
-        <br><span class="small">${TOOL_STATUSES[t.status]}</span></td><td>${SWITCH_OPTIONS[t.where].name}</td><td>${t.note}</td></tr>`).join("")}</table></div>
-    <h3>Significant tasks</h3>${people.length ? basedOn(N, "AI use notes") : ""}
-    <div class="scroll"><table class="grid"><caption>Tasks where a mistake could affect a conclusion, be hard to spot, or affect a person</caption>
-      <tr><th scope="col">Task</th><th scope="col">Why</th>${people.length ? `<th scope="col">AI use notes</th>` : ""}</tr>${significant}</table></div>
-    <h3>Lowest level that should use AI</h3>
-    ${bars(LEVELS.map(l => { const n = TASKS.filter(t => t.minLevel === l).length; return ["minlevel:" + l, l, n, plural(n, "task")]; }), true)}</details>`;
+function pilotsBox(C) {     // small tests of AI on one task: only when the files have some
+  const list = C.list.filter(p => p.pilots).flatMap(p => p.pilots);
+  if (!list.length) return "";
+  const saved = list.map(p => p.baselineMinutes - p.aiMinutes), med = list.length >= SMALL.average ? median(saved) : null;
+  const still = list.reduce((n, p) => n + p.stillUsing, 0), started = list.reduce((n, p) => n + p.startedWith, 0);
+  return `<details id="pilotsBox"${panels.pilots ? " open" : ""} ontoggle="panels.pilots = this.open"><summary>Pilots (${list.length})</summary>
+    <p data-key="pilots-median" data-value="${med === null ? "" : med}">${med === null ? "The typical time saved shows once there are 3 pilots."
+      : `<b>Typical time saved per task:</b> ${med >= 0 ? plural(med, "minute") : plural(-med, "minute") + " slower"} (the middle pilot, so one big result can't skew it).`}
+      Still using AI for it: ${share(still, started)} of the people who started a pilot.</p>
+    <div class="scroll"><table class="grid"><caption>Each pilot is one small test, not a firm-wide figure</caption>
+      <tr><th scope="col">Task</th><th scope="col">Tool</th><th scope="col">Minutes without AI</th><th scope="col">With AI</th><th scope="col">Saved</th><th scope="col">Errors caught</th><th scope="col">Still using it</th></tr>
+      ${list.map((p, i) => `<tr data-key="pilot:${i}" data-value="${saved[i]}"><th scope="row">${safe(p.goal || "Pilot " + (i + 1))}</th><td>${safe(p.tool)}</td><td>${p.baselineMinutes}</td><td>${p.aiMinutes}</td>
+        <td>${saved[i] >= 0 ? saved[i] : -saved[i] + " slower"}</td><td>${p.errorsCaught}</td><td>${p.stillUsing} of ${p.startedWith}</td></tr>`).join("")}</table></div></details>`;
 }
 
 // =====================================================================
-// TAB: Pilots (small tests of AI on one task): a slope for each, and who kept using it
+// TAB: This week: suggested tasks from the data, which the manager ticks, edits and saves
 // =====================================================================
-function pilotsScreen() {
-  if (!people.length) return noData("Pilots");
-  const H = people.filter(p => p.pilots), list = H.flatMap(p => p.pilots);
-  const head = `<h1>Pilots</h1><p class="grey">Small tests of AI on one task: the minutes it took without and with AI, errors caught, and whether people kept using it.</p>${basedOn(H)}`;
-  if (!list.length) return head + "<p>No pilots in the files yet.</p>";
-  const sum = key => list.reduce((n, p) => n + p[key], 0), longest = Math.max(1, ...list.map(p => Math.max(p.baselineMinutes, p.aiMinutes)));
-  const enough = list.length >= SMALL.average, med = median(list.map(p => p.baselineMinutes - p.aiMinutes));
-  return head + `<div class="tiles">${tile("pilots", "Pilots", list.length, "")}
-      ${tile("errors", "Errors caught", sum("errorsCaught"), "Across all pilots")}
-      ${tile("still", "Still using AI for it", share(sum("stillUsing"), sum("startedWith")), "People who started a pilot", sum("stillUsing"))}
-      ${tile("median", "Typical time saved per task", !enough ? "Needs 3 pilots" : med >= 0 ? plural(med, "minute") : plural(-med, "minute") + " slower",
-        enough ? "The median: the middle pilot, so one big result can't skew it" : "", enough ? med : "")}</div>
-    <p class="small">Each pilot is one small test, not a firm-wide figure; these just add them up. Every slope uses the same scale, and a line that goes up means AI was slower.</p>
-    <div class="pilots">${list.map((p, i) => pilotBox(p, i, longest)).join("")}</div>`;
+function suggestTasks(C) {  // [{ on, text, level ("" = everyone), why }]
+  const out = [], R = C.rows.map(x => x.r), hot = topOf(C.rows), Q = quizFigures(C.list), S = stepFigures(C.list);
+  const add = (text, level, why) => out.push({ on: true, text, level, why });
+  if (hot) { const [s, t] = hot.name.split(" / "); add(`Practise ${t} checks on ${s}: ${TYPE_ADVICE[t]}.`, "", `Hotspot: ${hot.name}, ${plural(hot.n, "report")}`); }
+  const slips = R.filter(r => r.type === "Data or privacy slip").length, flag = noteFlags(C.list)[0];
+  if (slips || flag.n) add(`Recap the data rules: ${TYPE_ADVICE["Data or privacy slip"]}.`, "", [slips ? plural(slips, "privacy slip") : "", flag.n ? plural(flag.n, "AI use note") + " naming an unapproved tool" : ""].filter(Boolean).join(" and "));
+  const card = Q.cards.find(c => c.missed);
+  if (card) add(`Do the '${card.pf.name}' card in Spot the mistake. The check: ${card.pf.check}`, "", `Missed by ${share(card.missed, card.answered)}`);
+  const P = C.list.filter(p => p.settingsCopiedOn !== null && p.exportedOn), stale = P.filter(p => !p.settingsCopiedOn || daysBetween(p.settingsCopiedOn, p.exportedOn) > 7).length;
+  if (P.length && stale / P.length >= 0.5) add("Copy your AI settings prompt (on My level) into your AI tool again.", "", `${share(stale, P.length)} hadn't copied it in the last 7 days`);
+  if (S.enough) { const j = S.per.indexOf(Math.min(...S.per));
+    if (S.per[j] < 0.8 * S.D.length) add(`Finish Start here step ${j + 1}: ${START_STEPS[j].text.toLowerCase()}.`, "", `Done by ${share(S.per[j], S.D.length)}`); }
+  const lows = TASKS.filter(t => t.ratings.cloud === "Low"), wk = weekNo(todayISO()) + weekStart;
+  const levels = LEVELS.map((l, i) => i).filter(i => C.list.some(p => p.level === LEVELS[i]));
+  (levels.length ? levels : [0, 1, 2, 3]).forEach(i => {
+    const t = lows[(wk + i) % lows.length], v = verdictFor(t, i, "cloud").key;
+    add(`Try '${t.task}' with made-up data${v === "byhand" ? ": do it by hand first, then compare with AI's answer" : ""}.`, LEVELS[i], "A Low task to try at this level");
+  });
+  return out;
+}
+function weekScreen() {
+  if (!people.length) return noData("This week");
+  const C = current(), key = JSON.stringify(slice);
+  if (!week || week.key !== key) { week = suggestTasks(C); week.key = key; }   // new filters: new suggestions
+  const start = addDays(mondayOf(todayISO()), 7 * weekStart), picked = week.filter(t => t.on && t.text.trim()).length;
+  const rows = week.map((t, i) => `<div class="task${t.on ? "" : " off"}" data-key="task:${i}">
+      <input type="checkbox" id="wk-on-${i}"${t.on ? " checked" : ""} aria-label="Include task ${i + 1}" onchange="weekSet(${i}, 'on', this.checked)">
+      <div class="taskbody"><label class="hidden-say" for="wk-text-${i}">Task ${i + 1}</label>
+        <textarea id="wk-text-${i}" rows="${Math.max(2, Math.ceil(t.text.length / 40))}" maxlength="200" oninput="weekSet(${i}, 'text', this.value)">${safe(t.text)}</textarea>
+        ${t.why ? `<span class="small">Why: ${safe(t.why)}</span>` : `<span class="small">Added by you</span>`}</div>
+      <div class="taskfor"><label class="small" for="wk-level-${i}">For</label>
+        <select id="wk-level-${i}" onchange="weekSet(${i}, 'level', this.value)"><option value="">Everyone</option>${LEVELS.map(l => `<option${l === t.level ? " selected" : ""}>${l}</option>`).join("")}</select></div></div>`).join("");
+  return `<h1>This week</h1>${slicerBar(C)}
+    <p class="grey">Suggested tasks for ${safe(C.name)}, made from the data. Tick the ones to keep, change the words, say who each is for, or add your own.</p>
+    <div class="field weekpick"><label for="weekStart">Week starting</label><select id="weekStart" onchange="weekStart = Number(this.value); draw()">
+      ${[0, 1].map(n => `<option value="${n}"${n === weekStart ? " selected" : ""}>${n ? "Next week" : "This week"}: Monday ${formatDate(addDays(mondayOf(todayISO()), 7 * n))}</option>`).join("")}</select></div>
+    <div class="tasks" id="taskList">${rows || "<p>No suggestions from this data. Add your own below.</p>"}</div>
+    <p><button class="plain" id="addTask" onclick="weekAdd()">Add a task</button>
+      <button class="plain" id="remakeTasks" onclick="week = null; weekMsg = 'Suggestions made again from the data.'; draw(weekMsg)">Start again from the data</button></p>
+    <h2>Save and share</h2>
+    <p class="small" id="weekCount">${plural(picked, "task")} ticked for the week starting ${formatDate(start)}. The file has the tasks only: no names and no figures.</p>
+    <button class="btn" id="saveWeek" onclick="saveWeek()">Save this week's tasks</button>
+    <button class="plain" id="printWeek" onclick="printWeek()">Print the list</button>
+    <p class="small" id="weekMsg" role="status">${weekMsg}</p>
+    <details id="weekCopy"${panels.weekcopy ? " open" : ""} ontoggle="panels.weekcopy = this.open"><summary>Can't save files? Copy the text instead</summary>
+      <textarea id="weekText" readonly aria-label="Text of the weekly tasks file">${safe(JSON.stringify(weekFile(), null, 2))}</textarea>
+      <button class="plain" id="copyWeek" onclick="copyText('weekText', 'weekMsg')">Copy</button></details>
+    <p class="small">Loading this file into the staff app comes later. For now, share the printed list or the file with the team.</p>`;
+}
+function weekSet(i, key, value) {   // a tick, typed words or a level: kept without a redraw, so typing isn't interrupted
+  week[i][key] = key === "text" ? value.slice(0, 200) : value;
+  if (key === "on") document.querySelector(`[data-key="task:${i}"]`).classList.toggle("off", !value);
+  document.getElementById("weekCount").textContent = document.getElementById("weekCount").textContent.replace(/^\d+ tasks?/, plural(week.filter(t => t.on && t.text.trim()).length, "task"));
+  document.getElementById("weekText").value = JSON.stringify(weekFile(), null, 2);
+  weekMsg = "";
+}
+function weekAdd() { week.push({ on: true, text: "", level: "", why: "" }); draw(); document.getElementById("wk-text-" + (week.length - 1)).focus(); }
+function weekFile() {       // the small file the staff app will read later
+  const C = current();
+  return { app: EXPORT_APP, kind: "weekly-tasks", version: 1, weekStarting: addDays(mondayOf(todayISO()), 7 * weekStart), madeOn: todayISO(),
+           forWhom: C.kind === "all" ? "Whole audit" : C.one ? "One person" : C.g ? C.g.name : "Whole audit",
+           tasks: week.filter(t => t.on && t.text.trim()).map(t => ({ text: cut(t.text, 200), level: t.level })) };
+}
+function saveWeek() {
+  const data = weekFile(), ok = data.tasks.length && downloadFile("weekly-tasks.json", JSON.stringify(data, null, 2));
+  weekMsg = !data.tasks.length ? "Tick at least one task first." : ok ? "Saved as weekly-tasks.json." : "This browser blocked the file. Copy the text instead (below).";
+  document.getElementById("weekMsg").textContent = weekMsg;
+}
+function printWeek() {      // one clean page: the tasks for everyone, then each level's
+  const data = weekFile(), group = l => data.tasks.filter(t => t.level === l);
+  printBlock(`<h1>Suggested AI tasks: week starting ${formatDate(data.weekStarting)}</h1><p>For: ${safe(data.forWhom)}</p>`
+    + ["", ...LEVELS].filter(l => group(l).length).map(l => `<h2>${l || "Everyone"}</h2><ul>${group(l).map(t => `<li>${safe(t.text)}</li>`).join("")}</ul>`).join("")
+    + (data.tasks.length ? "" : "<p>No tasks ticked.</p>"));
 }
 
-function pilotBox(p, i, longest) {   // one pilot: a slope from minutes without AI to minutes with it, and a part-filled circle for who kept using it
-  const saved = p.baselineMinutes - p.aiMinutes, pc = p.baselineMinutes >= SMALL.percent && saved ? pct(Math.abs(saved), p.baselineMinutes) : 0;
-  const W = Math.min(room(), 330), H = 190, top = 26, base = 160, xa = 54, xb = W - 128, y = m => r1(base - (base - top) * m / longest);
-  const slower = saved < 0, part = p.startedWith ? p.stillUsing / p.startedWith : 0, cx = W - 46, cy = 92, rr = 34;
-  const slope = `<line x1="${xa}" x2="${xa}" y1="${top - 8}" y2="${base}" class="axis"/><line x1="${xb}" x2="${xb}" y1="${top - 8}" y2="${base}" class="axis"/>
-    <text x="${xa}" y="${base + 22}" class="tick" text-anchor="middle">Without AI</text><text x="${xb}" y="${base + 22}" class="tick" text-anchor="middle">With AI</text>
-    <line x1="${xa}" x2="${xb}" y1="${y(p.baselineMinutes)}" y2="${y(p.aiMinutes)}" class="slope ${slower ? "up" : ""} draw"/>
-    <g data-key="pilot:${i}:without" data-value="${p.baselineMinutes}"><circle cx="${xa}" cy="${y(p.baselineMinutes)}" r="6" class="dot pop"/>
-      <text x="${xa - 10}" y="${y(p.baselineMinutes) + 5}" class="val" text-anchor="end">${p.baselineMinutes}</text></g>
-    <g data-key="pilot:${i}:with" data-value="${p.aiMinutes}"><circle cx="${xb}" cy="${y(p.aiMinutes)}" r="6" class="dot ${slower ? "hot" : ""} pop"${delay(600)}/>
-      <text x="${xb + 10}" y="${y(p.aiMinutes) + 5}" class="val">${p.aiMinutes}</text></g>
-    <text x="${xa - 10}" y="${top - 12}" class="tick" text-anchor="start">minutes</text>`;
-  const a = 2 * Math.PI * part, ex = r1(cx + rr * Math.sin(a)), ey = r1(cy - rr * Math.cos(a));
-  const pie = part >= 1 ? `<circle cx="${cx}" cy="${cy}" r="${rr}" class="pie pop"/>` : part > 0
-    ? `<path d="M${cx},${cy} L${cx},${cy - rr} A${rr},${rr} 0 ${part > 0.5 ? 1 : 0} 1 ${ex},${ey} Z" class="pie pop"${delay(700)}/>` : "";
-  const circle = `<circle cx="${cx}" cy="${cy}" r="${rr}" class="pie-back"/>${pie}
-    <text x="${cx}" y="${cy + rr + 22}" class="tick" text-anchor="middle">${p.stillUsing} of ${p.startedWith} still</text><text x="${cx}" y="${cy + rr + 40}" class="tick" text-anchor="middle">using it</text>`;
-  const words = saved >= 0 ? plural(saved, "minute") + " saved" : plural(-saved, "minute") + " slower";
-  return `<div class="box viz pilot" data-key="pilot:${i}" data-value="${saved}"><h2>${safe(p.goal || "Pilot " + (i + 1))}</h2><p class="small">Tool: ${safe(p.tool)}</p>
-    ${svg(W, H + 26, slope + circle, `${p.baselineMinutes} minutes without AI, ${p.aiMinutes} with it; ${p.stillUsing} of ${p.startedWith} people still use it`)}
-    <p class="take"><b>${words} per task</b>${pc ? ` (${pc}% ${saved > 0 ? "faster" : "slower"})` : ""}</p>
-    <p>Errors caught: ${p.errorsCaught} · Still using it: ${share(p.stillUsing, p.startedWith)} people</p>
-    <details class="maths" id="maths-pilot-${i}"${panels["m-pilot" + i] ? " open" : ""} ontoggle="panels['m-pilot${i}'] = this.open"><summary id="sum-pilot-${i}">Show the maths</summary><div class="sum">
-      ${ms(`${p.baselineMinutes} − ${p.aiMinutes} = ${saved} minute${Math.abs(saved) === 1 ? "" : "s"} ${saved >= 0 ? "saved" : "(a minus means slower)"}`)}
-      ${pc ? ms(`${Math.abs(saved)} ÷ ${p.baselineMinutes} = ${pc}% ${saved > 0 ? "faster" : "slower"}`) : ms("No percentage is shown when the task took under 5 minutes, or nothing changed.")}
-      ${ms(`Still using it: ${p.stillUsing} ÷ ${p.startedWith}` + (p.startedWith >= SMALL.percent ? ` = ${pct(p.stillUsing, p.startedWith)}%` : " (no percentage when under 5 people)"))}</div></details>
-    <p class="small">From one small test, not a firm-wide figure.</p></div>`;
-}
-
 // =====================================================================
-// TAB: Data (the shared Data tab, with a "How to use this dashboard" box and a big example button)
+// TAB: Data: the shared Data tab, plus what's loaded, saving a group file, and the example files
 // =====================================================================
 function dataFinal() {
-  const how = `<div class="box howto" id="howTo"><h2>How to use this dashboard</h2><ol>
-      <li><b>Load</b> the files staff send with 'Send to my manager' (below), or try the example team.</li>
-      <li><b>Overview</b> tells the story in 4 numbers; <b>Mistakes</b> shows where and what; <b>Learning</b> shows what people find hard; <b>Pilots</b> shows the small tests.</li>
-      <li>Each chart has one line saying what it shows. Open <b>Show the maths</b> to see how each figure was worked out.</li></ol>
-      <p class="small">Small groups are never shown on their own, so no figure points at one person.</p></div>`;
-  return dataScreen().replace("</h1>", "</h1>" + how).replace('class="btn" id="exampleBtn"', 'class="btn big" id="exampleBtn"');
+  const C = people.length ? current() : null;
+  const table = C ? `<h2>What's loaded</h2><div class="scroll"><table class="grid" id="loadedTable"><caption>Each group file, and each person's own file</caption>
+      <tr><th scope="col">Group or file</th><th scope="col">Kind</th><th scope="col">People</th><th scope="col">Reports</th></tr>
+      ${C.opts.map(o => `<tr data-key="source:${safe(o.name)}" data-value="${o.list.length}"><th scope="row">${safe(o.name)}</th><td>${o.group ? "Group file" : "One person's file"}</td>
+        <td>${o.list.length}</td><td>${o.list.reduce((n, p) => n + p.reports.length, 0)}</td></tr>`).join("")}</table></div>` : "";
+  const save = C ? `<h2>Save as a group file</h2>
+    <p class="small">Puts everyone loaded (${plural(people.length, "person", "people")}) into one file, so you can load them in one go next time or send them on. It holds the same data as the staff files: no names.</p>
+    <div class="field"><label for="groupName">Group name (for example 'Leeds audit')</label>
+      <input type="text" id="groupName" maxlength="60" oninput="document.getElementById('groupHint').textContent = privacyHint(this.value)"></div>
+    <span class="small" id="groupHint" role="status"></span>
+    <p><button class="btn" id="saveGroup" onclick="saveGroup()">Save as group file</button></p>
+    <p class="small" id="groupMsg" role="status">${groupMsg}</p>` : "";
+  const examples = `<h2>Example files</h2><p class="small">The <b>example-data</b> folder next to this dashboard has made-up files to try:
+      4 group files (Manchester audit, London audit, NQ1 cohort, Managers) and 4 people's own files. Load them with the box above.
+      The <b>Load example team</b> button below loads a different, smaller made-up team.</p>`;
+  return dataScreen().replace("<h2>Other ways to load data</h2>", table + save + examples + "<h2>Other ways to load data</h2>");
+}
+function toFile(p) {        // a loaded person back in the shape of a staff file
+  const f = { app: EXPORT_APP, version: EXPORT_VERSION, madeWith: p.madeWith, exportedOn: p.exportedOn, anonId: p.anonId, level: p.level,
+    reports: p.reports.map(r => ({ id: r.id, date: r.date, section: r.section, type: r.type, wrong: r.wrong, caught: r.caught, impact: r.impact, context: r.context, task: r.task })) };
+  if (p.steps) f.steps = p.steps;
+  if (p.picks) f.game = { picks: p.picks };
+  if (p.settingsCopiedOn !== null) f.settingsCopiedOn = p.settingsCopiedOn;
+  if (p.notes) f.notes = p.notes;
+  if (p.pilots) f.pilots = p.pilots;
+  if (p.team) f.team = p.team;
+  return f;
+}
+function saveGroup() {
+  const name = cleanTeam(document.getElementById("groupName").value);
+  if (!name) groupMsg = "Type a name for the group first.";
+  else {
+    const file = "group-" + (name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "files") + ".json";
+    const ok = downloadFile(file, JSON.stringify({ app: EXPORT_APP, version: EXPORT_VERSION, kind: "group", name, madeOn: todayISO(), people: people.map(toFile) }, null, 2));
+    groupMsg = ok ? `Saved as ${safe(file)}: ${plural(people.length, "person", "people")}.` : "This browser blocked the file.";
+  }
+  document.getElementById("groupMsg").innerHTML = groupMsg;
 }
 
 draw();   // show the Overview tab
-play();
 
 </script>
 </body>

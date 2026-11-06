@@ -1,0 +1,703 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "kind": "group",
+  "name": "Managers",
+  "madeOn": "2026-11-06",
+  "people": [
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-29",
+      "anonId": "p-vi524jku",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-vi524jku-0",
+          "date": "2026-10-29",
+          "section": "Accounts and disclosures",
+          "type": "Wrong judgement",
+          "wrong": "Draft going concern wording sounded more certain than the evidence.",
+          "caught": "Rechecked to the source document",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "Drafting the going concern conclusion"
+        },
+        {
+          "id": "r-vi524jku-1",
+          "date": "2026-10-28",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Suggested materiality on profit when the entity makes a loss.",
+          "caught": "Senior's review",
+          "impact": "",
+          "context": "practice",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-vi524jku-2",
+          "date": "2026-10-15",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Quoted a note that isn't in the accounts.",
+          "caught": "Checked against Companies House",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "First pass against the disclosure checklist"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          2,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-26",
+      "notes": [
+        {
+          "id": "n-vi524jku-0",
+          "date": "2026-09-21",
+          "task": "Searching for unrecorded liabilities",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-vi524jku-1",
+          "date": "2026-09-11",
+          "task": "Deciding if revenue is recognised correctly",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-vi524jku-2",
+          "date": "2026-09-25",
+          "task": "Deciding if revenue is recognised correctly",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [
+        {
+          "id": "pl-vi524jku-0",
+          "goal": "First pass against the disclosure checklist",
+          "tool": "Claude",
+          "baselineMinutes": 90,
+          "aiMinutes": 55,
+          "errorsCaught": 8,
+          "startedWith": 6,
+          "stillUsing": 5
+        }
+      ],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-29",
+      "anonId": "p-dqmmq4rc",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-dqmmq4rc-0",
+          "date": "2026-09-28",
+          "section": "Revenue",
+          "type": "Wrong judgement",
+          "wrong": "Said revenue on a long contract should all be taken at the start.",
+          "caught": "Rechecked to the source document",
+          "impact": "",
+          "context": "practice",
+          "task": "Deciding if revenue is recognised correctly"
+        },
+        {
+          "id": "r-dqmmq4rc-1",
+          "date": "2026-10-08",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Called a fraud risk 'low' with no reason given.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "",
+          "context": "real",
+          "task": "Industry research from public news"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        false,
+        true,
+        true,
+        false
+      ],
+      "game": {
+        "picks": [
+          3,
+          2,
+          3,
+          2,
+          3,
+          1,
+          -1,
+          1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-23",
+      "notes": [
+        {
+          "id": "n-dqmmq4rc-0",
+          "date": "2026-10-06",
+          "task": "Searching for unrecorded liabilities",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-dqmmq4rc-1",
+          "date": "2026-10-01",
+          "task": "Searching for unrecorded liabilities",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-dqmmq4rc-2",
+          "date": "2026-09-21",
+          "task": "Background checks on a director",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            false,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [
+        {
+          "id": "pl-dqmmq4rc-0",
+          "goal": "Drafting the planning memo",
+          "tool": "Microsoft 365 Copilot",
+          "baselineMinutes": 120,
+          "aiMinutes": 80,
+          "errorsCaught": 5,
+          "startedWith": 4,
+          "stillUsing": 4
+        }
+      ],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-3h2449ak",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-3h2449ak-0",
+          "date": "2026-10-16",
+          "section": "Walkthroughs and controls",
+          "type": "Wrong judgement",
+          "wrong": "Said a review control was precise enough without evidence.",
+          "caught": "Re-added it in Excel",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "Concluding on control design"
+        },
+        {
+          "id": "r-3h2449ak-1",
+          "date": "2026-10-08",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Said a disclosure was met with no quote to support it.",
+          "caught": "Checked against Companies House",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "Drafting the going concern conclusion"
+        },
+        {
+          "id": "r-3h2449ak-2",
+          "date": "2026-10-21",
+          "section": "Revenue",
+          "type": "Wrong judgement",
+          "wrong": "Said revenue on a long contract should all be taken at the start.",
+          "caught": "Compared with my own working",
+          "impact": "",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-3h2449ak-3",
+          "date": "2026-10-27",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Suggested materiality on profit when the entity makes a loss.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "First draft of the planning memo"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          2,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-19",
+      "notes": [
+        {
+          "id": "n-3h2449ak-0",
+          "date": "2026-09-02",
+          "task": "First pass against the disclosure checklist",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-1",
+          "date": "2026-10-16",
+          "task": "First pass against the disclosure checklist",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            false,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-2",
+          "date": "2026-09-08",
+          "task": "Searching for unrecorded liabilities",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-3",
+          "date": "2026-09-18",
+          "task": "Setting materiality",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-4",
+          "date": "2026-09-29",
+          "task": "Drafting the going concern conclusion",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "London audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-cnd79qu2",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-cnd79qu2-0",
+          "date": "2026-09-11",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Said a director resigned in 2024; the record shows no change.",
+          "caught": "Senior's review",
+          "impact": "",
+          "context": "real",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-cnd79qu2-1",
+          "date": "2026-10-16",
+          "section": "Accounts and disclosures",
+          "type": "Wrong judgement",
+          "wrong": "Draft going concern wording sounded more certain than the evidence.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "",
+          "context": "real",
+          "task": "First pass against the disclosure checklist"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          2,
+          -1,
+          0,
+          0,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-19",
+      "notes": [
+        {
+          "id": "n-cnd79qu2-0",
+          "date": "2026-10-09",
+          "task": "First draft of the planning memo",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-cnd79qu2-1",
+          "date": "2026-09-30",
+          "task": "Drafting the going concern conclusion",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-cnd79qu2-2",
+          "date": "2026-09-18",
+          "task": "Searching for unrecorded liabilities",
+          "tool": "Claude",
+          "checked": [
+            true,
+            false,
+            true,
+            false
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [
+        {
+          "id": "pl-cnd79qu2-0",
+          "goal": "Spotting old reconciling items",
+          "tool": "A local model",
+          "baselineMinutes": 30,
+          "aiMinutes": 34,
+          "errorsCaught": 2,
+          "startedWith": 3,
+          "stillUsing": 1
+        }
+      ],
+      "team": "London audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-05",
+      "anonId": "p-zqwc79ag",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-zqwc79ag-0",
+          "date": "2026-09-23",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Invented a related party loan that isn't in the minutes.",
+          "caught": "Senior's review",
+          "impact": "A wrong figure on file",
+          "context": "real",
+          "task": "Finding directors' other companies on Companies House"
+        },
+        {
+          "id": "r-zqwc79ag-1",
+          "date": "2026-11-04",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Quoted a note that isn't in the accounts.",
+          "caught": "Compared with my own working",
+          "impact": "",
+          "context": "real",
+          "task": "Drafting the going concern conclusion"
+        },
+        {
+          "id": "r-zqwc79ag-2",
+          "date": "2026-10-23",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Called a fraud risk 'low' with no reason given.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Industry research from public news"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          0,
+          0,
+          2,
+          3,
+          1,
+          2,
+          1
+        ]
+      },
+      "settingsCopiedOn": "2026-11-04",
+      "notes": [
+        {
+          "id": "n-zqwc79ag-0",
+          "date": "2026-10-23",
+          "task": "Deciding if revenue is recognised correctly",
+          "tool": "Claude",
+          "checked": [
+            true,
+            false,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-zqwc79ag-1",
+          "date": "2026-10-09",
+          "task": "Concluding on control design",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-zqwc79ag-2",
+          "date": "2026-09-29",
+          "task": "Concluding on control design",
+          "tool": "Claude",
+          "checked": [
+            true,
+            false,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-zqwc79ag-3",
+          "date": "2026-11-03",
+          "task": "Setting materiality",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-zqwc79ag-4",
+          "date": "2026-09-10",
+          "task": "Analysing employees' pay data",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "Birmingham audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-05",
+      "anonId": "p-8766wcc6",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-8766wcc6-0",
+          "date": "2026-10-30",
+          "section": "Walkthroughs and controls",
+          "type": "Wrong judgement",
+          "wrong": "Concluded a control was well designed from one walkthrough.",
+          "caught": "Re-added it in Excel",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "Process notes from meeting notes"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          -1,
+          3,
+          1,
+          4,
+          -1,
+          -1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-11-04",
+      "notes": [
+        {
+          "id": "n-8766wcc6-0",
+          "date": "2026-09-14",
+          "task": "First draft of the planning memo",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-8766wcc6-1",
+          "date": "2026-10-23",
+          "task": "Setting materiality",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-8766wcc6-2",
+          "date": "2026-10-16",
+          "task": "Drafting the going concern conclusion",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "Leeds audit"
+    }
+  ]
+}

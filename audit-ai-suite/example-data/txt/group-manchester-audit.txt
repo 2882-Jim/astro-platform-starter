@@ -1,0 +1,1508 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "kind": "group",
+  "name": "Manchester audit",
+  "madeOn": "2026-11-06",
+  "people": [
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-06",
+      "anonId": "p-6yf6kqcu",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-6yf6kqcu-0",
+          "date": "2026-09-17",
+          "section": "Revenue",
+          "type": "Missed something",
+          "wrong": "Missed a large sale on 31 March.",
+          "caught": "Read the clause myself",
+          "impact": "Missing a cut-off error",
+          "context": "practice",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-6yf6kqcu-1",
+          "date": "2026-10-20",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Matched an invoice to the wrong ledger line.",
+          "caught": "Re-added it in Excel",
+          "impact": "A wrong conclusion on file",
+          "context": "real",
+          "task": "Matching invoices to the ledger"
+        },
+        {
+          "id": "r-6yf6kqcu-2",
+          "date": "2026-10-23",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Rounded every invoice to the nearest £100.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "Testing the wrong sample",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-6yf6kqcu-3",
+          "date": "2026-10-16",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Dropped the pence and the totals no longer agreed.",
+          "caught": "Read the clause myself",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-6yf6kqcu-4",
+          "date": "2026-09-18",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-6yf6kqcu-5",
+          "date": "2026-11-04",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process notes said invoices are approved twice; the notes say once.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Process flow from notes"
+        },
+        {
+          "id": "r-6yf6kqcu-6",
+          "date": "2026-11-05",
+          "section": "Payroll",
+          "type": "Wrong number",
+          "wrong": "Pension rate in the formula was last year's.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Explaining a payroll report layout (made-up example)"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        false,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          2,
+          1,
+          4,
+          3,
+          1,
+          2,
+          3
+        ]
+      },
+      "settingsCopiedOn": "2026-10-21",
+      "notes": [],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-03",
+      "anonId": "p-hd6pgee5",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-hd6pgee5-0",
+          "date": "2026-10-30",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Invoice total read as £1,850; the PDF says £1,580.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-hd6pgee5-1",
+          "date": "2026-10-30",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "VAT added twice in the sales schedule.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-hd6pgee5-2",
+          "date": "2026-11-02",
+          "section": "Revenue",
+          "type": "Missed something",
+          "wrong": "Missed a credit note issued after the year end.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-hd6pgee5-3",
+          "date": "2026-10-30",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Supplier statement check skipped the second page.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Matching invoices to the ledger"
+        },
+        {
+          "id": "r-hd6pgee5-4",
+          "date": "2026-10-22",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Quoted a note that isn't in the accounts.",
+          "caught": "Manager's review",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-hd6pgee5-5",
+          "date": "2026-11-02",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Ledger total in the table was out by one invoice.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "game": {
+        "picks": [
+          0,
+          -1,
+          2,
+          1,
+          3,
+          1,
+          -1,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-hd6pgee5-0",
+          "date": "2026-10-22",
+          "task": "Process notes from meeting notes",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-hd6pgee5-1",
+          "date": "2026-09-11",
+          "task": "Explaining what counts as a related party",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-hd6pgee5-2",
+          "date": "2026-10-12",
+          "task": "Process flow from notes",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-06",
+      "anonId": "p-nz5t3vnn",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-nz5t3vnn-0",
+          "date": "2026-11-06",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "Manager's review",
+          "impact": "",
+          "context": "real",
+          "task": "First pass against the disclosure checklist"
+        },
+        {
+          "id": "r-nz5t3vnn-1",
+          "date": "2026-10-20",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process flow added a control the client doesn't have.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Process flow from notes"
+        },
+        {
+          "id": "r-nz5t3vnn-2",
+          "date": "2026-10-30",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Said a disclosure was met with no quote to support it.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-nz5t3vnn-3",
+          "date": "2026-10-19",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "Checked against Companies House",
+          "impact": "Client data outside the firm",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-nz5t3vnn-4",
+          "date": "2026-11-06",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Bank balance copied from the wrong month.",
+          "caught": "Senior's review",
+          "impact": "",
+          "context": "real",
+          "task": "Spotting old reconciling items"
+        },
+        {
+          "id": "r-nz5t3vnn-5",
+          "date": "2026-10-02",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Closing balance had two digits swapped.",
+          "caught": "Checked against Companies House",
+          "impact": "A wrong figure on file",
+          "context": "real",
+          "task": "Spotting old reconciling items"
+        },
+        {
+          "id": "r-nz5t3vnn-6",
+          "date": "2026-10-23",
+          "section": "Related parties",
+          "type": "Missed something",
+          "wrong": "Left out a company the director joined last month.",
+          "caught": "Checked against Companies House",
+          "impact": "A misleading note to the client",
+          "context": "practice",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-nz5t3vnn-7",
+          "date": "2026-11-02",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Bank balance copied from the wrong month.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling balances from bank statements"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        false,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          3,
+          2,
+          3,
+          2,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-24",
+      "notes": [
+        {
+          "id": "n-nz5t3vnn-0",
+          "date": "2026-10-28",
+          "task": "Explaining what counts as a related party",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-nz5t3vnn-1",
+          "date": "2026-10-16",
+          "task": "Explaining a payroll report layout (made-up example)",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-nz5t3vnn-2",
+          "date": "2026-10-09",
+          "task": "Process notes from meeting notes",
+          "tool": "A local model",
+          "checked": [
+            false,
+            false,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "basic",
+      "exportedOn": "2026-10-29",
+      "anonId": "p-y3yu7xez",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-y3yu7xez-0",
+          "date": "2026-09-25",
+          "section": "Walkthroughs and controls",
+          "type": "Missed something",
+          "wrong": "Process flow left out the approval step.",
+          "caught": "Senior's review",
+          "impact": "A wrong conclusion on file",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-y3yu7xez-1",
+          "date": "2026-10-20",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Missed an unrecorded invoice from April.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-y3yu7xez-2",
+          "date": "2026-10-16",
+          "section": "Cash and bank",
+          "type": "Missed something",
+          "wrong": "Old reconciling items list skipped one account.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-y3yu7xez-3",
+          "date": "2026-09-21",
+          "section": "Related parties",
+          "type": "Missed something",
+          "wrong": "Missed a director's company with a shortened name.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-y3yu7xez-4",
+          "date": "2026-10-22",
+          "section": "Walkthroughs and controls",
+          "type": "Missed something",
+          "wrong": "Process notes missed who can change supplier bank details.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        }
+      ],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-pdyqqu7c",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-pdyqqu7c-0",
+          "date": "2026-09-17",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Year-end sales total out by £2,000.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-pdyqqu7c-1",
+          "date": "2026-10-15",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "Senior's review",
+          "impact": "",
+          "context": "practice",
+          "task": "First pass against the disclosure checklist"
+        },
+        {
+          "id": "r-pdyqqu7c-2",
+          "date": "2026-10-28",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Credit note shown as a sale.",
+          "caught": "Read the clause myself",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-pdyqqu7c-3",
+          "date": "2026-10-30",
+          "section": "Planning",
+          "type": "Made-up info",
+          "wrong": "Listed a 'new reporting rule' that was never issued.",
+          "caught": "Checked against Companies House",
+          "impact": "Testing the wrong sample",
+          "context": "real",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-pdyqqu7c-4",
+          "date": "2026-10-27",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Wrong invoice date copied from a scan.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-pdyqqu7c-5",
+          "date": "2026-10-09",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process notes said invoices are approved twice; the notes say once.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Process notes from meeting notes"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          2,
+          3,
+          3,
+          2,
+          3,
+          1,
+          -1,
+          0
+        ]
+      },
+      "settingsCopiedOn": "2026-10-14",
+      "notes": [],
+      "pilots": []
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-06",
+      "anonId": "p-5mfx8hi9",
+      "level": "NQ2",
+      "reports": [
+        {
+          "id": "r-5mfx8hi9-0",
+          "date": "2026-10-09",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Two invoices merged into one line in the table.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-5mfx8hi9-1",
+          "date": "2026-10-09",
+          "section": "Cash and bank",
+          "type": "Missed something",
+          "wrong": "Missed a reconciling item from last year.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting a bank confirmation request"
+        },
+        {
+          "id": "r-5mfx8hi9-2",
+          "date": "2026-11-04",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Sales cut-off list added up to the wrong total.",
+          "caught": "Re-added it in Excel",
+          "impact": "",
+          "context": "practice",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-5mfx8hi9-3",
+          "date": "2026-10-12",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Quantity and price columns swapped for three invoices.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-5mfx8hi9-4",
+          "date": "2026-10-30",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Suggested materiality on profit when the entity makes a loss.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-5mfx8hi9-5",
+          "date": "2026-10-05",
+          "section": "Revenue",
+          "type": "Missed something",
+          "wrong": "Lead list left out sales on the last day of the year.",
+          "caught": "Compared with my own working",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-5mfx8hi9-6",
+          "date": "2026-10-05",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Quoted a note that isn't in the accounts.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "A misleading note to the client",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          2,
+          3,
+          0,
+          0,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-5mfx8hi9-0",
+          "date": "2026-10-07",
+          "task": "Drafting supplier statement requests",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Senior"
+        },
+        {
+          "id": "n-5mfx8hi9-1",
+          "date": "2026-11-02",
+          "task": "Drafting supplier statement requests",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Senior"
+        },
+        {
+          "id": "n-5mfx8hi9-2",
+          "date": "2026-10-16",
+          "task": "Excel formula to recalculate pay for a sample",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "reviewerRole": "Senior"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-bk8g75nn",
+      "level": "NQ2",
+      "reports": [
+        {
+          "id": "r-bk8g75nn-0",
+          "date": "2026-10-14",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Rounded every invoice to the nearest £100.",
+          "caught": "Rechecked to the source document",
+          "impact": "Client data outside the firm",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-bk8g75nn-1",
+          "date": "2026-10-09",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Dropped the pence and the totals no longer agreed.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-bk8g75nn-2",
+          "date": "2026-10-27",
+          "section": "Cash and bank",
+          "type": "Missed something",
+          "wrong": "Old reconciling items list skipped one account.",
+          "caught": "Manager's review",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling balances from bank statements"
+        },
+        {
+          "id": "r-bk8g75nn-3",
+          "date": "2026-10-20",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Supplier statement check skipped the second page.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-bk8g75nn-4",
+          "date": "2026-10-27",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Closing balance had two digits swapped.",
+          "caught": "Checked against Companies House",
+          "impact": "A wrong figure on file",
+          "context": "real",
+          "task": "Pulling balances from bank statements"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        false,
+        false,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          2,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-19",
+      "notes": [
+        {
+          "id": "n-bk8g75nn-0",
+          "date": "2026-09-21",
+          "task": "Pulling balances from bank statements",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Senior"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-04",
+      "anonId": "p-t82mfhn8",
+      "level": "NQ2",
+      "reports": [
+        {
+          "id": "r-t82mfhn8-0",
+          "date": "2026-10-29",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Missed an unrecorded invoice from April.",
+          "caught": "Manager's review",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-t82mfhn8-1",
+          "date": "2026-10-30",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Invoice total read as £1,850; the PDF says £1,580.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-t82mfhn8-2",
+          "date": "2026-11-02",
+          "section": "Walkthroughs and controls",
+          "type": "Missed something",
+          "wrong": "Process flow left out the approval step.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Process notes from meeting notes"
+        },
+        {
+          "id": "r-t82mfhn8-3",
+          "date": "2026-11-04",
+          "section": "Planning",
+          "type": "Wrong judgement",
+          "wrong": "Called a fraud risk 'low' with no reason given.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-t82mfhn8-4",
+          "date": "2026-10-09",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process flow added a control the client doesn't have.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Process notes from meeting notes"
+        },
+        {
+          "id": "r-t82mfhn8-5",
+          "date": "2026-11-04",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "VAT added twice in the sales schedule.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Pulling invoice details from scanned PDFs"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          4,
+          1,
+          0,
+          0,
+          3
+        ]
+      },
+      "settingsCopiedOn": "2026-10-23",
+      "notes": [
+        {
+          "id": "n-t82mfhn8-0",
+          "date": "2026-09-25",
+          "task": "Industry research from public news",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Senior"
+        },
+        {
+          "id": "n-t82mfhn8-1",
+          "date": "2026-11-04",
+          "task": "Drafting supplier statement requests",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            false,
+            false,
+            true
+          ],
+          "reviewerRole": "Senior"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "basic",
+      "exportedOn": "2026-10-27",
+      "anonId": "p-hvve9stg",
+      "level": "NQ2",
+      "reports": [
+        {
+          "id": "r-hvve9stg-0",
+          "date": "2026-10-02",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Year-end sales total out by £2,000.",
+          "caught": "Senior's review",
+          "impact": "A misleading note to the client",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-hvve9stg-1",
+          "date": "2026-10-23",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-hvve9stg-2",
+          "date": "2026-10-02",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Credit note shown as a sale.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        },
+        {
+          "id": "r-hvve9stg-3",
+          "date": "2026-10-27",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Bank balance copied from the wrong month.",
+          "caught": "",
+          "impact": "",
+          "context": "",
+          "task": ""
+        }
+      ],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-hg5kepr6",
+      "level": "Senior",
+      "reports": [
+        {
+          "id": "r-hg5kepr6-0",
+          "date": "2026-09-01",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Wrong invoice date copied from a scan.",
+          "caught": "Compared with my own working",
+          "impact": "A misleading note to the client",
+          "context": "real",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-hg5kepr6-1",
+          "date": "2026-10-27",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Matched an invoice to the wrong ledger line.",
+          "caught": "Checked against Companies House",
+          "impact": "Testing the wrong sample",
+          "context": "practice",
+          "task": "Searching for unrecorded liabilities"
+        },
+        {
+          "id": "r-hg5kepr6-2",
+          "date": "2026-10-02",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Said a disclosure was met with no quote to support it.",
+          "caught": "Manager's review",
+          "impact": "",
+          "context": "practice",
+          "task": "First pass against the disclosure checklist"
+        },
+        {
+          "id": "r-hg5kepr6-3",
+          "date": "2026-10-16",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-hg5kepr6-4",
+          "date": "2026-10-09",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Quoted a note that isn't in the accounts.",
+          "caught": "Read the clause myself",
+          "impact": "Client data outside the firm",
+          "context": "practice",
+          "task": "First pass against the disclosure checklist"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "game": {
+        "picks": [
+          0,
+          1,
+          0,
+          0,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-hg5kepr6-0",
+          "date": "2026-09-10",
+          "task": "Finding directors' other companies on Companies House",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [
+        {
+          "id": "pl-hg5kepr6-0",
+          "goal": "Pulling invoice details from scanned PDFs",
+          "tool": "Microsoft 365 Copilot",
+          "baselineMinutes": 45,
+          "aiMinutes": 25,
+          "errorsCaught": 6,
+          "startedWith": 5,
+          "stillUsing": 4
+        }
+      ],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-ysufpiem",
+      "level": "Senior",
+      "reports": [
+        {
+          "id": "r-ysufpiem-0",
+          "date": "2026-10-16",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Two invoices merged into one line in the table.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-ysufpiem-1",
+          "date": "2026-10-09",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Sales cut-off list added up to the wrong total.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        },
+        {
+          "id": "r-ysufpiem-2",
+          "date": "2026-09-18",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process notes said invoices are approved twice; the notes say once.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Concluding on control design"
+        },
+        {
+          "id": "r-ysufpiem-3",
+          "date": "2026-09-01",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Quantity and price columns swapped for three invoices.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling invoice details from scanned PDFs"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        true,
+        false
+      ],
+      "game": {
+        "picks": [
+          2,
+          3,
+          2,
+          2,
+          3,
+          1,
+          3,
+          -1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-11",
+      "notes": [
+        {
+          "id": "n-ysufpiem-0",
+          "date": "2026-10-19",
+          "task": "First pass against the disclosure checklist",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-ysufpiem-1",
+          "date": "2026-10-20",
+          "task": "Process flow from notes",
+          "tool": "A local model",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": []
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-06",
+      "anonId": "p-nrie5esd",
+      "level": "Senior",
+      "reports": [
+        {
+          "id": "r-nrie5esd-0",
+          "date": "2026-10-14",
+          "section": "Revenue",
+          "type": "Missed something",
+          "wrong": "Missed a large sale on 31 March.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-nrie5esd-1",
+          "date": "2026-11-02",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Listed a directorship that isn't on Companies House.",
+          "caught": "Rechecked to the source document",
+          "impact": "A misleading note to the client",
+          "context": "practice",
+          "task": "Finding directors' other companies on Companies House"
+        },
+        {
+          "id": "r-nrie5esd-2",
+          "date": "2026-11-06",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Gave a director's company a made-up registration number.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-nrie5esd-3",
+          "date": "2026-11-03",
+          "section": "Payroll",
+          "type": "Wrong number",
+          "wrong": "Recalculated pay formula ignored overtime.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Excel formula to recalculate pay for a sample"
+        },
+        {
+          "id": "r-nrie5esd-4",
+          "date": "2026-11-02",
+          "section": "Related parties",
+          "type": "Missed something",
+          "wrong": "Left out a company the director joined last month.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding directors' other companies on Companies House"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          1,
+          0,
+          2,
+          3,
+          3,
+          3,
+          -1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-16",
+      "notes": [
+        {
+          "id": "n-nrie5esd-0",
+          "date": "2026-09-07",
+          "task": "Finding every place a figure appears",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-06",
+      "anonId": "p-gfdzfi3w",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-gfdzfi3w-0",
+          "date": "2026-10-02",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Rounded every invoice to the nearest £100.",
+          "caught": "Re-added it in Excel",
+          "impact": "",
+          "context": "practice",
+          "task": "Deciding if revenue is recognised correctly"
+        },
+        {
+          "id": "r-gfdzfi3w-1",
+          "date": "2026-10-30",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Dropped the pence and the totals no longer agreed.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Deciding if revenue is recognised correctly"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          1,
+          3,
+          1,
+          0,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-24",
+      "notes": [
+        {
+          "id": "n-gfdzfi3w-0",
+          "date": "2026-10-09",
+          "task": "Explaining what counts as a related party",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-46yr3vun",
+      "level": "Manager",
+      "reports": [
+        {
+          "id": "r-46yr3vun-0",
+          "date": "2026-10-29",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Closing balance had two digits swapped.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Pulling balances from bank statements"
+        },
+        {
+          "id": "r-46yr3vun-1",
+          "date": "2026-10-30",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "Checked against Companies House",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "First pass against the disclosure checklist"
+        },
+        {
+          "id": "r-46yr3vun-2",
+          "date": "2026-10-30",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Ledger total in the table was out by one invoice.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Searching for unrecorded liabilities"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          1,
+          1,
+          2,
+          1,
+          0,
+          3,
+          1
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-46yr3vun-0",
+          "date": "2026-09-17",
+          "task": "Excel formula to recalculate pay for a sample",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-46yr3vun-1",
+          "date": "2026-10-05",
+          "task": "First draft of the planning memo",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            false
+          ],
+          "reviewerRole": "Manager"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    }
+  ]
+}

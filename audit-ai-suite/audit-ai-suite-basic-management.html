@@ -751,7 +751,13 @@ function makeExport(madeWith) {    // madeWith = "basic" or "final"
     out.notes = loadList("notes").map(cleanNote).filter(Boolean);
     out.pilots = loadList("pilots").map(cleanPilot).filter(Boolean);
   }
+  const team = cleanTeam(load("team", ""));
+  if (team) out.team = team;       // optional: a team or office, never a name
   return out;
+}
+
+function cleanTeam(t) {           // "Team or office": plain text, up to 60 characters
+  return cut(typeof t === "string" ? t.replace(/[\u0000-\u001f]/g, " ") : "", 60);
 }
 
 function cleanNote(n) {            // an AI use note: reviewer role only, never a name
@@ -794,13 +800,28 @@ function normaliseExport(obj) {    // check a loaded file; bad parts are skipped
     exportedAt: typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]{5,12}Z$/.test(obj.exportedAt) ? obj.exportedAt : "", level: LEVELS.includes(obj.level) ? obj.level : "",
     reports, steps, picks: validPicks(obj.game && obj.game.picks),
     settingsCopiedOn: isISO(obj.settingsCopiedOn) ? obj.settingsCopiedOn : ("settingsCopiedOn" in obj ? "" : null),
-    notes, pilots } };
+    notes, pilots, team: cleanTeam(obj.team), group: "" } };
 }
 
-function readExport(text) {        // text from a file -> checked person (or a plain-English problem)
+function readExport(text) {        // text from a file -> checked people (or a plain-English problem)
   if (typeof text !== "string" || text.length > 1000000) return { ok: false, problem: "This file is too big to be from this app." };
-  try { return normaliseExport(JSON.parse(text)); }
+  let obj;
+  try { obj = JSON.parse(text); }
   catch (e) { return { ok: false, problem: "This file couldn't be read. Is it the file from 'Send to my manager'?" }; }
+  if (!obj || typeof obj !== "object" || obj.kind !== "group") {   // one person's file
+    const r = normaliseExport(obj);
+    if (r.ok) r.people = [r.person];
+    return r;
+  }
+  // A group file: { app, version, kind: "group", name, people: [one person's file, ...] }. Each person is checked on their own.
+  if (obj.app !== EXPORT_APP) return { ok: false, problem: "This file wasn't made by this app." };
+  const name = cleanTeam(obj.name) || "Unnamed group";
+  if (!Array.isArray(obj.people)) return { ok: false, problem: "This group file has no people in it." };
+  const checked = obj.people.slice(0, 500).map(normaliseExport), list = checked.filter(r => r.ok).map(r => r.person);
+  if (!list.length) return { ok: false, problem: "None of the people in this group file could be read." };
+  list.forEach(p => { p.group = name; });
+  return { ok: true, group: name, people: list, newer: obj.version > EXPORT_VERSION || checked.some(r => r.newer),
+           skipped: checked.reduce((n, r) => n + (r.ok ? r.skipped : 1), 0) + Math.max(0, obj.people.length - 500) };
 }
 
 function mergePeople(people) {     // one entry per person: each part comes from their latest file that has it
@@ -814,7 +835,8 @@ function mergePeople(people) {     // one entry per person: each part comes from
     return { anonId: files[0].anonId, madeWith: files.some(f => f.madeWith === "final") ? "final" : "basic",
              exportedOn: files[files.length - 1].exportedOn, level: latest("level") || "", reports,
              steps: latest("steps"), picks: latest("picks"), settingsCopiedOn: latest("settingsCopiedOn"),
-             notes: latest("notes"), pilots: latest("pilots"), files: files.length };
+             notes: latest("notes"), pilots: latest("pilots"), team: latest("team") || "", group: latest("group") || "",
+             source: latest("source") || "", files: files.length };
   });
 }
 
@@ -937,6 +959,7 @@ function checkData() {
 // ---------- What's loaded and what the user has picked (in memory only, never saved) ----------
 let loaded = [];            // every file that passed the checks
 let people = [];            // the same files merged: one entry per person
+let fromFiles = [];         // each file loaded: [name, true if it's a group file]
 let isExample = false;      // true while the made-up example team is showing
 let tab = "overview";       // which tab is showing
 let square = null;          // the heat map square picked: [section, type]
@@ -1021,9 +1044,9 @@ function trendText(t) {     // the last 4 weeks against the 4 before (needs 10 o
 }
 const CAVEAT = "More reports can mean more AI use or better checking, not just more mistakes.";
 
-function levelGroups() {    // people per level. A level with under 3 people joins the level next to it, so no small group
-                            // can be singled out (not even by subtracting the others from the total)
-  const groups = LEVELS.concat("").map(l => ({ names: [l || "level not set"], list: people.filter(p => p.level === l) })).filter(g => g.list.length);
+function levelGroups(from) {   // people per level (of everyone, or of the list given). A level with under 3 people joins the level
+                               // next to it, so no small group can be singled out (not even by subtracting the others from the total)
+  const groups = LEVELS.concat("").map(l => ({ names: [l || "level not set"], list: (from || people).filter(p => p.level === l) })).filter(g => g.list.length);
   const bands = [];
   groups.forEach(g => {
     const last = bands[bands.length - 1];
@@ -1053,12 +1076,17 @@ async function loadFiles(fileList) {
 }
 
 function addFiles(items) {  // keeps the files that passed the checks and says what happened to each
-  if (isExample && items.some(x => x[1].ok)) { loaded = []; people = []; isExample = false; }   // never mix the example team with real files
-  const before = loaded.length - people.length, c = { added: 0, skipped: [], newer: 0, leftOut: 0 };
+  if (isExample && items.some(x => x[1].ok)) { loaded = []; people = []; fromFiles = []; isExample = false; }   // never mix the example team with real files
+  const before = loaded.length - people.length, c = { added: 0, skipped: [], newer: 0, leftOut: 0, groups: [] };
+  const plain = x => JSON.stringify(Object.assign({}, x, { source: undefined }));   // a person's data, wherever it was loaded from
   items.forEach(([name, r]) => {
     if (!r.ok) return c.skipped.push([name, r.problem]);
-    if (loaded.some(f => JSON.stringify(f) === JSON.stringify(r.person))) return c.skipped.push([name, "This file is already loaded."]);
-    loaded.push(r.person); c.added++; c.newer += r.newer ? 1 : 0; c.leftOut += r.skipped;
+    const fresh = r.people.filter(p => !loaded.some(f => plain(f) === plain(p)));
+    if (!fresh.length) return c.skipped.push([name, r.group ? "This group file is already loaded." : "This file is already loaded."]);
+    fresh.forEach(p => { p.source = r.group || name; loaded.push(p); });   // a group's people are tagged with the group's name
+    fromFiles.push([r.group || name, !!r.group]);
+    if (r.group) c.groups.push([r.group, fresh.length]);
+    c.added++; c.newer += r.newer ? 1 : 0; c.leftOut += r.skipped;
   });
   people = mergePeople(loaded);
   c.replaced = loaded.length - people.length - before;   // someone's second file: their newest parts are used
@@ -1067,7 +1095,7 @@ function addFiles(items) {  // keeps the files that passed the checks and says w
 }
 
 function filesMessage(c) {  // e.g. "3 files loaded; 1 older file replaced; 1 file skipped (x.txt): ..."
-  const parts = [plural(c.added, "file") + " loaded"];
+  const parts = [plural(c.added, "file") + " loaded" + (c.groups.length ? " (" + c.groups.map(g => safe(g[0]) + ": a group of " + plural(g[1], "person", "people")).join("; ") + ")" : "")];
   if (c.replaced) parts.push(plural(c.replaced, "older file") + " replaced");
   if (c.skipped.length === 1) parts.push(`1 file skipped (${safe(c.skipped[0][0])}): ${c.skipped[0][1]}`);
   if (c.skipped.length > 1) parts.push(plural(c.skipped.length, "file") + " skipped:");
@@ -1092,7 +1120,8 @@ function loadPasted() {     // the fallback: text pasted from a file
 }
 
 function loadExample() {    // the made-up team replaces anything loaded
-  loaded = exampleTeam(); people = mergePeople(loaded); isExample = true; square = null; confirming = false;
+  loaded = exampleTeam().map(p => Object.assign(p, { group: "Example team", source: "Example team" }));
+  people = mergePeople(loaded); fromFiles = [["Example team", true]]; isExample = true; square = null; confirming = false;
   results = "";
   draw("Showing the made-up example team.");
 }
@@ -1116,7 +1145,7 @@ function loadThisBrowser() {   // what the staff app saved in this same browser,
 
 function askClear() { confirming = true; draw(); document.getElementById("confirmNo").focus(); }
 function clearLoaded() {
-  loaded = []; people = []; isExample = false; square = null; confirming = false;
+  loaded = []; people = []; fromFiles = []; isExample = false; square = null; confirming = false;
   results = "<p>Loaded data removed from this page. Your files haven't changed.</p>";
   draw(results);
   document.getElementById("fileInput").focus();
@@ -1207,14 +1236,16 @@ function pickCell(s, t) {   // pick a heat map square: its reports show under th
 // =====================================================================
 function dataScreen() {
   const files = people.reduce((n, p) => n + p.files, 0), sizes = plural(people.length, "person", "people") + ", " + plural(allReports().length, "report");
+  const groups = fromFiles.filter(f => f[1]).length, singles = fromFiles.length - groups;
+  const from = groups ? plural(groups, "group file") + (singles ? " and " + plural(singles, "file") : "") : plural(files, "file");
   const now = !people.length ? "<b>No data loaded yet.</b>" : isExample ? `<b>Showing the made-up example team: ${sizes}.</b> Loading staff files will replace it.`
-    : `<b>Loaded: ${sizes}</b> (from ${plural(files, "file")}).`;
+    : `<b>Loaded: ${sizes}</b> (from ${from}).`;
   return `<h1>Data</h1>
-    <p class="grey">Load the files staff save with 'Send to my manager'. The app adds no names to the files.
+    <p class="grey">Load the files staff save with 'Send to my manager', or a group file (several people in one file). The app adds no names to the files.
       Nothing you load is saved: it stays on this page until you close it.</p>
     <p class="box" id="loadedNow">${now}</p>
     <h2>Load staff files</h2>
-    <label class="lab" for="fileInput">Choose one or more files (or drag them onto the box)</label>
+    <label class="lab" for="fileInput">Choose one or more files, or group files (or drag them onto the box)</label>
     <input type="file" id="fileInput" multiple accept=".json,application/json,.txt,text/plain" onchange="loadFiles(this.files)">
     <details id="pasteBox"${panels.paste ? " open" : ""} ontoggle="panels.paste = this.open"><summary>Can't load files? Paste a file's text</summary>
       <div class="field"><label for="pasteText">Open the file in a text editor (such as Notepad), copy all of it, and paste it here</label>

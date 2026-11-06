@@ -1,0 +1,45 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "madeWith": "final",
+  "exportedOn": "2026-11-02",
+  "anonId": "p-jsnazua2",
+  "level": "Trainee (NQ1)",
+  "reports": [
+    {
+      "id": "r-jsnazua2-0",
+      "date": "2026-09-15",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "Total of the sales sample didn't add up: AI said £12,400, it's £12,040.",
+      "caught": "Re-added it in Excel",
+      "impact": "",
+      "context": "practice",
+      "task": "Flagging unusual sales near the year end (leads only)"
+    }
+  ],
+  "steps": [
+    true,
+    false,
+    false,
+    false,
+    false,
+    false
+  ],
+  "game": {
+    "picks": [
+      0,
+      0,
+      1,
+      3,
+      0,
+      2,
+      0,
+      3
+    ]
+  },
+  "settingsCopiedOn": "",
+  "notes": [],
+  "pilots": [],
+  "team": "Birmingham audit"
+}

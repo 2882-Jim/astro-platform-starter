@@ -710,7 +710,13 @@ function makeExport(madeWith) {    // madeWith = "basic" or "final"
     out.notes = loadList("notes").map(cleanNote).filter(Boolean);
     out.pilots = loadList("pilots").map(cleanPilot).filter(Boolean);
   }
+  const team = cleanTeam(load("team", ""));
+  if (team) out.team = team;       // optional: a team or office, never a name
   return out;
+}
+
+function cleanTeam(t) {           // "Team or office": plain text, up to 60 characters
+  return cut(typeof t === "string" ? t.replace(/[\u0000-\u001f]/g, " ") : "", 60);
 }
 
 function cleanNote(n) {            // an AI use note: reviewer role only, never a name
@@ -753,13 +759,28 @@ function normaliseExport(obj) {    // check a loaded file; bad parts are skipped
     exportedAt: typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]{5,12}Z$/.test(obj.exportedAt) ? obj.exportedAt : "", level: LEVELS.includes(obj.level) ? obj.level : "",
     reports, steps, picks: validPicks(obj.game && obj.game.picks),
     settingsCopiedOn: isISO(obj.settingsCopiedOn) ? obj.settingsCopiedOn : ("settingsCopiedOn" in obj ? "" : null),
-    notes, pilots } };
+    notes, pilots, team: cleanTeam(obj.team), group: "" } };
 }
 
-function readExport(text) {        // text from a file -> checked person (or a plain-English problem)
+function readExport(text) {        // text from a file -> checked people (or a plain-English problem)
   if (typeof text !== "string" || text.length > 1000000) return { ok: false, problem: "This file is too big to be from this app." };
-  try { return normaliseExport(JSON.parse(text)); }
+  let obj;
+  try { obj = JSON.parse(text); }
   catch (e) { return { ok: false, problem: "This file couldn't be read. Is it the file from 'Send to my manager'?" }; }
+  if (!obj || typeof obj !== "object" || obj.kind !== "group") {   // one person's file
+    const r = normaliseExport(obj);
+    if (r.ok) r.people = [r.person];
+    return r;
+  }
+  // A group file: { app, version, kind: "group", name, people: [one person's file, ...] }. Each person is checked on their own.
+  if (obj.app !== EXPORT_APP) return { ok: false, problem: "This file wasn't made by this app." };
+  const name = cleanTeam(obj.name) || "Unnamed group";
+  if (!Array.isArray(obj.people)) return { ok: false, problem: "This group file has no people in it." };
+  const checked = obj.people.slice(0, 500).map(normaliseExport), list = checked.filter(r => r.ok).map(r => r.person);
+  if (!list.length) return { ok: false, problem: "None of the people in this group file could be read." };
+  list.forEach(p => { p.group = name; });
+  return { ok: true, group: name, people: list, newer: obj.version > EXPORT_VERSION || checked.some(r => r.newer),
+           skipped: checked.reduce((n, r) => n + (r.ok ? r.skipped : 1), 0) + Math.max(0, obj.people.length - 500) };
 }
 
 function mergePeople(people) {     // one entry per person: each part comes from their latest file that has it
@@ -773,7 +794,8 @@ function mergePeople(people) {     // one entry per person: each part comes from
     return { anonId: files[0].anonId, madeWith: files.some(f => f.madeWith === "final") ? "final" : "basic",
              exportedOn: files[files.length - 1].exportedOn, level: latest("level") || "", reports,
              steps: latest("steps"), picks: latest("picks"), settingsCopiedOn: latest("settingsCopiedOn"),
-             notes: latest("notes"), pilots: latest("pilots"), files: files.length };
+             notes: latest("notes"), pilots: latest("pilots"), team: latest("team") || "", group: latest("group") || "",
+             source: latest("source") || "", files: files.length };
   });
 }
 
@@ -1464,7 +1486,8 @@ function heatScreen() {
     ${heatTable(countReports(reports), "pickMine", "mine")}${topLine(countReports(reports), "mineTop")}${mine}
     <h2 id="teamHead">Everyone at ${LEVELS[level]} (made-up example)</h2>
     <p class="warn">Made-up numbers, to show what a team view could look like. These are not real reports.</p>
-    ${heatTable(counts, "pickTeam", "team")}${topLine(counts, "teamTop")}${team}`;
+    ${heatTable(counts, "pickTeam", "team")}${topLine(counts, "teamTop")}${team}
+    <h2 id="heatSendHead">Send my data to my manager</h2>${sendHtml("heat")}`;
 }
 function pickMine(s, t) {   // show the square's reports under the map, bring them into view and read out how many
   heatCell = [s, t];
@@ -1698,11 +1721,12 @@ function guideBody(onScreen) {   // onScreen: tab names are buttons that open th
       <li>${tab("level", "My level")}: pick your level. Copy your AI settings prompt and paste it into your AI tool's settings, again each week.</li>
       <li>${tab("prompt", "Prompt builder")}: turns your rough notes into a safe prompt, with the safety rules built in. It also writes client requests (emails) that need no AI.</li>
       <li>${tab("learn", "Learn")}: the approved tools, a glossary of AI words, and a five-question quiz.</li>
-      <li>${tab("heat", "Heat map")}: report an AI mistake in about 20 seconds, then see your reports and a made-up team example.</li>
+      <li>${tab("heat", "Heat map")}: report an AI mistake in about 20 seconds, then see your reports and a made-up team example. Send your data to your manager from here too.</li>
       <li>${tab("note", "AI note")}: a short note of what you used AI for and what you checked, to print or copy for your reviewer.
         Running a small pilot? Record it there too.</li></ul>
     <h2>Send to my manager</h2>
-    <p>In ${onScreen ? `<button class="link" id="guide-settings" onclick="go('settings')">Settings</button>` : "<b>Settings</b>"}, "Save the file" makes a file for you to send to your manager.
+    <p>On the Heat map, or in ${onScreen ? `<button class="link" id="guide-settings" onclick="go('settings')">Settings</button>` : "<b>Settings</b>"}, "Save the file" makes a file for you to send to your manager.
+      You can add your team or office (never a name) so your manager can compare teams.
       The app adds no names, but what you typed goes in as written, so check it doesn't name a client or a person.</p>
     <h2>Keep it private</h2><ul><li>Never type client names or client data into this app.</li>
       <li>Everything is saved only in this browser on this device. Nothing is sent anywhere unless you send the file yourself.</li></ul>
@@ -1736,8 +1760,9 @@ function settingsScreen() {
       <li>Quiz: ${best === null ? "not done yet" : "best mark " + best + " of 5"} (Spot the mistake questions answered: ${loadPicks().filter(x => x >= 0).length} of ${PITFALLS.length})</li>
       <li>AI use notes: ${loadNotes().length}</li>
       <li>Pilots: ${loadPilots().length}</li>
-      <li>AI settings prompt last copied: ${copiedAgo()}</li></ul>
-    <h2>Send to my manager</h2>${sendHtml()}
+      <li>AI settings prompt last copied: ${copiedAgo()}</li>
+      <li>Team or office: ${load("team", "") ? safe(cleanTeam(load("team", ""))) : "not given"}</li></ul>
+    <h2>Send to my manager</h2>${sendHtml("")}
     <h2>Clear my saved data</h2>
     ${confirming === "all" ? confirmHtml("Delete everything this app has saved in this browser? This can't be undone.", "Yes, clear it all", "clearAll('clearAll')", "clearAll")
       : `<p class="small">Deletes your reports, ticks, answers, notes and pilots from this browser, and starts afresh.</p>
@@ -1745,21 +1770,34 @@ function settingsScreen() {
     <p class="small" id="clearMsg" role="status">${msg("clear")}</p>`;
 }
 
-function sendHtml() {       // "Send to my manager": the list above, in a file the app adds no names to
-  const data = makeExport("final");
+// "Send to my manager" shows on Settings (at = "") and on the Heat map (at = "heat"); each place has its own ids
+const SEND_IDS = { "": { btn: "downloadBtn", msg: "sendMsg", box: "copyBox", text: "exportText", copy: "copyExport", warn: "sendWarn", team: "teamBox", hint: "teamHint" },
+  heat: { btn: "heatDownload", msg: "heatSendMsg", box: "heatCopyBox", text: "heatExportText", copy: "heatCopy", warn: "heatSendWarn", team: "heatTeamBox", hint: "heatTeamHint" } };
+function sendHtml(at) {     // "Send to my manager": everything saved, in a file the app adds no names to
+  const data = makeExport("final"), id = SEND_IDS[at], team = load("team", "");
   const risky = data.reports.filter(r => privacyHint(r.wrong + " " + r.caught + " " + r.impact)).length + data.pilots.filter(p => privacyHint(p.goal)).length;
-  return `<p class="small">Saves everything listed above in a file for you to send to your manager. The app adds no names, but what you typed goes in as written, so check it doesn't name a client or a person.</p>
-    ${risky ? `<p class="warn" id="sendWarn">${plural(risky, "item")} might include a name or number. Check, and delete any that identify a client or a person, before sending.</p>` : ""}
-    <button class="btn" id="downloadBtn" onclick="sendFile()">Save the file</button>
-    <p class="small" id="sendMsg" role="status"></p>
-    <details id="copyBox"${panels.copy ? " open" : ""} ontoggle="panels.copy = this.open"><summary>Can't save files? Copy the text instead</summary>
-      <textarea id="exportText" readonly aria-label="Text of the file for your manager">${safe(JSON.stringify(data, null, 2))}</textarea>
-      <button class="plain" id="copyExport" onclick="copyText('exportText', 'sendMsg')">Copy</button></details>`;
+  return `<p class="small">Saves ${at ? "your reports, ticks, quiz answers, notes and pilots" : "everything listed above"} in a file for you to send to your manager. The app adds no names, but what you typed goes in as written, so check it doesn't name a client or a person.</p>
+    ${risky ? `<p class="warn" id="${id.warn}">${plural(risky, "item")} might include a name or number. Check, and delete any that identify a client or a person, before sending.</p>` : ""}
+    <div class="field"><label for="${id.team}">Team or office (no names)</label>
+      <span class="small" id="${id.team}Help">Optional, for example 'Manchester audit'. It lets your manager compare teams.</span>
+      <input type="text" id="${id.team}" maxlength="60" value="${safe(team)}" aria-describedby="${id.team}Help ${id.hint}" oninput="setTeam(this.value, '${at}')">
+      <span class="small" id="${id.hint}" role="status">${privacyHint(team)}</span></div>
+    <button class="btn" id="${id.btn}" onclick="sendFile('${at}')">Save the file</button>
+    <p class="small" id="${id.msg}" role="status"></p>
+    <details id="${id.box}"${panels["copy" + at] ? " open" : ""} ontoggle="panels['copy${at}'] = this.open"><summary>Can't save files? Copy the text instead</summary>
+      <textarea id="${id.text}" readonly aria-label="Text of the file for your manager">${safe(JSON.stringify(data, null, 2))}</textarea>
+      <button class="plain" id="${id.copy}" onclick="copyText('${id.text}', '${id.msg}')">Copy</button></details>`;
 }
-function sendFile() {
-  const name = "ai-suite-for-my-manager-" + todayISO() + ".json";
+function setTeam(value, at) {   // saved as you type (no redraw, so typing isn't interrupted); the copy-the-text box keeps up
+  save("team", cut(value, 60));
+  const id = SEND_IDS[at];
+  document.getElementById(id.hint).textContent = privacyHint(value);
+  document.getElementById(id.text).value = JSON.stringify(makeExport("final"), null, 2);
+}
+function sendFile(at) {
+  const name = "ai-suite-for-my-manager-" + todayISO() + ".json", id = SEND_IDS[at];
   const ok = downloadFile(name, JSON.stringify(makeExport("final"), null, 2));
-  document.getElementById("sendMsg").textContent = ok ? "Saved as " + name + ". Send it to your manager." : "This browser blocked the file. Copy the text instead (below).";
+  document.getElementById(id.msg).textContent = ok ? "Saved as " + name + ". Send it to your manager." : "This browser blocked the file. Copy the text instead (below).";
 }
 function clearAll(backTo) { // delete everything, then start afresh (the next file gets a new reference code too)
   const ok = clearSaved();

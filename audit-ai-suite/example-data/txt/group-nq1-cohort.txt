@@ -1,0 +1,861 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "kind": "group",
+  "name": "NQ1 cohort",
+  "madeOn": "2026-11-06",
+  "people": [
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-28",
+      "anonId": "p-fnwac4js",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-fnwac4js-0",
+          "date": "2026-09-03",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-fnwac4js-1",
+          "date": "2026-10-21",
+          "section": "Planning",
+          "type": "Made-up info",
+          "wrong": "Industry summary gave a market growth figure with no source.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-fnwac4js-2",
+          "date": "2026-10-21",
+          "section": "Revenue",
+          "type": "Wrong number",
+          "wrong": "Dropped the pence and the totals no longer agreed.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Flagging unusual sales near the year end (leads only)"
+        },
+        {
+          "id": "r-fnwac4js-3",
+          "date": "2026-10-22",
+          "section": "Payroll",
+          "type": "Wrong number",
+          "wrong": "Recalculated pay formula ignored overtime.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Excel formula to recalculate pay for a sample"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          3,
+          3,
+          -1,
+          3,
+          3,
+          1,
+          3,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-02",
+      "anonId": "p-czse4v5q",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-czse4v5q-0",
+          "date": "2026-10-28",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Matched an invoice to the wrong ledger line.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-czse4v5q-1",
+          "date": "2026-10-02",
+          "section": "Related parties",
+          "type": "Data or privacy slip",
+          "wrong": "Typed a director's full name and date of birth into a personal chatbot.",
+          "caught": "Manager's review",
+          "impact": "Testing the wrong sample",
+          "context": "practice",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-czse4v5q-2",
+          "date": "2026-09-29",
+          "section": "Accounts and disclosures",
+          "type": "Made-up info",
+          "wrong": "Said a disclosure was met with no quote to support it.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding every place a figure appears"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          3,
+          3,
+          -1,
+          3,
+          3,
+          2,
+          2,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-12",
+      "notes": [],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-29",
+      "anonId": "p-p3j8hsrf",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-p3j8hsrf-0",
+          "date": "2026-10-09",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Supplier statement check skipped the second page.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-p3j8hsrf-1",
+          "date": "2026-10-19",
+          "section": "Payroll",
+          "type": "Data or privacy slip",
+          "wrong": "Payroll file pasted into a personal chatbot.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "",
+          "context": "practice",
+          "task": "Explaining a payroll report layout (made-up example)"
+        },
+        {
+          "id": "r-p3j8hsrf-2",
+          "date": "2026-09-21",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Ledger total in the table was out by one invoice.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-p3j8hsrf-3",
+          "date": "2026-10-23",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Matched an invoice to the wrong ledger line.",
+          "caught": "Senior's review",
+          "impact": "Testing the wrong sample",
+          "context": "real",
+          "task": "Matching invoices to the ledger"
+        },
+        {
+          "id": "r-p3j8hsrf-4",
+          "date": "2026-09-18",
+          "section": "Purchases",
+          "type": "Wrong number",
+          "wrong": "Ledger total in the table was out by one invoice.",
+          "caught": "Read the clause myself",
+          "impact": "",
+          "context": "practice",
+          "task": "Matching invoices to the ledger"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          1,
+          3,
+          -1,
+          -1,
+          3,
+          3,
+          -1,
+          -1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-08",
+      "notes": [
+        {
+          "id": "n-p3j8hsrf-0",
+          "date": "2026-09-30",
+          "task": "Excel formula to recalculate pay for a sample",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-04",
+      "anonId": "p-kb3enayk",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-kb3enayk-0",
+          "date": "2026-10-29",
+          "section": "Planning",
+          "type": "Data or privacy slip",
+          "wrong": "Pasted the client's name into a public chatbot for industry research.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "A wrong conclusion on file",
+          "context": "practice",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-kb3enayk-1",
+          "date": "2026-11-04",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Missed an unrecorded invoice from April.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        },
+        {
+          "id": "r-kb3enayk-2",
+          "date": "2026-10-23",
+          "section": "Cash and bank",
+          "type": "Missed something",
+          "wrong": "Missed a reconciling item from last year.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling balances from bank statements"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          2,
+          -1,
+          1,
+          3,
+          3,
+          -1,
+          0,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-kb3enayk-0",
+          "date": "2026-09-16",
+          "task": "Process notes from meeting notes",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-kb3enayk-1",
+          "date": "2026-10-29",
+          "task": "Drafting supplier statement requests",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Manchester audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-bz5ybnck",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-bz5ybnck-0",
+          "date": "2026-10-12",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Added a company to the group chart that doesn't exist.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding directors' other companies on Companies House"
+        },
+        {
+          "id": "r-bz5ybnck-1",
+          "date": "2026-10-19",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Listed a directorship that isn't on Companies House.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-bz5ybnck-2",
+          "date": "2026-10-09",
+          "section": "Related parties",
+          "type": "Data or privacy slip",
+          "wrong": "Director's home address put into a prompt.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Finding directors' other companies on Companies House"
+        },
+        {
+          "id": "r-bz5ybnck-3",
+          "date": "2026-10-14",
+          "section": "Purchases",
+          "type": "Missed something",
+          "wrong": "Supplier statement check skipped the second page.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Drafting supplier statement requests"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        false,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          -1,
+          3,
+          1,
+          2,
+          -1,
+          0,
+          3,
+          3
+        ]
+      },
+      "settingsCopiedOn": "2026-10-17",
+      "notes": [
+        {
+          "id": "n-bz5ybnck-0",
+          "date": "2026-10-22",
+          "task": "Pulling balances from bank statements",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-bz5ybnck-1",
+          "date": "2026-10-22",
+          "task": "Industry research from public news",
+          "tool": "Claude",
+          "checked": [
+            true,
+            true,
+            false,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-bz5ybnck-2",
+          "date": "2026-09-28",
+          "task": "Process flow from notes",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "London audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-293fixn7",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-293fixn7-0",
+          "date": "2026-10-16",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process notes said invoices are approved twice; the notes say once.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "A wrong figure on file",
+          "context": "practice",
+          "task": "Process flow from notes"
+        },
+        {
+          "id": "r-293fixn7-1",
+          "date": "2026-10-30",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process flow added a control the client doesn't have.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Process notes from meeting notes"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        true,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          -1,
+          -1,
+          1,
+          1,
+          3,
+          1,
+          -1,
+          2
+        ]
+      },
+      "settingsCopiedOn": "2026-10-25",
+      "notes": [],
+      "pilots": [],
+      "team": "London audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-28",
+      "anonId": "p-aqkjkp9s",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-aqkjkp9s-0",
+          "date": "2026-09-17",
+          "section": "Related parties",
+          "type": "Data or privacy slip",
+          "wrong": "Typed a director's full name and date of birth into a personal chatbot.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-aqkjkp9s-1",
+          "date": "2026-10-16",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Closing balance had two digits swapped.",
+          "caught": "Manager's review",
+          "impact": "Client data outside the firm",
+          "context": "real",
+          "task": "Drafting a bank confirmation request"
+        },
+        {
+          "id": "r-aqkjkp9s-2",
+          "date": "2026-09-25",
+          "section": "Planning",
+          "type": "Made-up info",
+          "wrong": "Listed a 'new reporting rule' that was never issued.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Industry research from public news"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        false,
+        true,
+        false,
+        true
+      ],
+      "game": {
+        "picks": [
+          0,
+          3,
+          1,
+          0,
+          1,
+          1,
+          0,
+          2
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-aqkjkp9s-x0",
+          "date": "2026-10-08",
+          "checked": [
+            true,
+            false,
+            true,
+            false
+          ],
+          "reviewerRole": "NQ2",
+          "task": "Explaining a payroll report layout (made-up example)",
+          "tool": "A personal chatbot"
+        }
+      ],
+      "pilots": [],
+      "team": "London audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-11-03",
+      "anonId": "p-5mgu4gkz",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-5mgu4gkz-0",
+          "date": "2026-10-23",
+          "section": "Planning",
+          "type": "Made-up info",
+          "wrong": "Quoted an ISA paragraph that doesn't exist.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Industry research from public news"
+        },
+        {
+          "id": "r-5mgu4gkz-1",
+          "date": "2026-11-02",
+          "section": "Cash and bank",
+          "type": "Wrong number",
+          "wrong": "Bank balance copied from the wrong month.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "",
+          "context": "practice",
+          "task": "Pulling balances from bank statements"
+        },
+        {
+          "id": "r-5mgu4gkz-2",
+          "date": "2026-10-15",
+          "section": "Accounts and disclosures",
+          "type": "Missed something",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-5mgu4gkz-3",
+          "date": "2026-10-20",
+          "section": "Walkthroughs and controls",
+          "type": "Missed something",
+          "wrong": "Process flow left out the approval step.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Process flow from notes"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        false,
+        true,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          2,
+          2,
+          3,
+          1,
+          3,
+          1,
+          -1,
+          -1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-29",
+      "notes": [],
+      "pilots": [],
+      "team": "Birmingham audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-p8v5pmsh",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-p8v5pmsh-0",
+          "date": "2026-10-12",
+          "section": "Payroll",
+          "type": "Data or privacy slip",
+          "wrong": "Nearly pasted a real payslip instead of a made-up one.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Explaining a payroll report layout (made-up example)"
+        },
+        {
+          "id": "r-p8v5pmsh-1",
+          "date": "2026-10-14",
+          "section": "Related parties",
+          "type": "Made-up info",
+          "wrong": "Gave a director's company a made-up registration number.",
+          "caught": "",
+          "impact": "",
+          "context": "practice",
+          "task": "Explaining what counts as a related party"
+        },
+        {
+          "id": "r-p8v5pmsh-2",
+          "date": "2026-10-16",
+          "section": "Walkthroughs and controls",
+          "type": "Made-up info",
+          "wrong": "Process notes said invoices are approved twice; the notes say once.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Process flow from notes"
+        }
+      ],
+      "steps": [
+        true,
+        true,
+        true,
+        true,
+        false,
+        false
+      ],
+      "game": {
+        "picks": [
+          3,
+          3,
+          3,
+          2,
+          1,
+          3,
+          -1,
+          -1
+        ]
+      },
+      "settingsCopiedOn": "2026-10-19",
+      "notes": [
+        {
+          "id": "n-p8v5pmsh-0",
+          "date": "2026-10-06",
+          "task": "Process flow from notes",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-p8v5pmsh-1",
+          "date": "2026-10-14",
+          "task": "Finding every place a figure appears",
+          "tool": "A local model",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Birmingham audit"
+    },
+    {
+      "app": "audit-ai-suite",
+      "version": 1,
+      "madeWith": "final",
+      "exportedOn": "2026-10-28",
+      "anonId": "p-vcbkjj7k",
+      "level": "Trainee (NQ1)",
+      "reports": [
+        {
+          "id": "r-vcbkjj7k-0",
+          "date": "2026-10-28",
+          "section": "Payroll",
+          "type": "Data or privacy slip",
+          "wrong": "Employee names left in a sample sent to AI.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "Excel formula to recalculate pay for a sample"
+        },
+        {
+          "id": "r-vcbkjj7k-1",
+          "date": "2026-10-16",
+          "section": "Walkthroughs and controls",
+          "type": "Missed something",
+          "wrong": "Process notes missed who can change supplier bank details.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "",
+          "context": "practice",
+          "task": "Process notes from meeting notes"
+        }
+      ],
+      "steps": [
+        true,
+        false,
+        true,
+        false,
+        true,
+        true
+      ],
+      "game": {
+        "picks": [
+          2,
+          3,
+          -1,
+          -1,
+          2,
+          1,
+          3,
+          1
+        ]
+      },
+      "settingsCopiedOn": "",
+      "notes": [
+        {
+          "id": "n-vcbkjj7k-0",
+          "date": "2026-10-28",
+          "task": "Pulling invoice details from scanned PDFs",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        },
+        {
+          "id": "n-vcbkjj7k-1",
+          "date": "2026-09-15",
+          "task": "Industry research from public news",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            true,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "NQ2"
+        }
+      ],
+      "pilots": [],
+      "team": "Birmingham audit"
+    }
+  ]
+}

@@ -1,0 +1,163 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "madeWith": "final",
+  "exportedOn": "2026-11-05",
+  "anonId": "p-9scvwtir",
+  "level": "Senior",
+  "reports": [
+    {
+      "id": "r-9scvwtir-0",
+      "date": "2026-09-28",
+      "section": "Revenue",
+      "type": "Missed something",
+      "wrong": "Lead list left out sales on the last day of the year.",
+      "caught": "Manager's review",
+      "impact": "A misleading note to the client",
+      "context": "real",
+      "task": "Pulling invoice details from scanned PDFs"
+    },
+    {
+      "id": "r-9scvwtir-1",
+      "date": "2026-10-20",
+      "section": "Related parties",
+      "type": "Made-up info",
+      "wrong": "Explained related parties with a rule that isn't in the standard.",
+      "caught": "Compared with my own working",
+      "impact": "A wrong conclusion on file",
+      "context": "real",
+      "task": "Finding directors' other companies on Companies House"
+    },
+    {
+      "id": "r-9scvwtir-2",
+      "date": "2026-10-09",
+      "section": "Cash and bank",
+      "type": "Wrong number",
+      "wrong": "Closing balance had two digits swapped.",
+      "caught": "",
+      "impact": "",
+      "context": "real",
+      "task": "Pulling balances from bank statements"
+    },
+    {
+      "id": "r-9scvwtir-3",
+      "date": "2026-11-05",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "Invoice total read as £1,850; the PDF says £1,580.",
+      "caught": "Reviewer asked for the quote",
+      "impact": "Testing the wrong sample",
+      "context": "real",
+      "task": "Flagging unusual sales near the year end (leads only)"
+    },
+    {
+      "id": "r-9scvwtir-4",
+      "date": "2026-10-15",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "VAT added twice in the sales schedule.",
+      "caught": "Manager's review",
+      "impact": "",
+      "context": "real",
+      "task": "Flagging unusual sales near the year end (leads only)"
+    }
+  ],
+  "steps": [
+    true,
+    true,
+    true,
+    true,
+    true,
+    true
+  ],
+  "game": {
+    "picks": [
+      0,
+      3,
+      1,
+      2,
+      3,
+      2,
+      3,
+      2
+    ]
+  },
+  "settingsCopiedOn": "2026-11-03",
+  "notes": [
+    {
+      "id": "n-9scvwtir-0",
+      "date": "2026-09-23",
+      "task": "Searching for unrecorded liabilities",
+      "tool": "Claude",
+      "checked": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "reviewerRole": "Manager"
+    },
+    {
+      "id": "n-9scvwtir-1",
+      "date": "2026-10-14",
+      "task": "Drafting a bank confirmation request",
+      "tool": "Claude",
+      "checked": [
+        true,
+        true,
+        false,
+        true
+      ],
+      "reviewerRole": "Manager"
+    },
+    {
+      "id": "n-9scvwtir-2",
+      "date": "2026-09-09",
+      "task": "Process notes from meeting notes",
+      "tool": "Microsoft 365 Copilot",
+      "checked": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "reviewerRole": "Manager"
+    },
+    {
+      "id": "n-9scvwtir-3",
+      "date": "2026-10-16",
+      "task": "Process notes from meeting notes",
+      "tool": "Claude",
+      "checked": [
+        true,
+        true,
+        true,
+        true
+      ],
+      "reviewerRole": "Manager"
+    }
+  ],
+  "pilots": [
+    {
+      "id": "pl-9scvwtir-0",
+      "goal": "Pulling balances from bank statements",
+      "tool": "Microsoft 365 Copilot",
+      "baselineMinutes": 40,
+      "aiMinutes": 15,
+      "errorsCaught": 5,
+      "startedWith": 4,
+      "stillUsing": 4
+    },
+    {
+      "id": "pl-9scvwtir-1",
+      "goal": "Matching invoices to the ledger",
+      "tool": "Claude",
+      "baselineMinutes": 50,
+      "aiMinutes": 30,
+      "errorsCaught": 3,
+      "startedWith": 3,
+      "stillUsing": 3
+    }
+  ],
+  "team": "Leeds audit"
+}

@@ -648,7 +648,13 @@ function makeExport(madeWith) {    // madeWith = "basic" or "final"
     out.notes = loadList("notes").map(cleanNote).filter(Boolean);
     out.pilots = loadList("pilots").map(cleanPilot).filter(Boolean);
   }
+  const team = cleanTeam(load("team", ""));
+  if (team) out.team = team;       // optional: a team or office, never a name
   return out;
+}
+
+function cleanTeam(t) {           // "Team or office": plain text, up to 60 characters
+  return cut(typeof t === "string" ? t.replace(/[\u0000-\u001f]/g, " ") : "", 60);
 }
 
 function cleanNote(n) {            // an AI use note: reviewer role only, never a name
@@ -691,13 +697,28 @@ function normaliseExport(obj) {    // check a loaded file; bad parts are skipped
     exportedAt: typeof obj.exportedAt === "string" && /^\d{4}-\d{2}-\d{2}T[\d:.]{5,12}Z$/.test(obj.exportedAt) ? obj.exportedAt : "", level: LEVELS.includes(obj.level) ? obj.level : "",
     reports, steps, picks: validPicks(obj.game && obj.game.picks),
     settingsCopiedOn: isISO(obj.settingsCopiedOn) ? obj.settingsCopiedOn : ("settingsCopiedOn" in obj ? "" : null),
-    notes, pilots } };
+    notes, pilots, team: cleanTeam(obj.team), group: "" } };
 }
 
-function readExport(text) {        // text from a file -> checked person (or a plain-English problem)
+function readExport(text) {        // text from a file -> checked people (or a plain-English problem)
   if (typeof text !== "string" || text.length > 1000000) return { ok: false, problem: "This file is too big to be from this app." };
-  try { return normaliseExport(JSON.parse(text)); }
+  let obj;
+  try { obj = JSON.parse(text); }
   catch (e) { return { ok: false, problem: "This file couldn't be read. Is it the file from 'Send to my manager'?" }; }
+  if (!obj || typeof obj !== "object" || obj.kind !== "group") {   // one person's file
+    const r = normaliseExport(obj);
+    if (r.ok) r.people = [r.person];
+    return r;
+  }
+  // A group file: { app, version, kind: "group", name, people: [one person's file, ...] }. Each person is checked on their own.
+  if (obj.app !== EXPORT_APP) return { ok: false, problem: "This file wasn't made by this app." };
+  const name = cleanTeam(obj.name) || "Unnamed group";
+  if (!Array.isArray(obj.people)) return { ok: false, problem: "This group file has no people in it." };
+  const checked = obj.people.slice(0, 500).map(normaliseExport), list = checked.filter(r => r.ok).map(r => r.person);
+  if (!list.length) return { ok: false, problem: "None of the people in this group file could be read." };
+  list.forEach(p => { p.group = name; });
+  return { ok: true, group: name, people: list, newer: obj.version > EXPORT_VERSION || checked.some(r => r.newer),
+           skipped: checked.reduce((n, r) => n + (r.ok ? r.skipped : 1), 0) + Math.max(0, obj.people.length - 500) };
 }
 
 function mergePeople(people) {     // one entry per person: each part comes from their latest file that has it
@@ -711,7 +732,8 @@ function mergePeople(people) {     // one entry per person: each part comes from
     return { anonId: files[0].anonId, madeWith: files.some(f => f.madeWith === "final") ? "final" : "basic",
              exportedOn: files[files.length - 1].exportedOn, level: latest("level") || "", reports,
              steps: latest("steps"), picks: latest("picks"), settingsCopiedOn: latest("settingsCopiedOn"),
-             notes: latest("notes"), pilots: latest("pilots"), files: files.length };
+             notes: latest("notes"), pilots: latest("pilots"), team: latest("team") || "", group: latest("group") || "",
+             source: latest("source") || "", files: files.length };
   });
 }
 

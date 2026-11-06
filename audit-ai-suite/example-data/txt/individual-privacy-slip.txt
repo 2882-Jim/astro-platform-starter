@@ -1,0 +1,105 @@
+{
+  "app": "audit-ai-suite",
+  "version": 1,
+  "madeWith": "final",
+  "exportedOn": "2026-11-04",
+  "anonId": "p-4ppsfsyn",
+  "level": "NQ2",
+  "reports": [
+    {
+      "id": "r-4ppsfsyn-0",
+      "date": "2026-10-26",
+      "section": "Payroll",
+      "type": "Data or privacy slip",
+      "wrong": "Payroll file pasted into a personal chatbot.",
+      "caught": "",
+      "impact": "",
+      "context": "practice",
+      "task": "Explaining a payroll report layout (made-up example)"
+    },
+    {
+      "id": "r-4ppsfsyn-1",
+      "date": "2026-10-27",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "Year-end sales total out by £2,000.",
+      "caught": "",
+      "impact": "",
+      "context": "real",
+      "task": "Flagging unusual sales near the year end (leads only)"
+    },
+    {
+      "id": "r-4ppsfsyn-2",
+      "date": "2026-11-03",
+      "section": "Purchases",
+      "type": "Missed something",
+      "wrong": "Missed an unrecorded invoice from April.",
+      "caught": "Read the clause myself",
+      "impact": "A wrong figure on file",
+      "context": "practice",
+      "task": "Drafting supplier statement requests"
+    },
+    {
+      "id": "r-4ppsfsyn-3",
+      "date": "2026-11-03",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "Credit note shown as a sale.",
+      "caught": "",
+      "impact": "",
+      "context": "real",
+      "task": "Pulling invoice details from scanned PDFs"
+    }
+  ],
+  "steps": [
+    true,
+    false,
+    false,
+    true,
+    true,
+    true
+  ],
+  "game": {
+    "picks": [
+      -1,
+      1,
+      3,
+      4,
+      2,
+      1,
+      3,
+      2
+    ]
+  },
+  "settingsCopiedOn": "2026-10-20",
+  "notes": [
+    {
+      "id": "n-4ppsfsyn-0",
+      "date": "2026-10-01",
+      "task": "Excel formula to recalculate pay for a sample",
+      "tool": "A local model",
+      "checked": [
+        true,
+        false,
+        true,
+        true
+      ],
+      "reviewerRole": "Senior"
+    },
+    {
+      "id": "n-4ppsfsyn-x0",
+      "date": "2026-10-30",
+      "checked": [
+        true,
+        false,
+        true,
+        false
+      ],
+      "reviewerRole": "Senior",
+      "task": "Analysing employees' pay data",
+      "tool": "A personal chatbot"
+    }
+  ],
+  "pilots": [],
+  "team": "Manchester audit"
+}
