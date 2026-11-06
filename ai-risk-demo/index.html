@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Can I use AI for this?</title>
+<style>
+  /* ---------- Look and feel ---------- */
+  * { box-sizing: border-box; }
+  body { margin: 0; font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+         color: #1a1a1a; background: #f6f7f9; line-height: 1.5; }
+  header, main, nav, .note { max-width: 760px; margin: 0 auto; padding: 0 16px; }
+  header { padding-top: 16px; }
+  h1 { font-size: 1.8rem; margin: 24px 0 8px; }
+  h2 { font-size: 1.1rem; margin: 20px 0 8px; }
+  .lead, .small, .note, #position { color: #555; }
+  .small, .note { font-size: 0.85rem; }
+  button { font: inherit; cursor: pointer; }
+
+  /* Search box and results */
+  #search { width: 100%; padding: 10px 12px; font-size: 16px; border: 1px solid #999; border-radius: 6px; }
+  #results { max-height: 50vh; overflow-y: auto; margin-top: 6px; }
+  .result { display: block; width: 100%; text-align: left; background: #fff; border: 1px solid #d6d6d6;
+            border-radius: 6px; padding: 8px 12px; margin-bottom: 4px; }
+  .result small { color: #555; }
+
+  /* The four rating labels: the word is always written on the label */
+  .label { display: inline-block; padding: 2px 10px; border-radius: 999px; font-size: 0.85rem;
+           font-weight: 600; color: #fff; white-space: nowrap; }
+  .low          { background: #2e7d32; }                 /* green */
+  .medium       { background: #f2b100; color: #1a1a1a; } /* amber */
+  .significant  { background: #c62828; }                 /* red */
+  .notpermitted { background: #424242; }                 /* dark grey */
+
+  /* Opening page key and Start button */
+  .key { list-style: none; padding: 0; }
+  .key li { display: flex; gap: 12px; align-items: flex-start; background: #fff; border: 1px solid #d6d6d6;
+            border-radius: 8px; padding: 12px; margin-bottom: 8px; }
+  .key .label { min-width: 110px; text-align: center; }
+  .start { background: #1f4e79; color: #fff; border: 0; border-radius: 8px; padding: 14px 48px;
+           font-size: 1.2rem; margin: 8px 0 16px; }
+
+  /* Sections page buttons */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 12px; }
+  .section-btn { background: #fff; border: 1px solid #d6d6d6; border-radius: 8px; padding: 20px 16px;
+                 text-align: left; font-weight: 600; }
+  .section-btn:hover, .result:hover { border-color: #1f4e79; }
+
+  /* Task cards */
+  .card { background: #fff; border: 1px solid #d6d6d6; border-radius: 8px; padding: 16px; margin-bottom: 12px; }
+  .card h2 { margin: 0 0 8px; }
+  .card p { margin: 8px 0; }
+  .more { background: none; border: 1px solid #1f4e79; color: #1f4e79; border-radius: 6px; padding: 6px 14px; }
+  .example { background: #f6f7f9; border-radius: 6px; padding: 4px 12px; margin-top: 10px; }
+  .found { outline: 3px solid #1f4e79; }  /* highlights the task you picked from the search */
+
+  /* Back / Home / Next bar */
+  nav { display: flex; gap: 8px; align-items: center; margin-top: 24px; padding-top: 12px;
+        padding-bottom: 12px; border-top: 1px solid #d6d6d6; }
+  nav button { background: #1f4e79; color: #fff; border: 0; border-radius: 6px; padding: 10px 18px; }
+  nav button:disabled { background: #bbb; cursor: default; }
+  #position { flex: 1; text-align: center; }
+  .note { padding-bottom: 24px; }
+</style>
+</head>
+<body>
+
+<header>
+  <label for="search"><b>Search all tasks</b></label>
+  <input id="search" type="search" placeholder="e.g. payroll, minutes, bank" autocomplete="off">
+  <div id="results"></div>
+</header>
+
+<main id="page"></main>
+
+<nav>
+  <button id="back">Back</button>
+  <button id="home">Home</button>
+  <span id="position"></span>
+  <button id="next">Next</button>
+</nav>
+
+<p class="note">Prototype only: example tasks and draft ratings. No client data.</p>
+
+<script>
+// =====================================================================
+// 1. THE TASK LIST  (edit tasks here, one line per task)
+//    section: must match a name in SECTIONS below exactly
+//    rating:  "low", "medium", "significant" or "notpermitted"
+//    Keep text inside "double quotes". Use ' (not ") inside the text.
+// =====================================================================
+const TASKS = [
+  { section: "Planning", rating: "low", task: "Brainstorm risks to consider for a client in an unfamiliar industry", reason: "Ideas to prompt your thinking; your risk assessment is done and recorded separately.", example: "Ask the firm's AI tool for common risks in, say, a small housebuilder. Use the list as prompts, then do and record the risk assessment yourself. Nothing from the chat goes on file." },
+  { section: "Planning", rating: "medium", task: "Summarise board minutes into a planning note", reason: "Goes on file, so every point must be checked back to the minutes.", example: "Ask the firm's approved tool for a bullet summary with page numbers. Tick every bullet against the minutes and correct anything wrong before filing." },
+  { section: "Planning", rating: "significant", task: "Ask AI to set the materiality figure", reason: "Materiality shapes the whole audit, and a poor figure could be hard to spot.", example: "The audit team still chooses the benchmark and the figure, records why, and has it reviewed. AI output can be one input, never the decision." },
+
+  { section: "Walkthroughs and controls", rating: "low", task: "Draft questions to ask in a walkthrough meeting", reason: "Helps you prepare; the evidence comes from the walkthrough itself.", example: "Describe the process in general terms and ask for questions covering each step. Edit the list to fit what you already know about the client." },
+  { section: "Walkthroughs and controls", rating: "medium", task: "Turn your walkthrough notes into a tidy process write-up", reason: "Goes on file; every step must match your notes and the client's documents.", example: "Give the firm's approved tool your own notes and ask for a step-by-step write-up. Check each step against your notes and the documents you saw, and delete anything you didn't see." },
+  { section: "Walkthroughs and controls", rating: "significant", task: "Ask AI whether a control is well designed and working", reason: "That is an audit conclusion, and a confident wrong answer would be hard to spot.", example: "AI can point out possible gaps for you to look into. You decide whether the control works, based on your own testing, and record why." },
+
+  { section: "Revenue", rating: "low", task: "Explain a revenue recognition term you're unsure about", reason: "For your own understanding; nothing on file relies on it.", example: "Ask for a plain-English explanation with a simple example. Check it against the accounting standard or firm guidance before you rely on it in your work." },
+  { section: "Revenue", rating: "medium", task: "Pull key terms from sales contracts into a schedule", reason: "Goes on file; every term must be checked to the contract.", example: "Use the firm's approved tool to list price, payment and delivery terms for each contract. Check every entry against the contract itself." },
+  { section: "Revenue", rating: "significant", task: "Use AI to flag unusual revenue journals for testing", reason: "It decides what gets tested; if it misses something, you probably won't notice.", example: "Agree the criteria with your manager first, keep a record of what the tool was asked and what it found, and do your own testing on the flagged items." },
+
+  { section: "Purchases", rating: "low", task: "Draft a list of documents to request from the client", reason: "An admin draft; you read and edit it before it's sent.", example: "Ask for a list of typical purchase documents (orders, delivery notes, invoices). Tailor it to the client and remove anything you don't need." },
+  { section: "Purchases", rating: "medium", task: "Copy figures from scanned purchase invoices into a testing schedule", reason: "Goes on file; every figure must be checked to the invoice.", example: "Use the firm's approved tool to read the scanned invoices into a table. Check every date, amount and supplier name against the invoice." },
+  { section: "Purchases", rating: "significant", task: "Use AI to search for unrecorded liabilities", reason: "A missed item would be hard to spot and could change the conclusion.", example: "Use it alongside, not instead of, your usual review of payments and invoices after the year end, and record what it was asked to do." },
+
+  { section: "Payroll", rating: "low", task: "Draft an email asking the client for payroll reports", reason: "Wording help only; you check it before sending.", example: "Ask for a clear, polite email listing the reports you need. Leave out names and salaries: the AI doesn't need them to write an email." },
+  { section: "Payroll", rating: "significant", task: "Use AI to flag employees with unusual pay", reason: "It affects named people, and mistakes would be hard to spot.", example: "Treat each flag as a question, not a finding. Check it to payroll records and discuss it with the client before forming any view about a person." },
+  { section: "Payroll", rating: "notpermitted", task: "Paste the client's payroll file into a personal chatbot", reason: "Client and personal data in a personal AI account breaks firm policy.", example: "Don't do this. Use only the firm's approved tools for client data. If you're not sure a tool is approved, ask your manager first." },
+
+  { section: "Cash and bank", rating: "low", task: "List reasons a bank reconciliation might not agree", reason: "Prompts for your own thinking; the reconciliation itself is tested to source.", example: "Ask for common causes (timing differences, bank charges, errors). Use them as ideas when you follow up differences with the client." },
+  { section: "Cash and bank", rating: "medium", task: "List year-end balances from bank statements in a schedule", reason: "Goes on file; every balance must be checked to the statement.", example: "Use the firm's approved tool to read the statements into a table. Check every balance to the statement and the bank confirmation." },
+  { section: "Cash and bank", rating: "notpermitted", task: "Use AI to make up a bank confirmation that hasn't arrived", reason: "Making up evidence is never allowed; the file would be false.", example: "Don't do this. Chase the bank, tell your manager, and agree with them what other work to do if it still doesn't arrive." },
+
+  { section: "Related parties", rating: "low", task: "List the kinds of related parties to ask the directors about", reason: "A prompt for your questions; the answers come from the directors and records.", example: "Ask for typical examples (close family, companies the directors control, key managers). Use them to plan your questions, then record the answers yourself." },
+  { section: "Related parties", rating: "medium", task: "Summarise public records of the directors' other companies", reason: "Goes on file; every company and date must be checked to the public record.", example: "Give the firm's approved tool the Companies House records you've downloaded. Check every company name, role and date against those records." },
+  { section: "Related parties", rating: "significant", task: "Use AI to scan the ledgers for related-party transactions", reason: "If it misses one you're unlikely to notice, and the disclosures could be wrong.", example: "Give it the full list of known related parties, keep a record of what it searched, and still do your usual enquiries and checks." },
+
+  { section: "Accounts and disclosures", rating: "low", task: "Spot typos and formatting slips in the draft accounts", reason: "A tidy-up aid; the figures and disclosures are checked separately.", example: "Use the firm's approved tool to point out spelling, layout and numbering slips. Make the fixes yourself, and don't let it change figures or policy wording." },
+  { section: "Accounts and disclosures", rating: "medium", task: "Check that figures in the notes agree to the main statements", reason: "Goes on file; every match or mismatch must be checked by you.", example: "Ask the firm's approved tool to list each note figure next to the matching statement figure. Check every pair yourself and follow up any differences." },
+  { section: "Accounts and disclosures", rating: "significant", task: "Ask AI whether the going concern basis is appropriate", reason: "A key conclusion; a confident wrong answer would be hard to spot.", example: "Use AI only to challenge your own work. The team does the going concern assessment, records the evidence and reaches its own conclusion." },
+];
+
+// =====================================================================
+// 2. THE FOUR RATINGS  (label, what it means, what to do)
+// =====================================================================
+const LEVELS = {
+  low:          { label: "Low",           meaning: "Helps you think or draft; nothing relies on it.", todo: "Normal review." },
+  medium:       { label: "Medium",        meaning: "Goes on file, but every item is checked to source.", todo: "Check every item, and tell your reviewer you used AI." },
+  significant:  { label: "Significant",   meaning: "Could affect a conclusion, would be hard to spot, or affects a person.", todo: "Only use AI for this if the firm has approved and tested it." },
+  notpermitted: { label: "Not permitted", meaning: "Against firm policy, e.g. client data in a personal AI account.", todo: "Don't." },
+};
+
+// 3. THE AUDIT AREAS, in the order they appear
+const SECTIONS = ["Planning", "Walkthroughs and controls", "Revenue", "Purchases", "Payroll",
+                  "Cash and bank", "Related parties", "Accounts and disclosures"];
+
+// =====================================================================
+// 4. HOW THE PAGES WORK
+//    Pages are numbered like slides: 0 = opening page, 1 = sections page,
+//    2 = Planning, 3 = Walkthroughs ... up to 9 = Accounts and disclosures.
+// =====================================================================
+const LAST_PAGE = SECTIONS.length + 1;
+const page = document.getElementById("page");
+const searchBox = document.getElementById("search");
+const results = document.getElementById("results");
+let current = 0; // the page we're on now
+
+// Show page number n, then update the bottom bar
+function show(n) {
+  current = n;
+  if (n === 0) page.innerHTML = homePage();
+  else if (n === 1) page.innerHTML = sectionsPage();
+  else page.innerHTML = sectionPage(n - 2);
+
+  document.getElementById("back").disabled = (n === 0);
+  document.getElementById("next").disabled = (n === LAST_PAGE);
+
+  let where = "Opening page";
+  if (n === 1) where = "All sections";
+  if (n >= 2) where = "Section " + (n - 1) + " of " + SECTIONS.length;
+  document.getElementById("position").textContent = where;
+
+  searchBox.value = "";      // clear any search
+  results.innerHTML = "";
+  window.scrollTo(0, 0);     // start at the top of the new page
+}
+
+// Opening page: title, one sentence, the traffic-light key, Start button
+function homePage() {
+  let key = "";
+  for (const r in LEVELS) {
+    key += `<li><span class="label ${r}">${LEVELS[r].label}</span>
+            <div>${LEVELS[r].meaning}<br><b>What to do:</b> ${LEVELS[r].todo}</div></li>`;
+  }
+  return `<h1>Can I use AI for this?</h1>
+    <p class="lead">See which uses of AI in an audit are fine and which are risky, and what to do about each.</p>
+    <h2>The four ratings</h2>
+    <ul class="key">${key}</ul>
+    <p class="small">Ratings assume you're using the firm's approved AI tool.</p>
+    <button class="start" onclick="show(1)">Start</button>`;
+}
+
+// Sections page: one button per audit area
+function sectionsPage() {
+  let buttons = "";
+  SECTIONS.forEach(function (name, s) {
+    buttons += `<button class="section-btn" onclick="show(${s + 2})">${name}</button>`;
+  });
+  return `<h1>Choose an audit area</h1><div class="grid">${buttons}</div>`;
+}
+
+// One section's page: a card for every task in that section
+function sectionPage(s) {
+  let cards = "";
+  TASKS.forEach(function (t, i) {
+    if (t.section === SECTIONS[s]) cards += card(t, i);
+  });
+  return `<h1>${SECTIONS[s]}</h1>
+    <p class="lead">Example tasks. Tap "See more" to see what good AI use looks like.</p>${cards}`;
+}
+
+// A single task card. The example stays hidden until "See more" is clicked.
+function card(t, i) {
+  const level = LEVELS[t.rating];
+  return `<div class="card" id="task-${i}">
+      <h2>${t.task}</h2>
+      <span class="label ${t.rating}">${level.label}</span>
+      <p>${t.reason}</p>
+      <button class="more" onclick="toggleMore(this)" aria-expanded="false">See more</button>
+      <div class="example" hidden>
+        <p><b>Good AI use looks like:</b> ${t.example}</p>
+        <p><b>What to do:</b> ${level.todo}</p>
+      </div>
+    </div>`;
+}
+
+// Open or close the example under a "See more" button
+function toggleMore(button) {
+  const box = button.nextElementSibling;
+  box.hidden = !box.hidden;
+  button.textContent = box.hidden ? "See more" : "Hide";
+  button.setAttribute("aria-expanded", !box.hidden);
+}
+
+// Search: runs on every key press. Ignores capital letters, and every
+// word typed must appear in the task, its reason or its section name.
+searchBox.addEventListener("input", function () {
+  const words = searchBox.value.toLowerCase().split(" ").filter(w => w !== "");
+  if (words.length === 0) { results.innerHTML = ""; return; }
+
+  let html = "";
+  TASKS.forEach(function (t, i) {
+    const text = (t.task + " " + t.reason + " " + t.section).toLowerCase();
+    if (words.every(w => text.includes(w))) {
+      html += `<button class="result" onclick="openTask(${i})">${t.task}<br>
+               <small>${t.section} · <span class="label ${t.rating}">${LEVELS[t.rating].label}</span></small></button>`;
+    }
+  });
+  results.innerHTML = html || "<p class='small'>No tasks found. Try a different word.</p>";
+});
+
+// Clicking a search result opens that task's section and highlights the card
+function openTask(i) {
+  show(SECTIONS.indexOf(TASKS[i].section) + 2);
+  const found = document.getElementById("task-" + i);
+  found.classList.add("found");
+  found.scrollIntoView({ block: "center" });
+}
+
+// The Back, Home and Next buttons
+document.getElementById("back").onclick = function () { show(current - 1); };
+document.getElementById("home").onclick = function () { show(0); };
+document.getElementById("next").onclick = function () { show(current + 1); };
+
+show(0); // start on the opening page
+</script>
+</body>
+</html>
