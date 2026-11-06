@@ -1,30 +1,39 @@
 ---
 import site from '../data/site.json';
+import Logo from './Logo.astro';
 const year = new Date().getFullYear();
 ---
 
 <footer class="bg-navy-900 text-navy-100">
-    <div class="container-site grid gap-8 py-12 sm:grid-cols-3">
-        <div>
-            <p class="font-extrabold text-white">{site.shortName}</p>
-            <p class="mt-2 text-sm">{site.fullName}</p>
+    <div class="container-site grid gap-10 py-14 md:grid-cols-4">
+        <div class="md:col-span-2">
+            <Logo kind="mcass" tone="light" />
+            <p class="mt-4 max-w-sm text-sm leading-relaxed">{site.fullName}. {site.tagline}</p>
+            <div class="mt-6 flex items-center gap-3">
+                <Logo kind="icaew" tone="light" size="sm" />
+                <Logo kind="aca" tone="light" size="sm" />
+            </div>
         </div>
         <div class="text-sm">
-            <p class="font-semibold text-white">Contact</p>
-            <p class="mt-2"><a class="underline" href={`mailto:${site.email}`}>{site.email}</a></p>
-            <p class="mt-1 flex gap-4">
-                {site.linkedinUrl && <a class="underline" href={site.linkedinUrl}>LinkedIn</a>}
-                {site.instagramUrl && <a class="underline" href={site.instagramUrl}>Instagram</a>}
-            </p>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-white">Contact</p>
+            <ul class="mt-4 space-y-2">
+                <li>General: <a class="underline" href={`mailto:${site.email}`}>{site.email}</a></li>
+                <li>Events: <a class="underline" href={`mailto:${site.eventsEmail}`}>{site.eventsEmail}</a></li>
+                {site.instagramUrl && <li><a class="underline" href={site.instagramUrl}>Instagram</a></li>}
+                {site.linkedinUrl && <li><a class="underline" href={site.linkedinUrl}>LinkedIn</a></li>}
+            </ul>
         </div>
         <div class="text-sm">
-            <p class="font-semibold text-white">Links</p>
-            <p class="mt-2"><a class="underline" href="/sponsors/">Partner with us</a></p>
-            <p class="mt-1"><a class="underline" href="/privacy/">Privacy notice</a></p>
+            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-white">Information</p>
+            <ul class="mt-4 space-y-2">
+                <li><a class="underline" href="/sponsors/">Sponsorship</a></li>
+                <li><a class="underline" href={site.icaewPageUrl}>MCASS on icaew.com</a></li>
+                <li><a class="underline" href="/privacy/">Privacy notice</a></li>
+            </ul>
         </div>
     </div>
     <div class="border-t border-white/10">
-        <p class="container-site py-4 text-xs text-navy-100/80">
+        <p class="container-site py-5 text-xs text-navy-100/70">
             © {year} {site.fullName}. Registered charity in England and Wales, number {site.charityNumber}.
         </p>
     </div>

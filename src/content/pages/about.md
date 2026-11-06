@@ -3,16 +3,16 @@ title: About MCASS
 description: Who we are and what we do for ACA students in Greater Manchester.
 ---
 
-The Manchester Chartered Accountants Students' Society (MCASS) represents ACA students training under ICAEW training agreements in Greater Manchester. We have been a registered charity since 1963 (charity number 217014).
+The Manchester Chartered Accountants Students' Society (MCASS) is the official body that represents ACA students under ICAEW training contracts in the Greater Manchester area. We have been a registered charity since 1963 (charity number 217014).
 
 ## What we do
 
-Our aim is to support members with their learning, training and professional development. We run:
+Our aim is to support members with their learning, training and professional development, and to help them build a social and professional network. Our programme includes:
 
-- **Socials**, so trainees from different firms can meet each other
-- **Sport**, including our Summer Games
-- **Revision and professional events** to help members through their exams
-- **The Annual Ball**, our flagship evening for Manchester's accountancy community
+- **Revision sessions** ahead of ACA exam sittings
+- **Professional and networking events**
+- **Post-exam socials** and the **Summer Games**
+- **The Annual Ball**, the society's principal event of the year
 
 ## Who runs it
 

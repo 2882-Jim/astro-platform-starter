@@ -2,7 +2,7 @@
     "pricesConfirmed": false,
     "vatStatus": "unconfirmed",
     "contractLength": "12 months",
-    "intro": "Partnering with MCASS puts your firm in front of trainee chartered accountants across Greater Manchester: the people your clients, recruiters and training providers want to reach early in their careers.",
+    "intro": "Sponsorship gives firms a direct, year-round presence among ACA students training across Greater Manchester, supporting the next generation of chartered accountants.",
     "prospectusUrl": "",
     "tiers": [
         {
@@ -40,7 +40,7 @@
             "price": "From £500",
             "availability": "Several available",
             "featured": false,
-            "summary": "An affordable way to show your support for Manchester's ACA students.",
+            "summary": "Entry-level support for the society's programme for the year.",
             "benefits": [
                 "Logo and link on the website's Partners section",
                 "Thank-you post on social media",
@@ -50,14 +50,38 @@
         }
     ],
     "addons": [
-        { "name": "Annual Ball headline sponsor", "price": "From £3,000", "summary": "Lead billing at our largest event. Can be combined with any tier." },
-        { "name": "Awards category", "price": "From £500", "summary": "Name and present one award category at the Ball." },
-        { "name": "Single event sponsor", "price": "On request", "summary": "Support one social, sports or revision event." }
+        {
+            "name": "Annual Ball headline sponsor",
+            "price": "From £3,000",
+            "summary": "Lead billing at our largest event. Can be combined with any tier."
+        },
+        {
+            "name": "Awards category",
+            "price": "From £500",
+            "summary": "Name and present one award category at the Ball."
+        },
+        {
+            "name": "Single event sponsor",
+            "price": "On request",
+            "summary": "Support one social, sports or revision event."
+        }
     ],
     "process": [
-        { "title": "Get in touch", "text": "Email us and we'll send the full prospectus and audience figures." },
-        { "title": "Agree a package", "text": "We tailor benefits and confirm everything in a simple 12-month agreement." },
-        { "title": "Invoice", "text": "We invoice from the society. Our charity number appears on every invoice." },
-        { "title": "Report back", "text": "You get a short report after each event you support and an end-of-year summary." }
+        {
+            "title": "Get in touch",
+            "text": "Email us and we'll send the full prospectus and audience figures."
+        },
+        {
+            "title": "Agree a package",
+            "text": "We tailor benefits and confirm everything in a simple 12-month agreement."
+        },
+        {
+            "title": "Invoice",
+            "text": "We invoice from the society. Our charity number appears on every invoice."
+        },
+        {
+            "title": "Report back",
+            "text": "You get a short report after each event you support and an end-of-year summary."
+        }
     ]
 }

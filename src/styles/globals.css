@@ -3,28 +3,28 @@
 @tailwind utilities;
 
 @layer base {
-    html { @apply scroll-smooth; }
     body { @apply bg-white text-slate-800 antialiased; }
-    h1 { @apply text-4xl font-extrabold tracking-tight text-navy-900 sm:text-5xl; }
-    h2 { @apply text-2xl font-bold tracking-tight text-navy-900 sm:text-3xl; }
-    h3 { @apply text-lg font-semibold text-navy-900; }
+    h1 { @apply font-serif text-4xl font-semibold leading-tight text-navy-900 sm:text-5xl; }
+    h2 { @apply font-serif text-2xl font-semibold text-navy-900 sm:text-3xl; }
+    h3 { @apply text-base font-semibold text-navy-900; }
 }
 
 @layer components {
     .container-site { @apply mx-auto w-full max-w-6xl px-4 sm:px-6; }
     .section { @apply py-14 sm:py-20; }
-    .eyebrow { @apply text-sm font-semibold uppercase tracking-wider text-gold-600; }
-    .btn { @apply inline-flex items-center justify-center rounded-full px-5 py-2.5 text-sm font-semibold no-underline transition focus:outline-none focus-visible:ring-2 focus-visible:ring-gold-400; }
-    .btn-primary { @apply btn bg-gold-400 text-navy-900 hover:bg-gold-300; }
-    .btn-dark { @apply btn bg-navy-800 text-white hover:bg-navy-700; }
+    .eyebrow { @apply border-l-2 border-accent-500 pl-3 text-xs font-semibold uppercase tracking-[0.15em] text-slate-500; }
+    .btn { @apply inline-flex items-center justify-center px-5 py-3 text-xs font-semibold uppercase tracking-[0.12em] no-underline transition focus:outline-none focus-visible:ring-2 focus-visible:ring-accent-500; }
+    .btn-primary { @apply btn bg-white text-navy-900 hover:bg-navy-50; }
+    .btn-dark { @apply btn bg-navy-900 text-white hover:bg-navy-700; }
     .btn-outline { @apply btn border border-current hover:bg-white/10; }
-    .card { @apply rounded-2xl border border-slate-200 bg-white p-6 shadow-sm; }
+    .card { @apply border border-slate-200 bg-white p-6; }
+    .rule { @apply h-px w-12 bg-accent-500; }
     .prose-site { @apply max-w-3xl text-slate-700; }
     .prose-site h2 { @apply mt-10 mb-4; }
     .prose-site h3 { @apply mt-8 mb-3; }
     .prose-site p, .prose-site ul, .prose-site ol { @apply my-4 leading-relaxed; }
     .prose-site ul { @apply list-disc pl-6; }
     .prose-site ol { @apply list-decimal pl-6; }
-    .prose-site a { @apply font-medium text-navy-600 underline; }
+    .prose-site a { @apply text-navy-600 underline; }
     .prose-site strong { @apply text-navy-900; }
 }

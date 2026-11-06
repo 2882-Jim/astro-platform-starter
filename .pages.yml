@@ -91,12 +91,17 @@ content:
       - { name: fullName, label: Full name, type: string }
       - { name: tagline, label: Tagline, type: string }
       - { name: intro, label: Home page intro, type: text }
+      - { name: mcassLogo, label: MCASS logo, type: image }
+      - { name: icaewLogo, label: ICAEW logo, type: image, description: "Use the official file supplied by ICAEW." }
+      - { name: acaLogo, label: ACA logo, type: image, description: "Use the official file supplied by ICAEW." }
       - { name: email, label: General email, type: string }
+      - { name: eventsEmail, label: Events email, type: string }
       - { name: sponsorshipEmail, label: Sponsorship email, type: string }
       - { name: charityNumber, label: Charity number, type: string }
       - { name: registeredSince, label: Registered since, type: string }
       - { name: linkedinUrl, label: LinkedIn URL, type: string }
       - { name: instagramUrl, label: Instagram URL, type: string }
+      - { name: icaewPageUrl, label: MCASS page on icaew.com, type: string }
       - { name: joinUrl, label: Join / sign-up link, type: string }
       - { name: heroImage, label: Home page main photo, type: image }
       - { name: cloudflareAnalyticsToken, label: Cloudflare Web Analytics token, type: string }

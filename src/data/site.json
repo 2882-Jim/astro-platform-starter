@@ -2,21 +2,42 @@
     "draftMode": true,
     "shortName": "MCASS",
     "fullName": "The Manchester Chartered Accountants Students' Society",
-    "tagline": "The society for ICAEW ACA students training in Greater Manchester.",
-    "intro": "Run by students, for students. We organise socials, sport, revision support and professional events so that training for the ACA is easier, and more fun, alongside work.",
+    "tagline": "The official body representing ACA students under ICAEW training contracts in Greater Manchester.",
+    "intro": "MCASS supports ACA students across Greater Manchester through revision sessions, professional development and networking events, post-exam socials, sport and the Annual Ball.",
     "email": "hello@mcass.uk",
+    "eventsEmail": "events@mcass.uk",
     "sponsorshipEmail": "hello@mcass.uk",
     "charityNumber": "217014",
     "registeredSince": "1963",
     "linkedinUrl": "",
-    "instagramUrl": "",
+    "instagramUrl": "https://www.instagram.com/mcass_icaew/",
     "joinUrl": "",
     "heroImage": "",
     "cloudflareAnalyticsToken": "",
     "stats": [
-        { "value": "TBC", "label": "ACA students in our area", "confirmed": false },
-        { "value": "TBC", "label": "Guests at the Annual Ball", "confirmed": false },
-        { "value": "TBC", "label": "Events a year", "confirmed": false },
-        { "value": "1963", "label": "Registered charity since", "confirmed": true }
-    ]
+        {
+            "value": "TBC",
+            "label": "ACA students in our area",
+            "confirmed": false
+        },
+        {
+            "value": "TBC",
+            "label": "Guests at the Annual Ball",
+            "confirmed": false
+        },
+        {
+            "value": "TBC",
+            "label": "Events a year",
+            "confirmed": false
+        },
+        {
+            "value": "1963",
+            "label": "Registered charity since",
+            "confirmed": true
+        }
+    ],
+    "icaewPageUrl": "https://www.icaew.com/students/student-support-and-benefits/student-societies-and-groups/manchester-student-society",
+    "mcassLogo": "",
+    "icaewLogo": "",
+    "acaLogo": ""
 }

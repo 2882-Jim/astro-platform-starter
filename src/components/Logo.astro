@@ -1,0 +1,32 @@
+---
+// Shows an uploaded logo file if set in Site settings, otherwise a plain text stand-in.
+// ICAEW and ACA stand-ins are deliberately plain text, not copies of the real marks.
+import site from '../data/site.json';
+interface Props {
+    kind: 'mcass' | 'icaew' | 'aca';
+    tone?: 'light' | 'dark';
+    size?: 'sm' | 'md' | 'lg';
+}
+const { kind, tone = 'dark', size = 'md' } = Astro.props;
+const src = { mcass: site.mcassLogo, icaew: site.icaewLogo, aca: site.acaLogo }[kind];
+const alt = { mcass: 'MCASS logo', icaew: 'ICAEW logo', aca: 'ACA logo' }[kind];
+const h = { sm: 'h-7', md: 'h-10', lg: 'h-14' }[size];
+const text = tone === 'light' ? 'text-white border-white/60' : 'text-navy-900 border-navy-900';
+---
+
+{
+    src ? (
+        <img src={src} alt={alt} class:list={[h, 'w-auto']} />
+    ) : kind === 'mcass' ? (
+        <span class:list={['inline-flex items-baseline gap-2 font-serif font-semibold leading-none', text, size === 'lg' ? 'text-4xl' : size === 'sm' ? 'text-lg' : 'text-2xl']}>
+            MCASS
+        </span>
+    ) : (
+        <span
+            title={`${alt} (upload in Site settings)`}
+            class:list={['inline-flex items-center border px-2 font-sans font-bold tracking-[0.2em]', h, text, size === 'lg' ? 'text-lg' : 'text-xs']}
+        >
+            {kind === 'icaew' ? 'ICAEW' : 'ACA'}
+        </span>
+    )
+}

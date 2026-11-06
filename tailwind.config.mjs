@@ -6,10 +6,13 @@ export default {
     theme: {
         extend: {
             colors: {
-                navy: { 50: '#eef3fa', 100: '#d6e1f1', 600: '#1d3d6b', 700: '#162f54', 800: '#10243f', 900: '#0b1a2e' },
-                gold: { 300: '#f2d67a', 400: '#e9c24a', 500: '#d4a72c', 600: '#b0861b' }
+                navy: { 50: '#f2f4f7', 100: '#dde3eb', 600: '#24406a', 700: '#1a3154', 800: '#132541', 900: '#0c1a2f' },
+                accent: { 500: '#a0802e', 600: '#866a22' }
             },
-            fontFamily: { sans: ['Inter', ...defaultTheme.fontFamily.sans] }
+            fontFamily: {
+                sans: ['Inter', ...defaultTheme.fontFamily.sans],
+                serif: ['"Source Serif 4"', ...defaultTheme.fontFamily.serif]
+            }
         }
     }
 };

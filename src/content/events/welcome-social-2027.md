@@ -5,7 +5,7 @@ dateConfirmed: false
 time: "18:30 onwards"
 venue: Venue TBC, Manchester city centre
 category: Social
-summary: Meet other new ACA trainees from firms across Greater Manchester. First drink on MCASS.
+summary: An evening for new ACA trainees to meet peers from firms across Greater Manchester.
 image: ""
 ticketUrl: ""
 sponsor: ""

@@ -1,43 +1,71 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import Photo from '../components/Photo.astro';
+import Logo from '../components/Logo.astro';
 import EventCard from '../components/EventCard.astro';
 import site from '../data/site.json';
 import { getEvents, getActiveSponsors } from '../lib/format';
 
 const { upcoming } = await getEvents();
 const sponsors = await getActiveSponsors();
-const pillars = [
-    { title: 'Social', text: 'Meet trainees from other firms at regular socials across Manchester.', photo: 'Members at a social' },
-    { title: 'Sport', text: 'Summer Games and sports fixtures between firms.', photo: 'Summer Games team photo' },
-    { title: 'Revision & development', text: 'Revision sessions and professional events to help you through the ACA.', photo: 'Revision session in progress' }
+const areas = [
+    { title: 'Exam and revision support', text: 'Revision sessions ahead of each ACA exam sitting, run with tuition providers.', photo: 'Revision session' },
+    { title: 'Professional development', text: 'Talks and networking events with firms and practitioners across Greater Manchester.', photo: 'Professional event' },
+    { title: 'Social and sport', text: 'Post-exam socials, the Summer Games and the Annual Ball, connecting trainees across firms.', photo: 'Annual Ball' }
 ];
 ---
 
 <Layout>
     <section class="bg-navy-900 text-white">
-        <div class="container-site grid items-center gap-10 py-16 sm:py-24 lg:grid-cols-2">
+        <div class="container-site grid items-center gap-12 py-16 sm:py-24 lg:grid-cols-[7fr_5fr]">
             <div>
-                <p class="eyebrow text-gold-400">Greater Manchester · ICAEW ACA students</p>
-                <h1 class="mt-3 text-white">The society for Manchester's trainee chartered accountants</h1>
-                <p class="mt-5 text-lg text-navy-100">{site.intro}</p>
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href="/events/" class="btn-primary">See upcoming events</a>
-                    <a href="/sponsors/" class="btn-outline text-white">Partner with us</a>
+                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-navy-100">ICAEW student society · Greater Manchester</p>
+                <h1 class="mt-5 text-white">{site.fullName}</h1>
+                <div class="rule mt-6"></div>
+                <p class="mt-6 max-w-xl text-lg leading-relaxed text-navy-100">{site.tagline}</p>
+                <div class="mt-10 flex flex-wrap gap-3">
+                    <a href="/events/" class="btn-primary">View events</a>
+                    <a href="/sponsors/" class="btn-outline text-white">Sponsorship</a>
                 </div>
             </div>
-            <Photo src={site.heroImage} alt="MCASS members at an event" label="Hero: members at the Annual Ball" class="aspect-[4/3]" />
+            <Photo src={site.heroImage} alt="MCASS members at an event" label="Main photo: MCASS Annual Ball" class="aspect-[4/3]" />
         </div>
     </section>
 
-    <section class="border-b border-slate-200 bg-navy-50">
-        <dl class="container-site grid grid-cols-2 gap-6 py-10 text-center md:grid-cols-4">
+    <section class="border-b border-slate-200">
+        <div class="container-site flex flex-wrap items-center justify-between gap-6 py-6">
+            <p class="text-xs uppercase tracking-[0.15em] text-slate-500">Representing ACA students under ICAEW training contracts</p>
+            <div class="flex items-center gap-6">
+                <Logo kind="mcass" size="sm" />
+                <Logo kind="icaew" />
+                <Logo kind="aca" />
+            </div>
+        </div>
+    </section>
+
+    <section class="section">
+        <div class="container-site grid gap-12 lg:grid-cols-[5fr_7fr]">
+            <div>
+                <p class="eyebrow">About the society</p>
+                <h2 class="mt-4">Supporting ACA students since {site.registeredSince}</h2>
+            </div>
+            <div class="text-lg leading-relaxed text-slate-700">
+                <p>{site.intro}</p>
+                <p class="mt-4 text-base text-slate-600">
+                    MCASS is run by an elected committee of ACA students and is a registered charity in England and Wales (number {site.charityNumber}).
+                </p>
+                <a href="/about/" class="mt-6 inline-block text-xs font-semibold uppercase tracking-[0.12em] text-navy-900 underline underline-offset-4">About MCASS</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="border-y border-slate-200 bg-navy-50">
+        <dl class="container-site grid grid-cols-2 divide-slate-200 md:grid-cols-4 md:divide-x">
             {
                 site.stats.map((s) => (
-                    <div class="flex flex-col">
-                        <dt class="order-2 text-sm text-slate-600">{s.label}</dt>
-                        <dd class="text-3xl font-extrabold text-navy-800">{s.value}</dd>
-                        {!s.confirmed && <dd class="text-xs text-gold-600">to confirm</dd>}
+                    <div class="flex flex-col px-4 py-8 text-center">
+                        <dt class="order-2 mt-1 text-xs uppercase tracking-[0.12em] text-slate-500">{s.label}</dt>
+                        <dd class="font-serif text-3xl font-semibold text-navy-900">{s.value}</dd>
                     </div>
                 ))
             }
@@ -47,16 +75,13 @@ const pillars = [
     <section class="section">
         <div class="container-site">
             <p class="eyebrow">What we do</p>
-            <h2 class="mt-2">Three pillars, one society</h2>
-            <div class="mt-10 grid gap-6 md:grid-cols-3">
+            <div class="mt-10 grid gap-8 md:grid-cols-3">
                 {
-                    pillars.map((p) => (
-                        <div class="card p-0 overflow-hidden">
-                            <Photo alt={p.photo} rounded="rounded-none" class="aspect-[16/10]" />
-                            <div class="p-6">
-                                <h3>{p.title}</h3>
-                                <p class="mt-2 text-sm text-slate-600">{p.text}</p>
-                            </div>
+                    areas.map((a) => (
+                        <div>
+                            <Photo alt={a.photo} class="aspect-[3/2]" />
+                            <h3 class="mt-5 font-serif text-xl font-semibold">{a.title}</h3>
+                            <p class="mt-2 text-sm leading-relaxed text-slate-600">{a.text}</p>
                         </div>
                     ))
                 }
@@ -68,18 +93,16 @@ const pillars = [
         <div class="container-site">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <p class="eyebrow">Coming up</p>
-                    <h2 class="mt-2">Upcoming events</h2>
+                    <p class="eyebrow">Events</p>
+                    <h2 class="mt-4">Forthcoming events</h2>
                 </div>
-                <a href="/events/" class="text-sm font-semibold text-navy-600">All events →</a>
+                <a href="/events/" class="text-xs font-semibold uppercase tracking-[0.12em] text-navy-900 underline underline-offset-4">All events</a>
             </div>
             {
                 upcoming.length ? (
-                    <div class="mt-10 grid gap-6 md:grid-cols-3">
-                        {upcoming.slice(0, 3).map((e) => <EventCard event={e} />)}
-                    </div>
+                    <div class="mt-10 grid gap-6 md:grid-cols-3">{upcoming.slice(0, 3).map((e) => <EventCard event={e} />)}</div>
                 ) : (
-                    <p class="mt-8 text-slate-600">New events will be announced soon. Follow us to hear first.</p>
+                    <p class="mt-8 text-slate-600">Forthcoming events will be published here.</p>
                 )
             }
         </div>
@@ -87,11 +110,11 @@ const pillars = [
 
     <section class="section">
         <div class="container-site">
-            <p class="eyebrow">Our partners</p>
-            <h2 class="mt-2">Supported by</h2>
+            <p class="eyebrow">Sponsors</p>
+            <h2 class="mt-4">Our partners</h2>
             {
                 sponsors.length ? (
-                    <ul class="mt-8 flex flex-wrap items-center gap-8">
+                    <ul class="mt-10 flex flex-wrap items-center gap-10">
                         {sponsors.map((s) => (
                             <li>
                                 <a href={s.data.website ?? '#'} class="block no-underline" title={s.data.name}>
@@ -101,16 +124,16 @@ const pillars = [
                         ))}
                     </ul>
                 ) : (
-                    <div class="mt-8 grid grid-cols-2 gap-4 md:grid-cols-4">
+                    <div class="mt-10 grid grid-cols-2 border-l border-t border-slate-200 md:grid-cols-4">
                         {['Headline Partner', 'Pillar Partner', 'Pillar Partner', 'Supporter'].map((t) => (
-                            <div class="grid h-24 place-items-center rounded-xl border-2 border-dashed border-slate-300 text-center text-sm text-slate-500">
-                                Logo: {t}
+                            <div class="grid h-28 place-items-center border-b border-r border-slate-200 text-xs uppercase tracking-[0.12em] text-slate-400">
+                                {t} logo
                             </div>
                         ))}
                     </div>
                 )
             }
-            <a href="/sponsors/" class="btn-dark mt-8">Become a partner</a>
+            <a href="/sponsors/" class="btn-dark mt-10">Sponsorship opportunities</a>
         </div>
     </section>
 </Layout>
