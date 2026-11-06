@@ -71,6 +71,11 @@
   .heat th[scope=row] { text-align: left; }
   #promptOut { min-height: 220px; }
   #settingsOut { min-height: 150px; }
+  details.box summary { cursor: pointer; }
+  .foryou { border-left: 4px solid; padding: 4px 10px; font-size: 16px; }
+  .goahead { border-color: #00796b; background: #e6f4f1; }
+  .byhand { border-color: #f2b100; background: #fff8e1; }
+  .notyet { border-color: #757575; background: #f0f0f0; }
   .two { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); column-gap: 16px; }  /* 2 columns on a laptop */
   .two p { margin: 6px 0; }
   footer.wrap { margin-top: 32px; border-top: 1px solid #d6d6d6; padding: 12px 16px 24px; font-size: 15px; color: #555; }
@@ -361,15 +366,15 @@ function today() {
 // =====================================================================
 // NAVIGATION: the top bar, and draw() which shows the current screen
 // =====================================================================
-const NAV = [["home", "Home"], ["level", "My level"], ["report", "Report a mistake"],
+const NAV = [["home", "Home"], ["tasks", "Check a task"], ["report", "Report a mistake"],
              ["heat", "Heat map"], ["game", "Spot the mistake"], ["prompt", "Prompt builder"]];
 
 function go(name) { screen = name; draw(); window.scrollTo(0, 0); }
 
 function draw() {
   document.getElementById("nav").innerHTML = NAV.map(n =>
-    `<button class="${screen === n[0] || (screen === "section" && n[0] === "home") ? "on" : ""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("");
-  const screens = { home: homeScreen, section: sectionScreen, checker: checkerScreen, level: levelScreen,
+    `<button class="${screen === n[0] || (screen === "section" && n[0] === "tasks") ? "on" : ""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("");
+  const screens = { home: homeScreen, tasks: tasksScreen, section: sectionScreen, checker: checkerScreen,
                     report: reportScreen, heat: heatScreen, game: gameScreen, cheat: cheatScreen, prompt: promptScreen };
   document.getElementById("screen").innerHTML = screens[screen]();
   if (document.getElementById("job")) jobChanged();   // set up the prompt builder's job-dependent bits
@@ -397,13 +402,12 @@ function homeScreen() {
         `<option value="${n}" ${n === level ? "selected" : ""}>${name}</option>`).join("")}</select>
       <span class="small">Sets the level in every tool.</span></p>
     <h2>The four ratings</h2>${key}
-    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>
-    <h2>Check a task</h2>${searchHtml()}
-    <p class="warn">Draft ratings for discussion, not firm policy.</p>${sectionButtons()}`;
+    <button class="btn big" onclick="go('tasks')">Start</button>
+    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>`;
 }
 
 // =====================================================================
-// SCREEN 2: Check a task: the section buttons and search box (both shown on Home)
+// SCREEN 2: Check a task (with My level merged in): settings prompt, search, section buttons
 // =====================================================================
 function searchHtml() {
   return `<p><label for="search"><b>Search all tasks</b></label>
@@ -449,14 +453,16 @@ function sectionScreen() {
     const rating = t.ratings[where];
     // If it's only Not permitted because of the personal account, say so
     const reason = (rating === "Not permitted" && t.ratings.cloud !== "Not permitted") ? "Client work must stay out of personal AI accounts." : t.reason;
+    const you = forYou(t);
     cards += `<div class="box" id="task-${i}"><h2>${t.task}</h2>${label(rating)}<p>${reason}</p>
+      <p class="foryou ${you.css}"><b>For you (${LEVELS[level]}): ${you.say}.</b> ${you.why}</p>
       <button class="plain" onclick="this.nextElementSibling.hidden = !this.nextElementSibling.hidden">See more</button>
       <div class="example" hidden><p><b>Good AI use looks like:</b> ${t.more}</p><p><b>What to do:</b> ${RATINGS[rating].todo}</p></div></div>`;
   });
   return ratingsFor() + searchHtml() + `<h1>${name}</h1>
     <p class="warn">Draft ratings for discussion, not firm policy.</p>${cards}
     <div class="sectionbar">
-      <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('home')">Back</button>
+      <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('tasks')">Back</button>
       <span>Section ${sectionNo + 1} of ${SECTIONS.length}</span>
       <button class="btn" onclick="sectionNo++; draw()" ${sectionNo === SECTIONS.length - 1 ? "disabled" : ""}>Next</button>
     </div>`;
@@ -488,29 +494,25 @@ function checkerScreen() {
 // =====================================================================
 // SCREEN 4: My level (Go ahead / Do it by hand first / Not yet)
 // =====================================================================
-function levelScreen() {
-  let html = levelFor() + ratingsFor() + `<h1>What can I do right now?</h1>
-    <p class="warn">Draft example for discussion, not firm policy.</p>
-    <div class="box"><h2>Your AI settings prompt</h2>
+function tasksScreen() {
+  return levelFor() + ratingsFor() + `<h1>Check a task</h1>
+    <p class="warn">Draft ratings for discussion, not firm policy.</p>
+    <details class="box"><summary><b>Your AI settings prompt (${LEVELS[level]})</b></summary>
       <p class="small">This should be in your AI tool's settings (custom instructions) right now:</p>
       <textarea id="settingsOut" readonly>${settingsPrompt()}</textarea>
       <button class="plain" onclick="copyText('settingsOut', 'settingsMsg')">Copy</button> <span id="settingsMsg" class="small"></span>
-      <p class="small"><b>Tip:</b> update weekly please.</p></div>`;
+      <p class="small"><b>Tip:</b> update weekly please.</p></details>
+    ${searchHtml()}${sectionButtons()}`;
+}
 
-  let goAhead = "", byHand = "", notYet = "";
-  TASKS.forEach(function (t) {
-    const rating = t.ratings[where];
-    const line = `<li>${t.task} ${label(rating)}`;
-    if (rating === "Not permitted") notYet += line + `<br><span class="small">Not permitted with a ${WHERE[where].name.toLowerCase()}.</span></li>`;
-    else if (level < LEVELS.indexOf(t.minLevel)) notYet += line + `<br><span class="small">Needs ${t.minLevel} or above: ask your senior.</span></li>`;
-    else if (level <= HAND_FIRST_UP_TO[rating]) byHand += line + `<br><span class="small">${rating === "Significant"
-        ? "High risk: do it yourself first and get sign-off before using AI." : "Do it yourself first so you can tell when AI gets it wrong."}</span></li>`;
-    else goAhead += line + "</li>";
-  });
-  return html + `<p class="small">Showing ${LEVELS[level]}, for: ${WHERE[where].name}.</p>
-    <div class="box"><h2>Go ahead</h2><ul>${goAhead || "<li>Nothing yet.</li>"}</ul></div>
-    <div class="box"><h2>Do it by hand first</h2><ul>${byHand || "<li>Nothing.</li>"}</ul></div>
-    <div class="box"><h2>Not yet, ask your senior</h2><ul>${notYet || "<li>Nothing.</li>"}</ul></div>`;
+// What the current level should do with a task: Go ahead / Do it by hand first / Not yet, with a reason
+function forYou(t) {
+  const rating = t.ratings[where];
+  if (rating === "Not permitted") return { css: "notyet", say: "Not permitted", why: "Don't use AI for this." };
+  if (level < LEVELS.indexOf(t.minLevel)) return { css: "notyet", say: "Not yet, ask your senior", why: "Needs " + t.minLevel + " or above." };
+  if (level <= HAND_FIRST_UP_TO[rating]) return { css: "byhand", say: "Do it by hand first",
+    why: rating === "Significant" ? "High risk: do it yourself first and get sign-off before using AI." : "So you can tell when AI gets it wrong." };
+  return { css: "goahead", say: "Go ahead", why: "Follow the rating's 'what to do'." };
 }
 
 // =====================================================================
