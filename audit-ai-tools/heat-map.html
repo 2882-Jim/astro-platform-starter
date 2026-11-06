@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>AI mistake heat map</title>
+<style>
+  body { background: #ffffff; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; margin: 0; }
+  main { max-width: 800px; margin: 0 auto; padding: 0 16px 32px; }
+  h1 { font-size: 28px; }
+  button { background: #1f4e79; color: #ffffff; border: none; border-radius: 6px; padding: 10px 16px; font-size: 16px; cursor: pointer; margin: 0 8px 8px 0; }
+  .grid-wrap { overflow-x: auto; margin: 16px 0; }
+  table { border-collapse: collapse; font-size: 15px; }
+  th, td { border: 1px solid #c8c8c8; padding: 6px; }
+  th { background: #f2f2f2; font-weight: bold; }
+  thead th { min-width: 70px; }
+  tbody th { text-align: left; min-width: 120px; }
+  td { padding: 0; }
+  td button { background: inherit; color: inherit; width: 100%; min-width: 70px; height: 44px; margin: 0; border-radius: 0; font-size: 17px; font-weight: bold; }
+  .note { font-size: 15px; color: #555555; }
+  .report { border: 1px solid #c8c8c8; border-radius: 6px; padding: 8px 12px; margin: 8px 0; }
+  footer { margin-top: 32px; border-top: 1px solid #c8c8c8; padding-top: 12px; font-size: 15px; }
+</style>
+</head>
+<body>
+<main>
+  <h1>AI mistake heat map</h1>
+  <p>This grid shows where AI tools have made mistakes in the audit, by audit section and type of mistake. Darker blue means more reports.</p>
+
+  <button onclick="loadExample()">Load example data</button>
+  <button onclick="clearAll()">Clear</button>
+
+  <div class="grid-wrap"><table id="grid"></table></div>
+  <p id="most"></p>
+  <p class="note">Click a square to see the reports behind it. These reports are separate from the log in index.html.</p>
+
+  <h2 id="detailTitle">Reports</h2>
+  <div id="details"><p>Click a square to see its reports.</p></div>
+
+  <footer>Prototype only: made-up examples and draft ratings. No client data.</footer>
+</main>
+
+<script>
+var SECTIONS = ["Planning", "Walkthroughs and controls", "Revenue", "Purchases", "Payroll", "Cash and bank", "Related parties", "Accounts and disclosures"];
+var TYPES = ["Made-up info", "Missed something", "Wrong number", "Wrong judgement", "Data/privacy slip"];
+var KEY = "heatMapReports";
+var reports = loadReports();
+
+// Read saved reports (returns an empty list if storage is blocked)
+function loadReports() {
+  try {
+    var saved = localStorage.getItem(KEY);
+    return saved ? JSON.parse(saved) : [];
+  } catch (e) {
+    return [];
+  }
+}
+
+// Save reports (does nothing if storage is blocked)
+function saveReports() {
+  try { localStorage.setItem(KEY, JSON.stringify(reports)); } catch (e) {}
+}
+
+// Make text safe to put inside the page
+function esc(text) {
+  return String(text).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+}
+
+// Count reports for one section and mistake type
+function countFor(section, type) {
+  var n = 0;
+  for (var i = 0; i < reports.length; i++) {
+    if (reports[i].section === section && reports[i].type === type) n++;
+  }
+  return n;
+}
+
+// Pick a colour: white for 0, light blue for low, dark blue for high
+function shade(count, max) {
+  if (count === 0) return "#ffffff";
+  var r = count / max;
+  var red = Math.round(219 + (31 - 219) * r);
+  var green = Math.round(233 + (78 - 233) * r);
+  var blue = Math.round(246 + (121 - 246) * r);
+  return "rgb(" + red + "," + green + "," + blue + ")";
+}
+
+// Draw the grid and the "Most reports" line
+function drawGrid() {
+  var max = 0, best = "";
+  for (var s = 0; s < SECTIONS.length; s++) {
+    for (var t = 0; t < TYPES.length; t++) {
+      var c = countFor(SECTIONS[s], TYPES[t]);
+      if (c > max) { max = c; best = SECTIONS[s] + " / " + TYPES[t]; }
+    }
+  }
+
+  var html = "<thead><tr><th>Section</th>";
+  for (var t = 0; t < TYPES.length; t++) html += "<th>" + esc(TYPES[t]) + "</th>";
+  html += "</tr></thead><tbody>";
+
+  for (var s = 0; s < SECTIONS.length; s++) {
+    html += "<tr><th>" + esc(SECTIONS[s]) + "</th>";
+    for (var t = 0; t < TYPES.length; t++) {
+      var count = countFor(SECTIONS[s], TYPES[t]);
+      var textColour = (max > 0 && count / max > 0.5) ? "#ffffff" : "#1a1a1a";
+      html += "<td style='background:" + shade(count, max) + ";color:" + textColour + "'><button" +
+        " aria-label='" + esc(SECTIONS[s]) + ", " + esc(TYPES[t]) + ": " + count + " reports'" +
+        " onclick='showReports(" + s + "," + t + ")'>" + count + "</button></td>";
+    }
+    html += "</tr>";
+  }
+  document.getElementById("grid").innerHTML = html + "</tbody>";
+
+  document.getElementById("most").textContent = max === 0 ? "No reports yet." : "Most reports: " + best;
+}
+
+// List the reports for the clicked square
+function showReports(s, t) {
+  var section = SECTIONS[s], type = TYPES[t];
+  document.getElementById("detailTitle").textContent = "Reports: " + section + " / " + type;
+  var html = "";
+  for (var i = 0; i < reports.length; i++) {
+    var r = reports[i];
+    if (r.section === section && r.type === type) {
+      html += "<div class='report'><strong>" + esc(r.date) + "</strong><br>" +
+        "<strong>What went wrong:</strong> " + esc(r.wrong) + "<br>" +
+        "<strong>How it was caught:</strong> " + esc(r.caught) + "<br>" +
+        "<strong>What could have happened:</strong> " + esc(r.impact) + "</div>";
+    }
+  }
+  document.getElementById("details").innerHTML = html || "<p>No reports for this square.</p>";
+}
+
+// Fill in made-up example reports
+function loadExample() {
+  var R = "Revenue", W = "Wrong number";
+  reports = [
+    { date: "2026-01-12", section: R, type: W, wrong: "Summary said revenue rose 12%; the ledger shows 8%.", caught: "Senior recalculated from the trial balance.", impact: "Analytical review would have used the wrong movement." },
+    { date: "2026-01-19", section: R, type: W, wrong: "Cut-off test total was out by £14,200.", caught: "Reviewer added up the sample again.", impact: "A cut-off error could have been missed." },
+    { date: "2026-02-03", section: R, type: W, wrong: "Credit notes were added instead of taken away.", caught: "Totals did not agree to the sales ledger.", impact: "Revenue overstated in the working paper." },
+    { date: "2026-02-17", section: R, type: W, wrong: "Monthly sales table copied March figures into April.", caught: "Manager spotted two identical months.", impact: "Trend analysis would have been wrong." },
+    { date: "2026-03-05", section: R, type: W, wrong: "VAT was not removed from gross sales figures.", caught: "Junior compared to the VAT return.", impact: "Revenue overstated by 20%." },
+    { date: "2026-03-21", section: R, type: W, wrong: "Sample size worked out as 25; method gives 40.", caught: "Reviewer checked against the sampling guide.", impact: "Too little testing done." },
+    { date: "2026-01-25", section: R, type: "Made-up info", wrong: "Summary quoted a contract clause that does not exist.", caught: "Senior read the contract.", impact: "Wrong revenue recognition point." },
+    { date: "2026-02-09", section: "Planning", type: "Missed something", wrong: "Risk summary left out the new loan covenant.", caught: "Manager knew about the loan from the client meeting.", impact: "Going concern risk not planned for." },
+    { date: "2026-03-02", section: "Planning", type: "Wrong judgement", wrong: "Suggested materiality based on revenue for a loss-making charity.", caught: "Partner review.", impact: "Materiality set too high." },
+    { date: "2026-02-14", section: "Walkthroughs and controls", type: "Made-up info", wrong: "Walkthrough note described an approval step nobody does.", caught: "Junior asked the finance team.", impact: "Controls reliance on a control that does not exist." },
+    { date: "2026-03-11", section: "Purchases", type: "Missed something", wrong: "Unrecorded liabilities search skipped January invoices.", caught: "Reviewer checked the date range.", impact: "Missing accruals not found." },
+    { date: "2026-03-18", section: "Purchases", type: W, wrong: "Accrual total double-counted one supplier.", caught: "Agreed to supplier statement.", impact: "Accruals overstated." },
+    { date: "2026-01-30", section: "Payroll", type: "Data/privacy slip", wrong: "Staff names and salaries pasted into a public AI tool.", caught: "Team member reported it straight away.", impact: "Personal data breach." },
+    { date: "2026-02-22", section: "Payroll", type: W, wrong: "Proof in total used 11 months instead of 12.", caught: "Senior checked the formula.", impact: "False difference investigated." },
+    { date: "2026-02-27", section: "Cash and bank", type: "Missed something", wrong: "Bank reconciliation summary missed an old uncleared cheque.", caught: "Reviewer read the full reconciliation.", impact: "Stale item not followed up." },
+    { date: "2026-03-08", section: "Related parties", type: "Missed something", wrong: "Director's other company not flagged as a related party.", caught: "Manager checked Companies House.", impact: "Disclosure missing from accounts." },
+    { date: "2026-03-25", section: "Related parties", type: "Made-up info", wrong: "Summary said the director loan was repaid; the bank statements show it was not.", caught: "Senior traced it to the bank.", impact: "Related party balance left out." },
+    { date: "2026-03-14", section: "Accounts and disclosures", type: "Wrong judgement", wrong: "Said a disclosure was not needed for a material post year-end event.", caught: "Partner review.", impact: "Accounts missing a required note." },
+    { date: "2026-03-28", section: "Accounts and disclosures", type: "Made-up info", wrong: "Summary said the lease ended in 2027; the lease says 2026.", caught: "Senior read the lease.", impact: "Wrong lease commitments note." },
+    { date: "2026-04-02", section: "Accounts and disclosures", type: W, wrong: "Comparative figure in the note did not match last year's accounts.", caught: "Junior ticked to prior year.", impact: "Error in the published accounts." }
+  ];
+  saveReports();
+  drawGrid();
+  document.getElementById("detailTitle").textContent = "Reports";
+  document.getElementById("details").innerHTML = "<p>Click a square to see its reports.</p>";
+}
+
+// Empty the grid after asking first
+function clearAll() {
+  if (!confirm("Delete all heat map reports?")) return;
+  reports = [];
+  saveReports();
+  drawGrid();
+  document.getElementById("detailTitle").textContent = "Reports";
+  document.getElementById("details").innerHTML = "<p>No reports yet.</p>";
+}
+
+drawGrid();
+</script>
+</body>
+</html>

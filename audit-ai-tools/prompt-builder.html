@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Safe prompt builder</title>
+<style>
+  * { box-sizing: border-box; }
+  body { margin: 0; background: #ffffff; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; }
+  main { max-width: 800px; margin: 0 auto; padding: 16px; }
+  label { display: block; margin: 8px 0; }
+  select, textarea { width: 100%; font: inherit; padding: 8px; border: 1px solid #888; border-radius: 6px; }
+  textarea { min-height: 200px; }
+  button { background: #1f4e79; color: #ffffff; border: 0; border-radius: 6px; padding: 10px 18px; font: inherit; cursor: pointer; margin: 8px 8px 8px 0; }
+  .warning { background: #fff4ce; border-left: 6px solid #b36b00; padding: 10px; margin: 8px 0; }
+  .note { color: #8a4b00; min-height: 1.5em; }
+  fieldset { border: 1px solid #ccc; border-radius: 6px; margin: 16px 0; }
+  footer { margin-top: 32px; font-size: 16px; color: #555; }
+</style>
+</head>
+<body>
+<main>
+  <h1>Safe prompt builder</h1>
+  <p>Builds a careful AI prompt from your chosen job and document, with rules that keep the answer tied to the source.</p>
+
+  <label for="job">What do you want the AI to do?</label>
+  <select id="job">
+    <option>Summarise a document</option>
+    <option>Find a figure</option>
+    <option>Draft a note</option>
+    <option>Check a list against a checklist</option>
+  </select>
+
+  <p class="warning"><strong>Warning:</strong> Remove client names first. Only paste what your firm's policy allows in this tool.</p>
+  <label for="source">Source text</label>
+  <textarea id="source" placeholder="Paste your document here"></textarea>
+  <p id="dataNote" class="note"></p>
+
+  <fieldset>
+    <legend>Rules for the AI</legend>
+    <label><input type="checkbox" class="rule" checked value="Use only this document. Do not use outside knowledge."> Use only this document</label>
+    <label><input type="checkbox" class="rule" checked value="Quote the exact line from the document for each point."> Quote the exact line for each point</label>
+    <label><input type="checkbox" class="rule" checked value="If it isn't in the document, say 'not found'. Do not guess."> If it isn't in the document, say 'not found'</label>
+    <label><input type="checkbox" class="rule" checked value="At the end, list anything you're unsure about."> List anything you're unsure about</label>
+  </fieldset>
+
+  <button id="buildBtn" type="button">Build my prompt</button>
+  <p id="buildNote" class="note"></p>
+
+  <label for="output">Your prompt</label>
+  <textarea id="output" readonly></textarea>
+  <button id="copyBtn" type="button">Copy</button>
+  <span id="copyNote" class="note"></span>
+
+  <fieldset>
+    <legend>Before you use the answer</legend>
+    <label><input type="checkbox"> Check every quote against the source</label>
+    <label><input type="checkbox"> Recheck every number</label>
+    <label><input type="checkbox"> Check any name or date</label>
+    <label><input type="checkbox"> Tell your reviewer AI was used</label>
+  </fieldset>
+
+  <footer>Prototype only: made-up examples and draft ratings. No client data.</footer>
+</main>
+
+<script>
+// One instruction line for each job
+var jobLines = {
+  "Summarise a document": "Summarise the document below in short bullet points, covering only the main points.",
+  "Find a figure": "Find the figure I ask about in the document below. Give the figure, say where it appears, and say 'not found' if it is not there.",
+  "Draft a note": "Draft a short, plain-English note based only on the document below.",
+  "Check a list against a checklist": "Check the list in the document below against the checklist. Mark each checklist item as met, not met or not found, and give the supporting line."
+};
+
+// Build the prompt from the job, ticked rules and pasted text
+function buildPrompt() {
+  var job = document.getElementById("job").value;
+  var text = document.getElementById("source").value.trim();
+  var lines = [jobLines[job], "", "Rules:"];
+  document.querySelectorAll(".rule").forEach(function (box) {
+    if (box.checked) lines.push("- " + box.value);
+  });
+  lines.push("", "--- DOCUMENT START ---", text || "[paste your document here]", "--- DOCUMENT END ---");
+  document.getElementById("output").value = lines.join("\n");
+  document.getElementById("buildNote").textContent = text ? "" : "No text pasted yet, so a placeholder has been added. Paste your document into the prompt before using it.";
+  // Simple check for things that look like an email address or a long number
+  var risky = /\S+@\S+\.\S+|\d{8,}/.test(text);
+  document.getElementById("dataNote").textContent = risky ? "This text seems to contain an email address or a long number. Check it is allowed before using it." : "";
+  document.getElementById("copyNote").textContent = "";
+}
+
+// Copy the prompt, or select it so the user can copy by hand
+async function copyPrompt() {
+  var box = document.getElementById("output");
+  var note = document.getElementById("copyNote");
+  try {
+    await navigator.clipboard.writeText(box.value);
+    note.textContent = "Copied";
+  } catch (e) {
+    box.focus();
+    box.select();
+    note.textContent = "Press Ctrl+C (or Cmd+C on a Mac) to copy";
+  }
+}
+
+document.getElementById("buildBtn").addEventListener("click", buildPrompt);
+document.getElementById("copyBtn").addEventListener("click", copyPrompt);
+</script>
+</body>
+</html>

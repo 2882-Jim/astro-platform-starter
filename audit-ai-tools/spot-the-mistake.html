@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Spot the AI Mistake</title>
+<style>
+  body { margin: 0; background: #ffffff; color: #1a1a1a; font-family: Arial, sans-serif; font-size: 18px; line-height: 1.5; }
+  main, footer { max-width: 800px; margin: 0 auto; padding: 0 16px; box-sizing: border-box; }
+  h1 { font-size: 28px; margin: 24px 0 8px; }
+  h2 { font-size: 22px; margin: 16px 0 8px; }
+  .muted { color: #555555; }
+  .box { border: 1px solid #cccccc; border-radius: 6px; padding: 12px; margin: 12px 0; background: #f6f8fa; overflow-wrap: break-word; }
+  .box p { margin: 4px 0; }
+  .label { font-weight: bold; font-size: 16px; color: #1f4e79; text-transform: uppercase; }
+  button { font: inherit; border-radius: 6px; cursor: pointer; }
+  .nav button, .actions button { background: #1f4e79; color: #ffffff; border: none; padding: 10px 18px; margin: 4px 8px 4px 0; }
+  .nav button:disabled { background: #9aa9b8; cursor: default; }
+  .sent { display: block; width: 100%; text-align: left; background: #ffffff; color: #1a1a1a; border: 2px dashed #1f4e79; padding: 10px; margin: 8px 0; }
+  .sent:hover:not(:disabled), .sent:focus { background: #e8f0f8; outline: 3px solid #f0b400; }
+  .sent:disabled { cursor: default; color: #1a1a1a; }
+  .sent.wrong { border: 3px solid #b00020; background: #fde8eb; }
+  .sent.picked { border-style: solid; }
+  .result { border-left: 6px solid #1f4e79; padding: 8px 12px; margin: 12px 0; background: #f6f8fa; }
+  .ok { color: #1b6e2a; font-weight: bold; }
+  .no { color: #b00020; font-weight: bold; }
+  table { border-collapse: collapse; width: 100%; }
+  td { padding: 4px; border-bottom: 1px solid #dddddd; }
+  td.num { text-align: right; }
+  ol li { margin-bottom: 10px; }
+  footer { margin-top: 32px; padding-bottom: 24px; font-size: 16px; color: #555555; }
+  .hidden { display: none; }
+  @media print {
+    #game, .actions, #intro { display: none !important; }
+    body { font-size: 13pt; }
+  }
+</style>
+</head>
+<body>
+<main>
+  <div id="intro">
+    <h1>Spot the AI mistake</h1>
+    <p>Each card shows some made-up AI output. Exactly one sentence is wrong. Click the sentence you think is wrong.</p>
+  </div>
+
+  <div id="game">
+    <p><strong id="progress"></strong> &middot; <span id="score"></span></p>
+    <h2 id="task"></h2>
+    <div id="source"></div>
+    <p class="label">AI output: click the wrong sentence</p>
+    <div id="sentences"></div>
+    <div id="result"></div>
+    <div class="nav">
+      <button id="backBtn" onclick="goBack()">Back</button>
+      <button id="nextBtn" onclick="goNext()">Next</button>
+      <button id="cheatBtn" onclick="showCheat()">See cheat sheet</button>
+    </div>
+  </div>
+
+  <div id="cheat" class="hidden">
+    <h1>Cheat sheet: 8 AI pitfalls in audit</h1>
+    <p><strong id="finalScore"></strong></p>
+    <ol id="cheatList"></ol>
+    <div class="actions">
+      <button onclick="window.print()">Print</button>
+      <button onclick="playAgain()">Play again</button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <p>Training demo: made-up examples, no client data.</p>
+  <p>Prototype only: made-up examples and draft ratings. No client data.</p>
+</footer>
+
+<script>
+// All names, companies and figures below are made up.
+// "wrong" is the number (counting from 0) of the wrong sentence.
+var cards = [
+  {
+    task: "AI summary of the firm's revenue testing approach",
+    source: "",
+    sentences: [
+      "The team should test a sample of sales invoices back to delivery notes.",
+      "Sales either side of the year end should be checked for cut-off.",
+      "This testing is required by ISA (UK) 9999, paragraph 412.7(z).",
+      "Any differences found should be recorded and evaluated."
+    ],
+    wrong: 2,
+    pitfall: "Invented standard paragraph number",
+    why: "There is no ISA (UK) 9999: AI writes references that look official because it copies the pattern, not the source.",
+    check: "Look up every standard and paragraph reference in the real standard before relying on it."
+  },
+  {
+    task: "AI summary of a 12-page office lease",
+    source: "<p><strong>Clause 2 (page 1):</strong> Term of 10 years from 1 March 2024.</p>" +
+            "<p><strong>Clause 9 (page 4):</strong> Rent reviewed every 5 years.</p>" +
+            "<p><strong>Clause 14 (page 7):</strong> The tenant may end the lease on 1 March 2029 by giving 6 months' notice.</p>" +
+            "<p><strong>Clause 22 (page 11):</strong> Rent of £48,000 a year, paid quarterly.</p>",
+    sentences: [
+      "The lease runs for 10 years from 1 March 2024.",
+      "Rent is £48,000 a year, paid quarterly.",
+      "There are no break clauses in the lease.",
+      "Rent is reviewed every five years."
+    ],
+    wrong: 2,
+    pitfall: "Missed item in the middle of a long document",
+    why: "AI tends to focus on the start and end of long text and can skip details in the middle (clause 14 is a break clause).",
+    check: "Ask for a clause reference for each point and read the middle sections yourself."
+  },
+  {
+    task: "AI total of the year-end accruals list",
+    source: "<table>" +
+            "<tr><td>Audit fee</td><td class='num'>£12,500</td></tr>" +
+            "<tr><td>Electricity</td><td class='num'>£3,240</td></tr>" +
+            "<tr><td>Staff bonus</td><td class='num'>£18,000</td></tr>" +
+            "<tr><td>Rent</td><td class='num'>£7,760</td></tr></table>",
+    sentences: [
+      "There are four accruals on the list.",
+      "The largest accrual is the staff bonus of £18,000.",
+      "The total of the accruals is £43,500.",
+      "The smallest accrual is electricity at £3,240."
+    ],
+    wrong: 2,
+    pitfall: "Arithmetic error in a total",
+    why: "AI predicts likely words rather than calculating, so a total can look right but be wrong (the real total is £41,500).",
+    check: "Re-add every total yourself or in a spreadsheet."
+  },
+  {
+    task: "AI process flow for purchases, from walkthrough notes",
+    source: "<p>Purchase invoices arrive by email to the accounts inbox. " +
+            "The accounts assistant enters them on the system. " +
+            "The finance manager approves any payment over £5,000. " +
+            "Payments are made weekly by BACS.</p>",
+    sentences: [
+      "Invoices arrive by email to the accounts inbox.",
+      "The accounts assistant enters each invoice on the system.",
+      "Each invoice is matched to a signed goods received note before entry.",
+      "Payments over £5,000 are approved by the finance manager.",
+      "Payments are made weekly by BACS."
+    ],
+    wrong: 2,
+    pitfall: "Extra process step not in the notes",
+    why: "AI fills gaps with what is typical, so it can add a 'normal' control that the client does not actually have.",
+    check: "Trace every step in the flow back to the walkthrough notes."
+  },
+  {
+    task: "AI answer from board minutes: \"Do the minutes mention any legal claims?\"",
+    source: "<p><strong>Puddleby Widgets Ltd, board meeting, 14 January</strong></p>" +
+            "<p>1. Budget for next year approved.</p>" +
+            "<p>2. New warehouse lease discussed.</p>" +
+            "<p>3. Dividend of £20,000 approved.</p>",
+    sentences: [
+      "The minutes record approval of next year's budget.",
+      "A new warehouse lease was discussed.",
+      "A dividend of £20,000 was approved.",
+      "The directors noted a legal claim from a former supplier, expected to settle for about £15,000."
+    ],
+    wrong: 3,
+    pitfall: "Confident answer to something not in the document",
+    why: "AI is built to give an answer, so it may invent one instead of saying \"not found\".",
+    check: "Ask the AI to quote the exact text it relied on, and to say \"not found\" if there is none."
+  },
+  {
+    task: "AI related party check of the purchase ledger",
+    source: "<p><strong>Directors' interests:</strong> Mo Fizzlewick (director) owns 60% of Fizzlewick Holdings Ltd.</p>" +
+            "<p><strong>Purchase ledger:</strong> Fizzlewick Hldgs Limited £86,000; Acme Paperclips Ltd £4,200; Bramble Office Supplies £2,900.</p>",
+    sentences: [
+      "The purchase ledger was compared with the list of directors' interests.",
+      "Acme Paperclips Ltd and Bramble Office Supplies have no link to any director.",
+      "No related party suppliers were found.",
+      "The largest supplier in the year was Fizzlewick Hldgs Limited at £86,000."
+    ],
+    wrong: 2,
+    pitfall: "Related party missed because of a slightly different name",
+    why: "AI can treat 'Fizzlewick Hldgs Limited' and 'Fizzlewick Holdings Ltd' as different companies.",
+    check: "Search on the key word in each name (e.g. 'Fizzlewick'), not the exact full name."
+  },
+  {
+    task: "AI answer: \"Is the client a small company?\" (financial year starting 1 January 2026)",
+    source: "",
+    sentences: [
+      "The client has turnover of £12 million, a balance sheet total of £6 million and 40 staff.",
+      "A company is small if it meets at least two of the three size tests.",
+      "The current small company limits are turnover of £10.2 million and a balance sheet total of £5.1 million.",
+      "The staff limit is an average of 50 employees."
+    ],
+    wrong: 2,
+    pitfall: "Out-of-date rule presented as current",
+    why: "AI learns from older material. For financial years starting on or after 6 April 2025 the UK limits rose to £15 million turnover and £7.5 million balance sheet total.",
+    check: "Confirm the rule and its start date with a current official source (e.g. gov.uk or legislation.gov.uk)."
+  },
+  {
+    task: "What a team member did with a client email",
+    source: "",
+    sentences: [
+      "Jamie needed to tidy up a long email about late documents.",
+      "Jamie opened the firm's approved AI tool, which keeps data inside the firm.",
+      "The tool suggested a shorter, clearer version.",
+      "For a second opinion, Jamie pasted the full email, including the client name 'Moonbeam Bakeries Ltd', into a free chatbot on a personal phone.",
+      "Jamie checked the final email before sending it."
+    ],
+    wrong: 3,
+    pitfall: "Client name pasted into a personal chatbot",
+    why: "This is a people mistake: a personal chatbot may keep or reuse what is typed, and the firm has no control over it.",
+    check: "Use only firm-approved tools for client work and never put client names or data into personal accounts."
+  }
+];
+
+var current = 0;   // which card is showing
+var answers = [];  // the sentence picked on each card (-1 = not answered)
+
+// Set up a fresh game
+function playAgain() {
+  answers = [];
+  for (var i = 0; i < cards.length; i++) {
+    answers.push(-1);
+  }
+  current = 0;
+  document.getElementById("cheat").className = "hidden";
+  document.getElementById("game").className = "";
+  document.getElementById("intro").className = "";
+  showCard();
+}
+
+// Count how many cards were answered correctly
+function getScore() {
+  var score = 0;
+  for (var i = 0; i < cards.length; i++) {
+    if (answers[i] === cards[i].wrong) {
+      score++;
+    }
+  }
+  return score;
+}
+
+// Draw the current card on screen
+function showCard() {
+  var card = cards[current];
+  var picked = answers[current];
+  document.getElementById("progress").textContent = "Card " + (current + 1) + " of " + cards.length;
+  document.getElementById("score").textContent = getScore() + " of " + cards.length + " spotted";
+  document.getElementById("task").textContent = card.task;
+
+  // Source extract (only some cards have one)
+  var sourceBox = document.getElementById("source");
+  if (card.source) {
+    sourceBox.innerHTML = "<div class='box'><p class='label'>Source (made-up)</p>" + card.source + "</div>";
+  } else {
+    sourceBox.innerHTML = "";
+  }
+
+  // One button per sentence
+  var list = document.getElementById("sentences");
+  list.innerHTML = "";
+  for (var i = 0; i < card.sentences.length; i++) {
+    var btn = document.createElement("button");
+    btn.className = "sent";
+    btn.textContent = card.sentences[i];
+    btn.setAttribute("data-index", i);
+    btn.onclick = pickSentence;
+    if (picked !== -1) {
+      btn.disabled = true; // card is locked once answered
+      if (i === card.wrong) { btn.className += " wrong"; }
+      if (i === picked) { btn.className += " picked"; }
+    }
+    list.appendChild(btn);
+  }
+
+  // Show the answer if this card has been answered
+  var result = document.getElementById("result");
+  if (picked === -1) {
+    result.innerHTML = "";
+  } else {
+    var verdict;
+    if (picked === card.wrong) {
+      verdict = "<p class='ok'>Correct: you spotted it.</p>";
+    } else {
+      verdict = "<p class='no'>Not quite: the wrong sentence is highlighted in red.</p>";
+    }
+    result.innerHTML = "<div class='result'>" + verdict +
+      "<p><strong>Pitfall:</strong> " + card.pitfall + "</p>" +
+      "<p><strong>Why AI does this:</strong> " + card.why + "</p>" +
+      "<p><strong>Check that catches it:</strong> " + card.check + "</p></div>";
+  }
+
+  // Buttons
+  document.getElementById("backBtn").disabled = (current === 0);
+  if (current === cards.length - 1) {
+    document.getElementById("nextBtn").textContent = "Finish";
+  } else {
+    document.getElementById("nextBtn").textContent = "Next";
+  }
+}
+
+// The user clicked a sentence
+function pickSentence() {
+  if (answers[current] !== -1) {
+    return; // already answered
+  }
+  answers[current] = Number(this.getAttribute("data-index"));
+  showCard();
+  document.getElementById("result").scrollIntoView({ block: "nearest" });
+}
+
+function goBack() {
+  if (current > 0) {
+    current--;
+    showCard();
+  }
+}
+
+function goNext() {
+  if (current < cards.length - 1) {
+    current++;
+    showCard();
+  } else {
+    showCheat();
+  }
+}
+
+// Show the one-page cheat sheet
+function showCheat() {
+  var list = document.getElementById("cheatList");
+  list.innerHTML = "";
+  for (var i = 0; i < cards.length; i++) {
+    var li = document.createElement("li");
+    li.innerHTML = "<strong>" + cards[i].pitfall + "</strong><br>Check: " + cards[i].check;
+    list.appendChild(li);
+  }
+  document.getElementById("finalScore").textContent = "Your score: " + getScore() + " of " + cards.length + " spotted";
+  document.getElementById("game").className = "hidden";
+  document.getElementById("intro").className = "hidden";
+  document.getElementById("cheat").className = "";
+  window.scrollTo(0, 0);
+}
+
+playAgain();
+</script>
+</body>
+</html>
