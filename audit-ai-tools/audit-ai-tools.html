@@ -200,34 +200,50 @@ const PITFALLS = [
 // =====================================================================
 // DATA: PROMPT_JOBS  (the Prompt builder)
 // =====================================================================
-// The jobs to choose from. "ask" = the hint shown in the optional "What exactly do you need?" box.
+// The jobs to choose from. group "write" = help putting your own thoughts into words;
+// group "doc" = work with a document you paste in. "ask" = the hint in the "your own words" box.
 const PROMPT_JOBS = [
-  { name: "Summarise a document", instruction: "Summarise the document below, covering every important point.", ask: "e.g. focus on dates, amounts and obligations" },
-  { name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears.", ask: "e.g. the total accruals at the year end" },
-  { name: "Draft a note", instruction: "Draft a short, clear note based only on the document below.", ask: "e.g. a file note of the key points from this meeting" },
-  { name: "Check a list against a checklist", instruction: "Check the list in the document below against the checklist. Mark each checklist item met, not met or not found.", ask: "e.g. paste the checklist above the list" },
-  { name: "Pull details into a table", instruction: "Pull the details I ask for from the document below into a table, one row per item.", ask: "e.g. invoice number, date, supplier and amount" },
-  { name: "Compare two versions", instruction: "Compare the two versions in the document below and list every difference.", ask: "e.g. label them VERSION 1 and VERSION 2" },
-  { name: "Explain a term", instruction: "Explain the term I ask about in plain English, using the document below for context.", ask: "e.g. what does 'break clause' mean here?" },
-  { name: "Tidy my wording", instruction: "Make my text below clearer and shorter without changing its meaning or any facts.", ask: "e.g. reply to a review point" },
+  { group: "write", name: "Help me write an email", instruction: "Turn my rough notes into a clear, polite email.", ask: "e.g. need bank letter still, chased twice, audit deadline Friday, keep it friendly" },
+  { group: "write", name: "Help me reply to a review point", instruction: "Turn my rough notes into a clear, professional reply to a review point: what I did, what I found and where it is on file.", ask: "e.g. reviewer asked why sample was 10, I used the firm's table, see WP C3" },
+  { group: "write", name: "Help me explain an issue to my senior", instruction: "Help me explain the issue in my notes clearly and briefly to my senior: what happened, why it matters and what I suggest.", ask: "e.g. invoices don't match orders for 3 items, not sure if it matters" },
+  { group: "write", name: "Help me ask the client a tricky question", instruction: "Help me word a polite, clear question to the client about the issue in my notes, without sounding accusatory.", ask: "e.g. big payment to a director's company, no invoice on file" },
+  { group: "write", name: "Help me plan a task", instruction: "Help me break the task in my notes into small steps, in a sensible order, with anything I should check first.", ask: "e.g. first time doing the payroll section, don't know where to start" },
+  { group: "write", name: "I'm not sure what to ask", instruction: "I'm not sure how to ask for what I need. Ask me up to 5 short questions to work out what I need, then suggest a clear request I could use.", ask: "e.g. something about accruals looks off but can't put my finger on it" },
+  { group: "doc", name: "Summarise a document", instruction: "Summarise the document below, covering every important point.", ask: "e.g. focus on dates, amounts and obligations" },
+  { group: "doc", name: "Find a figure", instruction: "Find the figure I ask about in the document below. Give the figure and say where it appears.", ask: "e.g. the total accruals at the year end" },
+  { group: "doc", name: "Draft a note from a document", instruction: "Draft a short, clear note based only on the document below.", ask: "e.g. a file note of the key points from this meeting" },
+  { group: "doc", name: "Check a list against a checklist", instruction: "Check the list in the document below against the checklist. Mark each checklist item met, not met or not found.", ask: "e.g. paste the checklist above the list" },
+  { group: "doc", name: "Pull details into a table", instruction: "Pull the details I ask for from the document below into a table, one row per item.", ask: "e.g. invoice number, date, supplier and amount" },
+  { group: "doc", name: "Compare two versions", instruction: "Compare the two versions in the document below and list every difference.", ask: "e.g. label them VERSION 1 and VERSION 2" },
+  { group: "doc", name: "Explain a term", instruction: "Explain the term I ask about in plain English, using the document below for context.", ask: "e.g. what does 'break clause' mean here?" },
 ];
 
-// Rules that go into EVERY prompt
-const PROMPT_ALWAYS = ["Use only the document below. Don't use outside knowledge or guess.",
-                       "If something isn't in the document, say \"not found\".",
-                       "Never invent figures, names, dates or references to standards.",
-                       "Show your working for any calculation.",
-                       "At the end, list anything you're unsure about.",
-                       "Write in UK English."];
+// Rules that go into EVERY prompt, then extra rules for each group of jobs
+const PROMPT_ALWAYS = ["Never invent figures, names, dates or references to standards.",
+                       "If you need a fact I haven't given you, ask me rather than guess.",
+                       "Write in plain UK English."];
+const PROMPT_ALWAYS_FOR = {
+  doc:   ["Use only the document below. Don't use outside knowledge.",
+          "If something isn't in the document, say \"not found\".",
+          "Show your working for any calculation.",
+          "At the end, list anything you're unsure about."],
+  write: ["My notes may be rough or half-finished: work out what I mean, but keep my meaning.",
+          "Don't add facts, promises or opinions I didn't give you.",
+          "After your answer, give me two short tips on how I could say it more clearly myself next time."],
+};
 
 // The prompt builder's dropdowns. Each option is [what the user sees, what goes into the prompt].
+// for: "doc", "write" or "all" = which jobs the dropdown is shown for.
 const PROMPT_CHOICES = [
-  { id: "evidence", label: "Evidence", options: [["Quote the line and give the page", "Quote the exact line and give the page, clause or note number for each point."],
-                                                 ["Quote the line only", "Quote the exact line from the document for each point."],
-                                                 ["Page reference only", "Give the page, clause or note number for each point."]] },
-  { id: "format",   label: "Answer as", options: [["Bullet points", "Answer in bullet points."], ["A table", "Answer in a table."], ["Short paragraphs", "Answer in short paragraphs."]] },
-  { id: "length",   label: "Length", options: [["Normal", ""], ["Short (under 200 words)", "Keep it under 200 words."], ["Detailed", "Be thorough and cover every point."]] },
-  { id: "audience", label: "Written for", options: [["The audit team", ""], ["The client", "Write for the client: plain words, no audit jargon."]] },
+  { id: "unclear",  for: "all", label: "If my notes are unclear", options: [["Ask me questions first", "If anything in my notes is unclear, ask me up to 3 short questions before you answer."],
+                                                                           ["Have a go and list assumptions", "If anything is unclear, have a go and list the assumptions you made."]] },
+  { id: "tone",     for: "write", label: "Tone", options: [["Friendly", "Use a friendly, professional tone."], ["Formal", "Use a formal tone."], ["Firm but polite", "Be firm but polite."]] },
+  { id: "evidence", for: "doc", label: "Evidence", options: [["Quote the line and give the page", "Quote the exact line and give the page, clause or note number for each point."],
+                                                             ["Quote the line only", "Quote the exact line from the document for each point."],
+                                                             ["Page reference only", "Give the page, clause or note number for each point."]] },
+  { id: "format",   for: "doc", label: "Answer as", options: [["Bullet points", "Answer in bullet points."], ["A table", "Answer in a table."], ["Short paragraphs", "Answer in short paragraphs."]] },
+  { id: "length",   for: "all", label: "Length", options: [["Normal", ""], ["Short (under 150 words)", "Keep it under 150 words."], ["Detailed", "Be thorough and cover every point."]] },
+  { id: "audience", for: "all", label: "Written for", options: [["The audit team", ""], ["The client", "Write for the client: plain words, no audit jargon."]] },
 ];
 
 // The AI settings prompt for each level (same order as LEVELS). Paste it into your AI tool's
@@ -356,6 +372,7 @@ function draw() {
   const screens = { home: homeScreen, section: sectionScreen, checker: checkerScreen, level: levelScreen,
                     report: reportScreen, heat: heatScreen, game: gameScreen, cheat: cheatScreen, prompt: promptScreen };
   document.getElementById("screen").innerHTML = screens[screen]();
+  if (document.getElementById("job")) jobChanged();   // set up the prompt builder's job-dependent bits
 }
 
 // Arrow keys move between sections (but not while typing in a box)
@@ -499,33 +516,48 @@ function levelScreen() {
 // =====================================================================
 // SCREEN 5: Report a mistake (form, then the saved list)
 // =====================================================================
+let reportSection = 0, reportType = 0;   // the section and type picked (remembered for the next report)
+let reportMsg = "";                       // "Logged" message after saving
+
 function reportScreen() {
+  const chips = (list, picked, kind) => list.map((name, i) =>
+    `<button class="plain ${i === picked ? "on" : ""}" onclick="pickChip(this, '${kind}', ${i})">${name}</button>`).join("");
+  const reports = loadReports();
   let list = "";
-  loadReports().forEach(r => list += `<div class="box entry"><p class="small">${safe(r.date)} · ${SECTIONS[r.section]} · ${MISTAKE_TYPES[r.type]}</p>
-    <p><b>What went wrong:</b> ${safe(r.wrong)}</p><p><b>How it was caught:</b> ${safe(r.caught)}</p><p><b>What could have happened:</b> ${safe(r.impact)}</p></div>`);
+  reports.forEach(r => list += `<div class="box entry"><p class="small">${safe(r.date)} · ${SECTIONS[r.section]} · ${MISTAKE_TYPES[r.type]}</p>
+    <p>${safe(r.wrong)}</p>${r.caught ? `<p class="small">Caught by: ${safe(r.caught)}</p>` : ""}${r.impact ? `<p class="small">Could have: ${safe(r.impact)}</p>` : ""}</div>`);
   return `<h1>Report an AI mistake</h1>
+    <p class="grey">Takes about 20 seconds. It goes straight onto the heat map.</p>
     <p class="warn">No client names or data. Describe the mistake, not the client.</p>
-    <div class="form">
-      <label for="wrong">What went wrong?</label><textarea id="wrong"></textarea>
-      <label for="caught">How was it caught?</label><textarea id="caught"></textarea>
-      <label for="impact">What could have happened?</label><textarea id="impact"></textarea>
-      <label for="type">Type of mistake</label><select id="type">${options(MISTAKE_TYPES)}</select>
-      <label for="section">Audit section</label><select id="section">${options(SECTIONS)}</select>
-    </div><br>
-    <button class="btn" onclick="saveReport()">Save</button>
-    <h2>Saved reports (newest first)</h2>
-    <button class="plain" onclick="clearReports()">Clear all</button>
-    ${list || "<p>No reports yet.</p>"}`;
+    <p><label for="wrong"><b>What went wrong?</b></label>
+      <textarea id="wrong" style="min-height: 60px" placeholder="e.g. AI summary said there were no break clauses; there was one in clause 14"></textarea></p>
+    <p><b>Which area?</b><br>${chips(SECTIONS, reportSection, "section")}</p>
+    <p><b>What kind of mistake?</b><br>${chips(MISTAKE_TYPES, reportType, "type")}</p>
+    <details><summary>Add more detail (optional)</summary>
+      <p><label for="caught">How was it caught?</label><input id="caught" type="search"></p>
+      <p><label for="impact">What could have happened?</label><input id="impact" type="search"></p></details>
+    <p><button class="btn" onclick="saveReport()">Log it</button> <span class="small" id="reportMsg">${reportMsg}</span></p>
+    <details><summary>Saved reports (${reports.length})</summary>
+      <p><button class="plain" onclick="clearReports()">Clear all</button></p>${list || "<p>No reports yet.</p>"}</details>`;
+}
+
+// Tapping a chip picks it (without redrawing, so typed text isn't lost)
+function pickChip(button, kind, i) {
+  if (kind === "section") reportSection = i; else reportType = i;
+  button.parentElement.querySelectorAll("button").forEach(b => b.classList.remove("on"));
+  button.classList.add("on");
 }
 
 function saveReport() {
   const value = id => document.getElementById(id).value.trim();
-  if (!value("wrong")) { alert("Please say what went wrong."); return; }
+  if (!value("wrong")) { alert("Please say what went wrong (one line is fine)."); return; }
   const list = loadReports();
-  list.unshift({ date: today(), section: Number(value("section")), type: Number(value("type")),
+  list.unshift({ date: today(), section: reportSection, type: reportType,
                  wrong: value("wrong"), caught: value("caught"), impact: value("impact") });  // newest first
   saveReports(list);
+  reportMsg = "Logged: " + SECTIONS[reportSection] + " / " + MISTAKE_TYPES[reportType] + ". Thanks!";
   draw();
+  reportMsg = "";
 }
 
 // =====================================================================
@@ -623,21 +655,23 @@ function aiPromptForm() {
   // A personal account can't take client data, so say so loudly
   const personal = where === "personal"
     ? `<p class="warn"><b>You chose Personal account on Home.</b> Only use made-up or public text here: no client data at all.</p>` : "";
+  // The job dropdown, split into its two groups
+  const group = (g, title) => `<optgroup label="${title}">` + PROMPT_JOBS.map((j, i) => j.group === g ? `<option value="${i}">${j.name}</option>` : "").join("") + `</optgroup>`;
   let choices = "";
-  PROMPT_CHOICES.forEach(c => choices += `<p><label for="${c.id}"><b>${c.label}</b></label><select id="${c.id}">${options(c.options.map(o => o[0]))}</select></p>`);
+  PROMPT_CHOICES.forEach(c => choices += `<p data-for="${c.for}"><label for="${c.id}"><b>${c.label}</b></label><select id="${c.id}">${options(c.options.map(o => o[0]))}</select></p>`);
   return `${personal}
-    <p><label for="job"><b>What's the job?</b></label>
-      <select id="job" onchange="document.getElementById('ask').placeholder = PROMPT_JOBS[this.value].ask">${options(PROMPT_JOBS.map(j => j.name))}</select></p>
-    <p><label for="ask"><b>What exactly do you need?</b> <span class="small">(optional)</span></label>
-      <input id="ask" type="search" placeholder="${PROMPT_JOBS[0].ask}"></p>
+    <p><label for="job"><b>What do you need help with?</b></label>
+      <select id="job" onchange="jobChanged()">${group("write", "Help me write or explain")}${group("doc", "Work with a document")}</select></p>
+    <p><label for="ask"><b>In your own words</b></label>
+      <span class="small">Rough notes, bullet points or half-sentences are fine: the AI will work out what you mean.</span>
+      <textarea id="ask"></textarea></p>
     <div class="two">${choices}
-      <p><label for="loaded"><b>Settings prompt loaded in your AI tool?</b></label>
+      <p data-for="all"><label for="loaded"><b>Settings prompt loaded in your AI tool?</b></label>
         <select id="loaded"><option value="no">No / not sure: add it</option><option value="yes">Yes: leave it out</option></select></p>
     </div>
     <p class="warn">Remove client names first. Only paste what your firm's policy allows in this tool.</p>
-    <label for="source"><b>Paste the source text</b></label><textarea id="source" style="min-height: 160px"></textarea>
-    <details><summary class="small">Always included: ${PROMPT_ALWAYS.length} safety rules</summary>
-      <ul class="small">${PROMPT_ALWAYS.map(r => `<li>${r}</li>`).join("")}</ul></details>
+    <label for="source"><b id="sourceLabel"></b></label><textarea id="source" style="min-height: 140px"></textarea>
+    <details><summary class="small" id="alwaysCount"></summary><ul class="small" id="alwaysList"></ul></details>
     <p><button class="btn" onclick="buildPrompt()">Build my prompt</button></p>
     <div id="built" hidden>
       <h2>Your prompt</h2><textarea id="promptOut" readonly></textarea>
@@ -646,19 +680,33 @@ function aiPromptForm() {
     </div>`;
 }
 
+// When the job changes: update the hint, the text box label, which dropdowns show, and the safety rules
+function jobChanged() {
+  const job = PROMPT_JOBS[document.getElementById("job").value];
+  document.getElementById("ask").placeholder = job.ask;
+  document.getElementById("sourceLabel").textContent = job.group === "doc"
+    ? "Paste the document" : "Anything to include? (optional: e.g. the review point or email you're replying to)";
+  document.querySelectorAll("[data-for]").forEach(el => el.hidden = !(el.dataset.for === "all" || el.dataset.for === job.group));
+  const always = PROMPT_ALWAYS.concat(PROMPT_ALWAYS_FOR[job.group]);
+  document.getElementById("alwaysCount").textContent = "Always included: " + always.length + " safety rules";
+  document.getElementById("alwaysList").innerHTML = always.map(r => `<li>${r}</li>`).join("");
+}
+
 function buildPrompt() {
   const value = id => document.getElementById(id).value.trim();
   const job = PROMPT_JOBS[value("job")];
-  // Every prompt gets the "always" rules, then one line from each dropdown (blank ones are skipped)
-  const rules = PROMPT_ALWAYS.concat(PROMPT_CHOICES.map(c => c.options[value(c.id)][1]).filter(r => r));
+  // The "always" rules for this job, then one line from each dropdown that's showing (blank ones are skipped)
+  const picked = PROMPT_CHOICES.filter(c => c.for === "all" || c.for === job.group).map(c => c.options[value(c.id)][1]);
+  const rules = PROMPT_ALWAYS.concat(PROMPT_ALWAYS_FOR[job.group], picked.filter(r => r));
 
   let prompt = "";
-  if (value("loaded") === "no") prompt += settingsPrompt() + "\n\n";   // 1. the level's settings, if not loaded
-  prompt += "Task: " + job.instruction + "\n";                          // 2. the job
-  if (value("ask")) prompt += "Specifically: " + value("ask") + "\n";
-  prompt += "\nRules:\n" + rules.map(r => "- " + r).join("\n") + "\n\n"; // 3. the rules
-  prompt += "--- DOCUMENT START ---\n" + (value("source") || "[paste your document here]") + "\n--- DOCUMENT END ---";
-  document.getElementById("promptOut").value = prompt;
+  if (value("loaded") === "no") prompt += settingsPrompt() + "\n\n";    // 1. the level's settings, if not loaded
+  prompt += "Task: " + job.instruction + "\n";                           // 2. the job
+  if (value("ask")) prompt += "\nMy notes, in my own words:\n" + value("ask") + "\n";
+  prompt += "\nRules:\n" + rules.map(r => "- " + r).join("\n") + "\n";   // 3. the rules
+  if (job.group === "doc") prompt += "\n--- DOCUMENT START ---\n" + (value("source") || "[paste your document here]") + "\n--- DOCUMENT END ---";
+  else if (value("source")) prompt += "\n--- BACKGROUND START ---\n" + value("source") + "\n--- BACKGROUND END ---";
+  document.getElementById("promptOut").value = prompt.trim();
   document.getElementById("copyMsg").textContent = "";
   document.getElementById("built").hidden = false;
 }
