@@ -345,15 +345,15 @@ function today() {
 // =====================================================================
 // NAVIGATION: the top bar, and draw() which shows the current screen
 // =====================================================================
-const NAV = [["home", "Home"], ["tasks", "Check a task"], ["level", "My level"], ["report", "Report a mistake"],
+const NAV = [["home", "Home"], ["level", "My level"], ["report", "Report a mistake"],
              ["heat", "Heat map"], ["game", "Spot the mistake"], ["prompt", "Prompt builder"]];
 
 function go(name) { screen = name; draw(); window.scrollTo(0, 0); }
 
 function draw() {
   document.getElementById("nav").innerHTML = NAV.map(n =>
-    `<button class="${screen === n[0] || (screen === "section" && n[0] === "tasks") ? "on" : ""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("");
-  const screens = { home: homeScreen, tasks: tasksScreen, section: sectionScreen, checker: checkerScreen, level: levelScreen,
+    `<button class="${screen === n[0] || (screen === "section" && n[0] === "home") ? "on" : ""}" onclick="go('${n[0]}')">${n[1]}</button>`).join("");
+  const screens = { home: homeScreen, section: sectionScreen, checker: checkerScreen, level: levelScreen,
                     report: reportScreen, heat: heatScreen, game: gameScreen, cheat: cheatScreen, prompt: promptScreen };
   document.getElementById("screen").innerHTML = screens[screen]();
 }
@@ -380,12 +380,13 @@ function homeScreen() {
         `<option value="${n}" ${n === level ? "selected" : ""}>${name}</option>`).join("")}</select>
       <span class="small">Sets the level in every tool.</span></p>
     <h2>The four ratings</h2>${key}
-    <button class="btn big" onclick="go('tasks')">Start</button>
-    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>`;
+    <button class="btn big" onclick="answers = []; go('checker')">Can I use AI for this?</button>
+    <h2>Check a task</h2>${searchHtml()}
+    <p class="warn">Draft ratings for discussion, not firm policy.</p>${sectionButtons()}`;
 }
 
 // =====================================================================
-// SCREEN 2: Check a task (section list), plus the shared search box
+// SCREEN 2: Check a task: the section buttons and search box (both shown on Home)
 // =====================================================================
 function searchHtml() {
   return `<p><label for="search"><b>Search all tasks</b></label>
@@ -414,11 +415,10 @@ function openTask(i) {     // open a search result's section and highlight the t
   card.scrollIntoView({ block: "center" });
 }
 
-function tasksScreen() {
+function sectionButtons() {
   let buttons = "";
   SECTIONS.forEach((name, s) => buttons += `<button class="list-btn" onclick="sectionNo = ${s}; go('section')"><b>${name}</b></button>`);
-  return ratingsFor() + searchHtml() + `<h1>Check a task</h1>
-    <p class="warn">Draft ratings for discussion, not firm policy.</p>${buttons}`;
+  return buttons;
 }
 
 // =====================================================================
@@ -439,7 +439,7 @@ function sectionScreen() {
   return ratingsFor() + searchHtml() + `<h1>${name}</h1>
     <p class="warn">Draft ratings for discussion, not firm policy.</p>${cards}
     <div class="sectionbar">
-      <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('tasks')">Back</button>
+      <button class="btn" onclick="if (sectionNo > 0) { sectionNo--; draw(); } else go('home')">Back</button>
       <span>Section ${sectionNo + 1} of ${SECTIONS.length}</span>
       <button class="btn" onclick="sectionNo++; draw()" ${sectionNo === SECTIONS.length - 1 ? "disabled" : ""}>Next</button>
     </div>`;
