@@ -85,28 +85,6 @@ const areas = [
         </div>
     </section>
 
-    <section class="bg-ink-50">
-        <div class="grid lg:grid-cols-2">
-            <Photo alt="Committee" label="Committee group photo" class="aspect-[4/3] lg:aspect-auto lg:h-full" />
-            <div class="px-4 py-14 sm:px-12 lg:py-20">
-                <p class="eyebrow">About MCASS</p>
-                <h2 class="mt-3">Run by students, since {site.registeredSince}</h2>
-                <p class="mt-5 max-w-lg leading-relaxed text-stone-600">MCASS supports ACA students across Greater Manchester through revision sessions, professional development and networking events, post-exam socials, sport and the Annual Ball.</p>
-                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
-                <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
-                    {
-                        site.stats.slice(0, 4).map((s) => (
-                            <div class="flex flex-col border-t-4 border-accent-500 pt-3">
-                                <dt class="order-2 text-xs uppercase tracking-[0.12em] text-stone-500">{s.label}</dt>
-                                <dd class="text-2xl font-bold text-ink-900">{s.value}</dd>
-                            </div>
-                        ))
-                    }
-                </dl>
-                <a href="/about/" class="btn-dark mt-10">About us</a>
-            </div>
-        </div>
-    </section>
 
     <section class="section">
         <div class="container-site reveal">
@@ -165,6 +143,29 @@ const areas = [
                     </div>
                 )
             }
+        </div>
+    </section>
+
+    <section class="border-t border-ink-100 bg-white">
+        <div class="grid lg:grid-cols-2">
+            <Photo alt="Committee" label="Committee group photo" class="aspect-[4/3] lg:aspect-auto lg:h-full" />
+            <div class="px-4 py-14 sm:px-12 lg:py-20">
+                <p class="eyebrow">About MCASS</p>
+                <h2 class="mt-3">Run by students, since {site.registeredSince}</h2>
+                <p class="mt-5 max-w-lg leading-relaxed text-stone-600">MCASS supports ACA students across Greater Manchester through revision sessions, professional development and networking events, post-exam socials, sport and the Annual Ball.</p>
+                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
+                <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
+                    {
+                        site.stats.slice(0, 4).map((s) => (
+                            <div class="flex flex-col border-t-4 border-accent-500 pt-3">
+                                <dt class="order-2 text-xs uppercase tracking-[0.12em] text-stone-500">{s.label}</dt>
+                                <dd class="text-2xl font-bold text-ink-900">{s.value}</dd>
+                            </div>
+                        ))
+                    }
+                </dl>
+                <a href="/about/" class="btn-dark mt-10">About us</a>
+            </div>
         </div>
     </section>
 </Layout>
