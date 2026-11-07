@@ -11,17 +11,17 @@ const { upcoming, past } = await getEvents();
     <Hero label="Event crowd or Annual Ball">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">Events</p>
         <h1 class="mt-4 text-white">Events</h1>
-        <p class="mt-4 max-w-xl text-lg text-white/85">Revision sessions, professional events, post-exam socials, sport and the Annual Ball.</p>
+        <p class="mt-4 max-w-xl text-lg text-white/85">What's coming up and how to book.</p>
     </Hero>
     <Breadcrumbs trail={[{ label: 'Events' }]} />
     <section class="section">
         <div class="container-site">
-            <h2>Forthcoming</h2>
+            <h2>Upcoming</h2>
             {
                 upcoming.length ? (
                     <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{upcoming.map((e) => <EventCard event={e} />)}</div>
                 ) : (
-                    <p class="mt-4 text-stone-600">New events will be announced soon.</p>
+                    <p class="mt-4 text-stone-600">Nothing booked yet. Check back soon.</p>
                 )
             }
             {

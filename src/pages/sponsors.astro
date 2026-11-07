@@ -16,16 +16,15 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
 <Layout title="Sponsorship" description="Sponsorship packages for firms who want to reach ACA students in Greater Manchester.">
     <Hero label="Sponsor branding at the Annual Ball">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">Sponsorship</p>
-        <h1 class="mt-4 max-w-3xl text-white">Partner with MCASS</h1>
+        <h1 class="mt-4 max-w-3xl text-white">Sponsor MCASS</h1>
         <p class="mt-5 max-w-xl text-lg text-white/85">{sp.intro}</p>
-        <a href={mailto} class="btn-primary mt-8">Request the prospectus</a>
+        <a href={mailto} class="btn-primary mt-8">Ask for the sponsor pack</a>
     </Hero>
     <Breadcrumbs trail={[{ label: 'Sponsorship' }]} />
 
     <section class="section">
         <div class="container-site">
-            <p class="eyebrow">Packages</p>
-            <h2 class="mt-3">Three ways to partner</h2>
+            <h2>Packages</h2>
             {!sp.pricesConfirmed && <p class="mt-3 text-xs text-amber-800">Draft prices, subject to committee approval.</p>}
             <div class="mt-10 grid gap-px bg-ink-100 md:grid-cols-3">
                 {
@@ -51,8 +50,7 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
 
     <section class="pb-14 sm:pb-20">
         <div class="container-site">
-            <p class="eyebrow">Your brand at our events</p>
-            <h2 class="mt-3">Where partners are seen</h2>
+            <h2>Sponsors at our events</h2>
             <div class="mt-10">
                 <Gallery labels={['Sponsor banner at the Ball', 'Partner speaking at an event', 'Branded table', 'Revision session sponsor', 'Summer Games kit']} />
             </div>
@@ -63,7 +61,7 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
         sponsors.length > 0 && (
             <section class="section bg-ink-50">
                 <div class="container-site">
-                    <h2>Current partners</h2>
+                    <h2>Current sponsors</h2>
                     <ul class="mt-8 flex flex-wrap items-center gap-10">
                         {sponsors.map((s) => (
                             <li title={s.data.name}>{s.data.logo ? <img src={s.data.logo} alt={s.data.name} class="h-12 w-auto" /> : <span class="font-bold">{s.data.name}</span>}</li>
@@ -77,7 +75,7 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
     <section class="bg-accent-500 text-white">
         <div class="container-site flex flex-wrap items-center justify-between gap-6 py-12">
             <div>
-                <h2 class="text-white">Discuss a partnership</h2>
+                <h2 class="text-white">Get in touch</h2>
                 <p class="mt-2 text-white/75">
                     {site.fullName} is a registered charity (number {site.charityNumber}).
                 </p>

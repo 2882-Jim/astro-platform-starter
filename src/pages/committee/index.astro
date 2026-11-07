@@ -12,7 +12,7 @@ const committee = (await getCollection('committee')).sort((a, b) => a.data.order
     <Hero label="Full committee group photo">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">The committee</p>
         <h1 class="mt-4 text-white">Meet the committee</h1>
-        <p class="mt-4 max-w-xl text-lg text-white/85">MCASS is run by ACA students, elected each year. Select a member to read their profile.</p>
+        <p class="mt-4 max-w-xl text-lg text-white/85">We're ACA trainees, elected each year. Click a name to find out more.</p>
     </Hero>
     <Breadcrumbs trail={[{ label: 'Committee' }]} />
     <section class="section">
@@ -27,7 +27,7 @@ const committee = (await getCollection('committee')).sort((a, b) => a.data.order
                                     <p class="text-xs font-bold uppercase tracking-[0.12em] text-accent-500">{m.data.role}</p>
                                     <p class="mt-1 text-lg font-bold text-ink-900">{m.data.name}</p>
                                     {m.data.firm && <p class="text-xs text-stone-500">{m.data.firm}</p>}
-                                    <p class="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-ink-900 group-hover:text-accent-500">View profile →</p>
+                                    <p class="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-ink-900 group-hover:text-accent-500">Profile →</p>
                                 </div>
                             </a>
                         </li>

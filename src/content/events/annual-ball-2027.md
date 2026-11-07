@@ -5,7 +5,7 @@ dateConfirmed: false
 time: "Drinks reception 18:30"
 venue: Venue TBC
 category: Ball
-summary: Our flagship black-tie night for Manchester's accountancy community, from trainees to partners.
+summary: Our black-tie night for Manchester's accountants, from trainees to partners.
 image: ""
 ticketUrl: ""
 sponsor: ""

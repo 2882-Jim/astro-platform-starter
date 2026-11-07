@@ -5,7 +5,7 @@ dateConfirmed: false
 time: "18:30 onwards"
 venue: Venue TBC, Manchester city centre
 category: Social
-summary: An evening for new ACA trainees to meet peers from firms across Greater Manchester.
+summary: A night for new trainees to meet people from other firms.
 image: ""
 ticketUrl: ""
 sponsor: ""

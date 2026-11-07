@@ -5,7 +5,7 @@ dateConfirmed: false
 time: "TBC"
 venue: Venue TBC
 category: Sports
-summary: Inter-firm sports competition, followed by an evening reception.
+summary: Sport between firms, then drinks after.
 image: ""
 ticketUrl: ""
 sponsor: ""

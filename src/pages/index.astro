@@ -11,17 +11,17 @@ import { getEvents, getActiveSponsors } from '../lib/format';
 const { upcoming } = await getEvents();
 const sponsors = await getActiveSponsors();
 const areas = [
-    { title: 'Exams and revision', text: 'Revision sessions ahead of ACA exam sittings.', photo: 'Revision session', href: '/events/' },
-    { title: 'Professional development', text: 'Talks and networking with firms across Greater Manchester.', photo: 'Networking event', href: '/events/' },
-    { title: 'Socials and sport', text: 'Post-exam socials, the Summer Games and the Annual Ball.', photo: 'Summer Games', href: '/events/' }
+    { title: 'Revision', text: 'Sessions before each exam sitting.', photo: 'Revision session', href: '/events/' },
+    { title: 'Networking', text: 'Meet people from other firms.', photo: 'Networking event', href: '/events/' },
+    { title: 'Socials and sport', text: 'Post-exam socials and the Summer Games.', photo: 'Summer Games', href: '/events/' }
 ];
 ---
 
 <Layout>
     <Hero image={site.heroImage} label="Annual Ball (wide shot)" tall>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">ICAEW student society · Greater Manchester</p>
-        <h1 class="mt-4 max-w-3xl text-white">Supporting ACA students across Greater Manchester</h1>
-        <p class="mt-5 max-w-xl text-lg text-white/85">{site.tagline}</p>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">ICAEW student society</p>
+        <h1 class="mt-4 max-w-3xl text-white">For ACA trainees in Greater Manchester</h1>
+        <p class="mt-5 max-w-xl text-lg text-white/85">{site.intro}</p>
         <div class="mt-8 flex flex-wrap gap-3">
             <a href="/events/" class="btn-primary">View events</a>
             <a href="/sponsors/" class="btn-light">Sponsorship</a>
@@ -29,8 +29,7 @@ const areas = [
     </Hero>
 
     <section class="border-b border-ink-100">
-        <div class="container-site flex flex-wrap items-center justify-between gap-6 py-6">
-            <p class="text-xs uppercase tracking-[0.15em] text-stone-500">Representing ACA students under ICAEW training contracts</p>
+        <div class="container-site flex flex-wrap items-center justify-center gap-6 py-6">
             <div class="flex items-center gap-6">
                 <Logo kind="mcass" size="sm" />
                 <Logo kind="icaew" />
@@ -42,17 +41,16 @@ const areas = [
 
     <section class="section pb-0">
         <div class="container-site">
-            <p class="eyebrow">Find what you need</p>
-            <h2 class="mt-3">Quick links</h2>
+            <h2>Quick links</h2>
             <ul class="mt-8 grid grid-cols-2 gap-px bg-ink-100 md:grid-cols-3 lg:grid-cols-6">
                 {
                     [
-                        { href: '/events/', title: 'Events', text: 'What is on and how to book' },
+                        { href: '/events/', title: 'Events', text: "What's on" },
                         { href: '/committee/', title: 'Committee', text: 'Who runs MCASS' },
-                        { href: '/join/', title: 'Membership', text: 'How to get involved' },
-                        { href: '/sponsors/', title: 'Sponsorship', text: 'Packages for firms' },
-                        { href: '/about/', title: 'About', text: 'Our aims and history' },
-                        { href: '/contact/', title: 'Contact', text: 'Email the committee' }
+                        { href: '/join/', title: 'Membership', text: 'How to join' },
+                        { href: '/sponsors/', title: 'Sponsorship', text: 'For firms' },
+                        { href: '/about/', title: 'About', text: 'Who we are' },
+                        { href: '/contact/', title: 'Contact', text: 'Get in touch' }
                     ].map((q) => (
                         <li>
                             <a href={q.href} class="group flex h-full flex-col bg-white p-5 transition-colors duration-300 hover:bg-accent-500">
@@ -69,8 +67,7 @@ const areas = [
 
     <section class="section">
         <div class="container-site reveal">
-            <p class="eyebrow">What we do</p>
-            <h2 class="mt-3">Learn, connect, celebrate</h2>
+            <h2>What we do</h2>
             <div class="mt-10 grid gap-2 md:grid-cols-3">
                 {
                     areas.map((a) => (
@@ -92,9 +89,8 @@ const areas = [
         <div class="grid lg:grid-cols-2">
             <Photo alt="Committee" label="Committee group photo" class="aspect-[4/3] lg:aspect-auto lg:h-full" />
             <div class="px-4 py-14 sm:px-12 lg:py-20">
-                <p class="eyebrow">About MCASS</p>
-                <h2 class="mt-3">Run by students, since {site.registeredSince}</h2>
-                <p class="mt-5 max-w-lg leading-relaxed text-stone-600">{site.intro}</p>
+                <h2>Run by trainees since {site.registeredSince}</h2>
+                <p class="mt-5 max-w-lg leading-relaxed text-stone-600">A committee of ACA trainees, elected every year, organises everything we do.</p>
                 <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
                 <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
                     {
@@ -115,8 +111,7 @@ const areas = [
         <div class="container-site reveal">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <p class="eyebrow">Events</p>
-                    <h2 class="mt-3">Forthcoming events</h2>
+                    <h2>Upcoming events</h2>
                 </div>
                 <a href="/events/" class="text-xs font-bold uppercase tracking-[0.12em] text-ink-900 underline underline-offset-4">All events</a>
             </div>
@@ -124,7 +119,7 @@ const areas = [
                 upcoming.length ? (
                     <div class="mt-10 grid gap-6 md:grid-cols-3">{upcoming.slice(0, 3).map((e) => <EventCard event={e} />)}</div>
                 ) : (
-                    <p class="mt-8 text-stone-600">Forthcoming events will be published here.</p>
+                    <p class="mt-8 text-stone-600">Nothing booked yet. Check back soon.</p>
                 )
             }
         </div>
@@ -132,8 +127,7 @@ const areas = [
 
     <section class="pb-14 sm:pb-20">
         <div class="container-site reveal">
-            <p class="eyebrow">Gallery</p>
-            <h2 class="mt-3">Moments from MCASS</h2>
+            <h2>Photos</h2>
             <div class="mt-10">
                 <Gallery labels={['Annual Ball', 'Summer Games', 'Post-exam social', 'Revision session', 'Awards']} />
             </div>
@@ -144,10 +138,9 @@ const areas = [
         <div class="container-site py-14">
             <div class="flex flex-wrap items-end justify-between gap-6">
                 <div>
-                    <p class="eyebrow">Our partners</p>
-                    <h2 class="mt-3">Supported by</h2>
+                    <h2>Our sponsors</h2>
                 </div>
-                <a href="/sponsors/" class="btn-dark">Become a partner</a>
+                <a href="/sponsors/" class="btn-dark">Sponsor us</a>
             </div>
             {
                 sponsors.length ? (

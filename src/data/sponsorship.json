@@ -1,7 +1,7 @@
 {
     "pricesConfirmed": false,
     "vatStatus": "unconfirmed",
-    "intro": "Support the next generation of chartered accountants and put your firm in front of ACA students across Greater Manchester.",
+    "intro": "Get your firm in front of ACA trainees across Greater Manchester.",
     "prospectusUrl": "",
     "tiers": [
         {
@@ -9,27 +9,30 @@
             "price": "From £6,000",
             "note": "One per year",
             "benefits": [
-                "Lead branding across the website and the Annual Ball",
-                "Speaking or stand opportunity at flagship events",
-                "Ball tickets and social media features through the year"
+                "Your logo first on the website and at the Ball",
+                "A stand or a talk at our biggest events",
+                "Ball tickets and posts on our socials"
             ]
         },
         {
             "name": "Event Partner",
             "price": "From £2,000",
-            "note": "Social, Sport or Revision",
+            "note": "Pick socials, sport or revision",
             "benefits": [
-                "Your name on every event in one strand",
-                "Logo on the website and event materials",
-                "Stand or banner at your events"
+                "Your name on every event in that strand",
+                "Your logo on the website",
+                "A stand or banner at those events"
             ]
         },
         {
             "name": "Supporter",
             "price": "From £500",
             "note": "Open to any firm",
-            "benefits": ["Logo and link on our website", "Thank-you post on social media"]
+            "benefits": [
+                "Your logo and a link on our website",
+                "A thank-you post on Instagram"
+            ]
         }
     ],
-    "smallPrint": "All packages run for 12 months, can be tailored and include a short report after each event. Annual Ball and awards sponsorship available on request."
+    "smallPrint": "Packages run for 12 months and we can adjust them to suit you. We send a short report after each event. Ask us about sponsoring the Ball or an award."
 }

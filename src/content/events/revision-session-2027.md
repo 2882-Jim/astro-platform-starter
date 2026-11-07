@@ -5,7 +5,7 @@ dateConfirmed: false
 time: "TBC"
 venue: Venue TBC
 category: Revision
-summary: Tutor-led revision before the next ACA exam sitting, with Q&A and exam technique tips.
+summary: Revision before the next ACA exam sitting, with time for questions.
 image: ""
 ticketUrl: ""
 sponsor: ""
