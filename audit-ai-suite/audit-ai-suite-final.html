@@ -243,8 +243,16 @@
   .guidetabs li { margin-bottom: 6px; }
   .guidebar { margin-top: 20px; }
 
-  /* About you, and the locked-file boxes */
-  input[type=email] { width: 100%; padding: 8px 10px; border: 1px solid #767676; border-radius: 6px; min-height: 44px; }
+  /* Sign in, and the locked-file boxes */
+  .userbar { text-align: right; margin: 0 0 -8px; overflow-wrap: anywhere; }
+  .userbar .link { min-height: 44px; padding: 0 4px; }
+  #signForm { max-width: 420px; }
+  .demopeople { width: 100%; }
+  .demopeople td, .demopeople th { vertical-align: middle; }
+  .demopeople .email { overflow-wrap: anywhere; }
+  .demopeople code { font-size: 17px; white-space: nowrap; }
+  .demopeople th .plain { margin-top: 4px; font-weight: normal; white-space: nowrap; }
+  input[type=email], input[type=password] { width: 100%; padding: 8px 10px; border: 1px solid #767676; border-radius: 6px; min-height: 44px; }
   input[type=file] { display: block; max-width: 100%; min-height: 44px; font-size: 16px; padding: 6px 0; }
 
   /* Team tab */
@@ -1024,19 +1032,43 @@ let message = "", messageAt = "";    // a short "Logged" / "Saved" message shown
 let problems = [], problemsAt = "";  // why a form couldn't be saved, shown once, and which form
 let confirming = "";        // which "Are you sure?" question is showing, if any
 let panels = {};            // which fold-out panels are open, so a redraw keeps them open
-const savedWhere = load("where", "cloud"), savedLevel = load("level", 0);
-let where = Object.keys(SWITCH_OPTIONS).includes(savedWhere) ? savedWhere : "cloud";   // the switch on Home
-let level = [0, 1, 2, 3].includes(savedLevel) ? savedLevel : 0;                         // set in the testing box on Home
+let where = "cloud";        // the switch on Home (read from what's saved when you sign in)
+let level = 0;              // set in the testing box on Home
 let report, pb, note, pilot;   // the forms: kept here so typed text survives redraws
-let prof = { name: "", email: "", role: "" };   // the profile form, as typed
+let signForm = { email: "", pass: "" };   // the sign-in form, as typed (the password is never saved)
+let busy = false;           // a sign-in or master list load is running (so a double click does nothing)
 let typedCode = "", importCode = "";            // team codes as typed (kept in memory only, never saved)
 let newCode = "";           // a team code just made: shown once, never saved
 let importNote = "";        // what the last import did (HTML, made only from safe() text)
 let teamPick = -1;          // the Team tab's dropdown: -1 = all teams, -2 = no team, else a place in teamNames()
 let teamSq = null, personSq = null;   // the square picked on the team map and on one person's map
 let personEmail = "";       // whose map the person screen shows
+
+// ---------- Keeping each person's data apart on a shared laptop ----------
+// The master list (who can sign in) is shared by everyone on this laptop. Everything else (reports, ticks,
+// notes, pilots, quiz, settings, team files) is saved under the signed-in person's email, so two people
+// never see each other's data. CORE's load and save are wrapped here, so every CORE helper does the same.
+let signedIn = "";          // the signed-in email ("" = no one); kept for this tab only, so a refresh keeps you signed in
+const coreLoad = load, coreSave = save;
+const SHARED_KEYS = ["master"];
+function userKey(key) { return SHARED_KEYS.includes(key) ? key : "u." + (signedIn || "nobody") + "." + key; }
+load = function (key, fallback) { return coreLoad(userKey(key), fallback); };
+save = function (key, value) { return coreSave(userKey(key), value); };
+const SESSION_KEY = "aiSuite.signedIn";
+function readSession() { try { return sessionStorage.getItem(SESSION_KEY) || ""; } catch (e) { return ""; } }
+function writeSession(email) {   // sessionStorage lasts until the tab is closed; if it's blocked, you stay signed in until a refresh
+  try { if (email) sessionStorage.setItem(SESSION_KEY, email); else sessionStorage.removeItem(SESSION_KEY); } catch (e) { /* signed in for this visit only */ }
+}
 resetForms();
 
+function resetState() {   // forget everything on screen (on sign in, sign out and clearing)
+  answers = []; heatCell = null; teamCell = null; heatList = []; quiz = null; sectionNo = 0; confirming = ""; panels = {};
+  typedCode = ""; importCode = ""; newCode = ""; importNote = ""; teamPick = -1; teamSq = null; personSq = null; personEmail = "";
+  const w = load("where", "cloud"), l = load("level", 0);
+  where = Object.keys(SWITCH_OPTIONS).includes(w) ? w : "cloud";
+  level = [0, 1, 2, 3].includes(l) ? l : 0;
+  resetForms();
+}
 function resetForms() {
   report = { section: 0, type: 0, task: -1, wrong: "" };
   pb = { task: -1, open: {}, vals: {}, ask: 0, items: [0], period: "" };   // recipes: which are open, what's typed; ask 0 = first request, 1 = chaser
@@ -1066,14 +1098,14 @@ function msg(at) { return messageAt === at ? message : ""; }
 
 // ---------- Navigation: one row of tabs ----------
 const TABS = [["home", "Home"], ["tasks", "Check a task"], ["prompt", "Prompt builder"], ["learn", "Learn"], ["heat", "Heat map"], ["note", "AI note"]];
-const PARENT = { section: "tasks", quiz: "learn", settings: "home", guide: "home", profile: "home", person: "team" };   // these screens light up their parent's tab
+const PARENT = { section: "tasks", quiz: "learn", settings: "home", guide: "home", person: "team" };   // these screens light up their parent's tab
 function tabs() { return canTeam() ? TABS.concat([["team", "Team"]]) : TABS; }   // the Team tab is for a Senior or Manager
 
 function go(name) {         // move to another screen
   if (name === "tasks" && screen !== "tasks" && answers.length === CHECKER_QUESTIONS.length) answers = [];   // a finished check starts afresh
   if (name === "learn") tick(1);                     // Learn holds the approved tools list
   if ((name === "team" || name === "person") && !canTeam()) name = "home";
-  if (name === "profile") prof = Object.assign({ name: "", email: "", role: "" }, loadProfile() || {});   // the form starts from what's saved
+  if (!me()) name = "signin"; else if (name === "signin") name = "home";   // nothing but the sign-in screen until you sign in
   screen = name; confirming = ""; panels = {}; newCode = ""; importNote = ""; teamSq = null; personSq = null;
   draw();
   const h1 = document.querySelector("#screen h1").textContent;
@@ -1082,11 +1114,11 @@ function go(name) {         // move to another screen
 
 function draw() {           // redraw the current screen and the tab row
   const lit = PARENT[screen] || screen;
-  const nav = `<div class="tabs">` + tabs().map(t => `<button id="tab-${t[0]}"${t[0] === lit ? ' aria-current="page"' : ""}
+  const nav = screen === "signin" ? "" : `<div class="tabs">` + tabs().map(t => `<button id="tab-${t[0]}"${t[0] === lit ? ' aria-current="page"' : ""}
       onclick="go('${t[0]}')">${t[1]}</button>`).join("") + `</div>`;
   const screens = { home: homeScreen, guide: guideScreen, settings: settingsScreen, tasks: tasksScreen, section: sectionScreen,
     prompt: promptScreen, learn: learnScreen, quiz: quizScreen, heat: heatScreen, note: noteScreen,
-    profile: profileScreen, team: teamScreen, person: personScreen };
+    signin: signInScreen, team: teamScreen, person: personScreen };
   render(nav, checkData() + screens[screen](), message);   // the message is also read out to screen readers
   message = ""; messageAt = ""; problems = []; problemsAt = "";
 }
@@ -1156,8 +1188,10 @@ function homeScreen() {
   const list = START_STEPS.map((s, i) => `<li class="step"><input type="checkbox" id="step-${i}"${steps[i] ? " checked" : ""} onchange="setStep(${i}, this.checked)">
       <label for="step-${i}">${s.text}</label>
       <button class="link" id="go-${i}" aria-label="Go: ${s.text}" onclick="goStep(${i})">Go</button></li>`).join("");
-  return `<h1>Settling into AI</h1>
-    ${msg("profile") ? `<p class="small" id="profileMsg" role="status">${msg("profile")}</p>` : ""}
+  const who = me();
+  return `<p class="userbar small" id="userBar">Signed in as <b>${safe(who.name)}</b> (${who.role})
+      <button class="link" id="signOut" onclick="signOut()">Sign out</button></p>
+    <h1>Settling into AI</h1>
     <p class="grey">Which uses of AI are fine, which are risky, and what to do.</p>
     <p class="small guidelink"><button class="link" id="guideLink" onclick="go('guide')">How to use this app</button></p>
     ${switchHtml()}
@@ -1182,7 +1216,7 @@ function goStep(i) {        // a step's Go link: opens its screen at the right p
 function testingHtml() {    // for trying the app out: clearly not part of the real app
   return `<div class="testbox" id="testBox"><p class="testlabel">TESTING ONLY – not part of the real app</p>
     <p><label for="testLevel">Level</label> <select id="testLevel" onchange="setLevel(this.value)">${options(LEVELS, level)}</select></p>
-    ${confirming === "reset" ? confirmHtml("Reset everything this app has saved in this browser?", "Yes, reset", "clearAll('resetAll')", "resetAll")
+    ${confirming === "reset" ? confirmHtml("Reset everything this app has saved in this browser, for everyone, including the master list?", "Yes, reset", "clearAll('resetAll')", "resetAll")
       : `<p><button class="link" id="resetAll" onclick="ask('reset')">Reset everything</button></p>`}
     <p class="small" id="resetMsg" role="status">${msg("reset")}</p></div>`;
 }
@@ -1787,7 +1821,8 @@ function guideBody(onScreen) {   // onScreen: tab names are buttons that open th
       with your name, work email and reports. Send it to your senior or manager. You need the team code they give you.</p>
     <p>Settings also has a file with no names in it, for the management dashboard. What you typed goes in as written, so check it doesn't name a client or a person.</p>
     <h2>Keep it private</h2><ul><li>Never type client names or client data into this app.</li>
-      <li>Everything is saved only in this browser on this device. Nothing is sent anywhere unless you send the file yourself.</li></ul>
+      <li>Everything is saved only in this browser on this device, under your sign-in, so other people on this laptop don't see it.
+        Nothing is sent anywhere unless you send the file yourself.</li></ul>
     <h2>Your first 10 minutes</h2><ol>${START_STEPS.map(s => `<li><b>${s.text}.</b> ${s.help}</li>`).join("")}</ol>
     <h2>Questions</h2>
     <h3>Is this firm policy?</h3><p>No. It's a prototype with made-up examples and draft ratings. Follow the firm's own policy, and ask your senior if you're unsure.</p>
@@ -1808,13 +1843,12 @@ function guideScreen() {
 // =====================================================================
 function settingsScreen() {
   const reports = loadReports(), examples = reports.filter(r => r.example).length, best = loadBest();
-  const me = loadProfile(), people = loadTeam().length;
+  const who = me(), people = loadTeam().length;
   return `<h1>Settings</h1>
-    <p>Everything you save stays in this browser on this device. Nothing is sent anywhere unless you save a file and send it yourself.</p>
+    <p>Everything you save stays in this browser on this device, kept apart from anyone else who signs in here. Nothing is sent anywhere unless you save a file and send it yourself.</p>
     <h2>About you</h2>
-    <p id="profileLine">${me ? `${safe(me.name)} · ${safe(me.email)} · ${me.role}` : "Not filled in yet."}
-      <button class="link" id="editProfile" onclick="go('profile')">${me ? "Change" : "Add my details"}</button></p>
-    <p class="small" id="profileMsg" role="status">${msg("profile")}</p>
+    <p id="profileLine">${safe(who.name)} · ${safe(who.email)} · ${who.role} · ${safe(teamsText(who))}</p>
+    <p class="small" id="profileNote">From the master list your manager loaded. ${PROFILE_NOTE}</p>
     <h2>What's saved</h2>
     <ul id="savedSummary">
       <li>Your level: ${load("levelSet", false) ? LEVELS[level] : "not chosen yet (left out of the file)"}</li>
@@ -1829,8 +1863,8 @@ function settingsScreen() {
     <h2>Send my data</h2>${exportHtml("set")}
     <h2>File for the management dashboard (no names)</h2>${sendHtml("")}
     <h2>Clear my saved data</h2>
-    ${confirming === "all" ? confirmHtml("Delete everything this app has saved in this browser? This can't be undone.", "Yes, clear it all", "clearAll('clearAll')", "clearAll")
-      : `<p class="small">Deletes your details, reports, ticks, answers, notes, pilots and any team files from this browser, and starts afresh.</p>
+    ${confirming === "all" ? confirmHtml("Delete everything this app has saved for you in this browser? This can't be undone.", "Yes, clear it all", "clearAll('clearAll')", "clearAll")
+      : `<p class="small">Deletes your reports, ticks, answers, notes, pilots and any team files from this browser, and starts afresh. Other people's data and the master list stay.</p>
          <button class="plain" id="clearAll" onclick="ask('all')">Clear my saved data</button>`}
     <p class="small" id="clearMsg" role="status">${msg("clear")}</p>`;
 }
@@ -1864,62 +1898,197 @@ function sendFile(at) {
   const ok = downloadFile(name, JSON.stringify(makeExport("final"), null, 2));
   document.getElementById(id.msg).textContent = ok ? "Saved as " + name + ". Send it to your manager." : "This browser blocked the file. Copy the text instead (below).";
 }
-function clearAll(backTo) { // delete everything, then start afresh (the next file gets a new reference code too)
-  const ok = clearSaved();
-  where = "cloud"; level = 0; answers = []; heatCell = null; teamCell = null; quiz = null; sectionNo = 0; confirming = "";
-  typedCode = ""; importCode = ""; newCode = ""; importNote = ""; teamPick = -1; teamSq = null; personSq = null; personEmail = "";
+// What "Clear my saved data" empties: each saved name and its empty value
+const MY_KEYS = { where: "cloud", level: 0, levelSet: false, reports: [], steps: null, picks: null, notes: [], pilots: [], quizBest: null,
+  settingsCopiedOn: "", anonId: "", team: "", teamData: {}, codeMadeOn: "" };
+function clearAll(backTo) { // "Clear my saved data" (just yours) or "Reset everything" (everyone's, and the master list)
+  let ok = true;
+  if (backTo === "resetAll") ok = clearSaved();
+  else for (const k in MY_KEYS) ok = save(k, MY_KEYS[k]) && ok;   // the next file gets a new reference code too
+  resetState();
+  const done = ok ? "Done: everything this app saved " + (backTo === "resetAll" ? "in this browser" : "for you") + " has been deleted." : "Cleared for this visit.";
+  if (backTo === "resetAll") { signedIn = ""; writeSession(""); tell("master", done + " Load the master list to start again."); go("signin"); return; }
   if (screen === "team" || screen === "person") screen = "settings";   // nothing to show there any more
-  resetForms();
-  tell(backTo === "resetAll" ? "reset" : "clear", ok ? "Done: everything this app saved in this browser has been deleted." : "Cleared for this visit.");
+  tell("clear", done);
   draw();
   focusId(backTo);
 }
 
 // =====================================================================
-// SCREEN 10: About you (name, work email, role), asked on the first visit and changed from Settings
+// SCREEN 10: Sign in (work email and password, checked against the master list a manager loads)
 // =====================================================================
 const ROLES = ["Worker", "Senior", "Manager"];
 const PROFILE_NOTE = "Prototype only. A real version would use the firm's own login.";
+const PASS_ROUNDS = 100000;  // how hard each password is scrambled (PBKDF2-SHA256), so the saved form can't be turned back into it
 function cleanName(n) { return cut(typeof n === "string" ? n.replace(/[\u0000-\u001f<>]/g, " ").replace(/\s+/g, " ") : "", 80); }
 function cleanEmail(e) { return typeof e === "string" ? e.trim().toLowerCase() : ""; }
 function validEmail(e) { return e.length <= 120 && /^[^\s@<>"',;]+@[^\s@<>"',;]+\.[a-z]{2,}$/.test(e); }   // a basic format check only
-function loadProfile() {    // { name, email, role }, or null if it's missing or damaged
-  const p = load("profile", null);
-  if (!p || typeof p !== "object") return null;
-  const name = cleanName(p.name), email = cleanEmail(p.email);
-  return name && validEmail(email) && ROLES.includes(p.role) ? { name, email, role: p.role } : null;
+function cleanTeams(t) {    // "Manchester;NQ1" or a list -> ["Manchester", "NQ1"]
+  return (Array.isArray(t) ? t : String(t || "").split(";")).map(cleanTeam).filter((x, i, all) => x && all.indexOf(x) === i).slice(0, 10);
 }
-function myRole() { const p = loadProfile(); return p ? p.role : ""; }
+
+// The master list: who can sign in on this laptop. Only the scrambled passwords are saved, never the passwords.
+let masterRaw, masterCache = null;   // the list as saved, and as checked (checked again only when it changes)
+function loadMaster() {     // { loadedOn, rounds, demo, people: [{ name, email, role, teams, salt, hash }] }, or null if none is loaded
+  const m = load("master", null);
+  if (m === masterRaw) return masterCache;
+  masterRaw = m; masterCache = null;
+  if (m && typeof m === "object" && Array.isArray(m.people) && Number.isInteger(m.rounds) && m.rounds >= 10000 && m.rounds <= 2000000) {
+    const people = m.people.slice(0, 5000).map(p => p && typeof p === "object" && validEmail(cleanEmail(p.email)) && ROLES.includes(p.role)
+      && typeof p.salt === "string" && typeof p.hash === "string"
+      ? { name: cleanName(p.name) || cleanEmail(p.email), email: cleanEmail(p.email), role: p.role, teams: cleanTeams(p.teams), salt: p.salt, hash: p.hash } : null).filter(Boolean);
+    if (people.length) masterCache = { loadedOn: isISO(m.loadedOn) ? m.loadedOn : "", rounds: m.rounds, demo: m.demo === true, people };
+  }
+  return masterCache;
+}
+function masterPeople() { const m = loadMaster(); return m ? m.people : []; }
+function me() { return signedIn ? masterPeople().find(p => p.email === signedIn) || null : null; }   // the signed-in person, from the master list
+function myRole() { const p = me(); return p ? p.role : ""; }
 function canTeam() { return myRole() === "Senior" || myRole() === "Manager"; }
 function isManager() { return myRole() === "Manager"; }
 
-function profileScreen() {
-  const saved = loadProfile();
-  return `<h1>About you</h1>
-    <p class="grey">So your senior or manager can tell whose file is whose.</p>
-    <p class="warn small" id="profileNote">${PROFILE_NOTE}</p>
-    <div class="field"><label for="profName">Your name</label>
-      <input id="profName" type="text" maxlength="80" autocomplete="name" value="${safe(prof.name)}" oninput="prof.name = this.value"></div>
-    <div class="field"><label for="profEmail">Work email</label>
-      <input id="profEmail" type="email" maxlength="120" autocomplete="email" spellcheck="false" value="${safe(prof.email)}" oninput="prof.email = this.value"></div>
-    <fieldset class="switch roles"><legend>Your role</legend>${ROLES.map((r, i) => `<label><input type="radio" name="role" id="role-${i}" value="${r}"${prof.role === r ? " checked" : ""}
-      onchange="prof.role = this.value"> ${r}</label>`).join("")}</fieldset>
-    <p class="small">A Senior or Manager also gets a Team tab, to open their team's files.</p>
-    ${problemsHtml("profile")}
-    <p><button class="btn" id="saveProfile" onclick="saveProfile()">Save</button>
-      <button class="plain" id="profileBack" onclick="go('${saved ? "settings" : "home"}')">${saved ? "Cancel" : "Not now"}</button></p>`;
+async function hashPassword(password, salt, rounds) {   // -> the scrambled password, as text
+  const base = await crypto.subtle.importKey("raw", new TextEncoder().encode(password), "PBKDF2", false, ["deriveBits"]);
+  return toB64(new Uint8Array(await crypto.subtle.deriveBits({ name: "PBKDF2", hash: "SHA-256", salt, iterations: rounds }, base, 256)));
 }
-function saveProfile() {
-  const name = cleanName(prof.name), email = cleanEmail(prof.email);
-  if (!name) problems.push("Your name.");
-  if (!validEmail(email)) problems.push("Work email: it should look like name@example.com.");
-  if (!ROLES.includes(prof.role)) problems.push("Choose your role.");
-  if (problems.length) { problemsAt = "profile"; draw(); focusId("problems"); return; }
-  const first = !loadProfile();
-  const ok = save("profile", { name, email, role: prof.role, note: PROFILE_NOTE });
-  tell("profile", ok ? "Saved: " + name + " (" + prof.role + ")." : "Saved for now, but this browser isn't saving, so it will be lost when you close the page.");
-  go(first ? "home" : "settings");
+
+function signInScreen() {
+  const m = loadMaster(), note = `<p class="warn small" id="profileNote">${PROFILE_NOTE}</p>`;
+  if (!m) return `<h1>Sign in</h1>${note}
+    <h2 id="setupHead">This laptop isn't set up yet</h2>
+    <p>A manager loads the master list once: who can sign in, with their role, teams and password.</p>
+    ${masterFileHtml("Set up this laptop: load master list")}
+    <p><button class="plain" id="demoMaster" onclick="loadDemoMaster()">Load demo master</button></p>
+    <p class="small">${DEMO_PEOPLE.length} made-up people (Workers, Seniors and Managers) with made-up passwords, for trying the app.</p>`;
+  return `<h1>Sign in</h1>${note}
+    <p class="small" id="masterMsg" role="status">${safe(msg("master"))}</p>
+    <form id="signForm" onsubmit="signIn(); return false" novalidate>
+      <div class="field"><label for="signEmail">Work email</label>
+        <input id="signEmail" type="email" maxlength="120" autocomplete="username" spellcheck="false" value="${safe(signForm.email)}" oninput="signForm.email = this.value"></div>
+      <div class="field"><label for="signPass">Password</label>
+        <input id="signPass" type="password" maxlength="200" autocomplete="current-password" value="${safe(signForm.pass)}" oninput="signForm.pass = this.value"></div>
+      ${msg("signFail") ? `<p class="error" id="signMsg" role="alert">${safe(msg("signFail"))}</p>` : ""}
+      <button class="btn" id="signInBtn" type="submit">Sign in</button></form>
+    ${m.demo ? demoPeopleHtml() : ""}
+    <p class="small" id="masterLine">Master list: ${persons(m.people.length)}${m.loadedOn ? ", loaded on " + formatDate(m.loadedOn) : ""}.
+      To change it, a Manager signs in and updates it on the Team tab.</p>`;
 }
+function masterFileHtml(words) {   // the master list file box: on the sign-in screen, and on the Team tab for a Manager
+  return `<p class="small" id="masterHelp">A CSV file saved from Excel with the columns name, email, role, teams, password. Role is Worker, Senior or Manager;
+      separate two teams with ; (e.g. Manchester;NQ1). Passwords are scrambled before saving. Delete the CSV file afterwards: it holds passwords.</p>
+    <div class="field"><label for="masterFile">${words}</label>
+      <input id="masterFile" type="file" accept=".csv,text/csv" aria-describedby="masterHelp masterMsg" onchange="readMaster(this.files[0], '${screen === "team" ? "team" : "signin"}')"></div>
+    <p class="small" id="masterMsg" role="status">${safe(msg("master"))}</p>`;
+}
+function demoPeopleHtml() {  // shown only while the made-up demo list is loaded
+  return `<div class="box" id="demoPeople"><h2>Demo people (made up)</h2>
+    <p class="small">Not real people or real passwords. Pick Fill in, then Sign in.</p>
+    <div class="scroll"><table class="grid demopeople"><tr><th scope="col">Name</th><th scope="col">Role and teams</th><th scope="col">Email and password</th></tr>
+      ${DEMO_PEOPLE.map(([name, email, role, teams, password], i) => `<tr><th scope="row">${safe(name)}<br>
+          <button class="plain" id="fill-${i}" aria-label="Fill in ${safe(name)}" onclick="fillDemo(${i})">Fill in</button></th>
+        <td>${role}<br><span class="small">${safe(teams.split(";").join(", "))}</span></td>
+        <td><span class="email">${safe(email)}</span><br><code>${safe(password)}</code></td></tr>`).join("")}</table></div></div>`;
+}
+function fillDemo(i) { signForm = { email: DEMO_PEOPLE[i][1], pass: DEMO_PEOPLE[i][4] }; draw(); focusId("signInBtn"); }
+
+async function signIn() {
+  const m = loadMaster(), email = cleanEmail(signForm.email), pass = signForm.pass.trim();
+  if (busy || !m) return;
+  if (!canEncrypt()) { tell("signFail", "This browser can't check passwords. Try an up-to-date Edge or Chrome."); draw(); return; }
+  const p = m.people.find(x => x.email === email);
+  busy = true; document.getElementById("masterMsg").textContent = "Checking…";
+  const old = document.getElementById("signMsg"); if (old) old.remove();   // so the next answer is read out afresh
+  let right = false;
+  try { const hash = await hashPassword(pass, p ? fromB64(p.salt) : new Uint8Array(16), m.rounds); right = !!p && !!pass && hash === p.hash; } catch (e) { right = false; }
+  busy = false; signForm.pass = "";
+  if (!right) { tell("signFail", "Email or password not recognised."); draw(); focusId("signPass"); return; }
+  signedIn = email; writeSession(email); signForm = { email: "", pass: "" };
+  resetState();   // your own saved switch, level and forms
+  tell("signin", "Signed in as " + p.name + " (" + p.role + ").");
+  go("home");
+}
+function signOut() {
+  signedIn = ""; writeSession(""); resetState();
+  tell("master", "Signed out.");
+  go("signin");
+}
+
+// Reading the master list. Excel saves "CSV UTF-8" (with a mark at the start) or older Windows text: both read correctly.
+const MASTER_COLS = { name: ["name", "full name"], email: ["email", "e-mail", "email address", "work email"], role: ["role"], teams: ["teams", "team"], password: ["password"] };
+function decodeCsv(buf) {
+  try { return new TextDecoder("utf-8", { fatal: true }).decode(buf); } catch (e) { return new TextDecoder("windows-1252").decode(buf); }
+}
+function masterRows(text) { // -> { people: [{ name, email, role, teams, password }], skipped: ["row 4 (no password)"] } or { problem }
+  const rows = parseCsv(text.replace(/^﻿/, ""));
+  const head = (rows[0] || []).map(h => h.trim().toLowerCase().replace(/\s+/g, " "));
+  const hasHead = MASTER_COLS.email.some(w => head.includes(w)), col = {};
+  Object.keys(MASTER_COLS).forEach((k, i) => { col[k] = hasHead ? head.findIndex(h => MASTER_COLS[k].includes(h)) : i; });   // no header row: name, email, role, teams, password
+  const missing = ["email", "role", "password"].filter(k => col[k] < 0);
+  if (missing.length) return { problem: "That file has no " + missing.join(" or ") + " column. It needs the columns name, email, role, teams, password. Nothing was changed." };
+  const byEmail = {}, skipped = [];
+  rows.slice(hasHead ? 1 : 0, 5001).forEach((r, i) => {
+    const cell = k => col[k] >= 0 ? String(r[col[k]] || "").trim() : "";
+    const email = cleanEmail(cell("email")), role = ROLES.find(x => x.toLowerCase() === cell("role").toLowerCase()), password = cell("password");
+    const why = !validEmail(email) ? "no valid email" : !role ? "role must be Worker, Senior or Manager" : !password ? "no password" : "";
+    if (why) { skipped.push("row " + (i + (hasHead ? 2 : 1)) + " (" + why + ")"); return; }
+    byEmail[email] = { name: cleanName(cell("name")) || email, email, role, teams: cleanTeams(cell("teams")), password };   // the same email twice: the later row counts
+  });
+  return { people: Object.keys(byEmail).map(k => byEmail[k]), skipped };
+}
+async function storeMaster(people, demo) {   // each password scrambled with its own random salt; only the scrambled form is saved
+  const say = text => { const el = document.getElementById("masterMsg"); if (el) el.textContent = text; };
+  const out = [];
+  for (const p of people) {
+    if (out.length % 10 === 0) say("Setting up " + (out.length ? out.length + " of " + people.length : persons(people.length)) + "…");
+    const salt = crypto.getRandomValues(new Uint8Array(16));
+    out.push({ name: p.name, email: p.email, role: p.role, teams: p.teams, salt: toB64(salt), hash: await hashPassword(p.password, salt, PASS_ROUNDS) });
+  }
+  return save("master", { loadedOn: todayISO(), rounds: PASS_ROUNDS, demo, people: out });   // replaces the old list
+}
+async function readMaster(file, at) {   // at = "signin" (setting up this laptop) or "team" (a Manager updating the list)
+  if (!file || busy || (at === "team" ? !isManager() : !!loadMaster())) return;
+  if (!canEncrypt()) return masterDone(at, "This browser can't scramble passwords, so the list wasn't loaded. Try an up-to-date Edge or Chrome.");
+  let text = "";
+  try { const buf = await file.arrayBuffer(); text = buf.byteLength > 2000000 ? "" : decodeCsv(buf); } catch (e) { text = ""; }
+  const r = masterRows(text);
+  if (r.problem) return masterDone(at, r.problem);
+  if (!r.people.length) return masterDone(at, "No one could be read from that file. It needs the columns name, email, role, teams, password." + (r.skipped.length ? " Skipped: " + r.skipped.slice(0, 5).join(", ") + "." : ""));
+  if (!r.people.some(p => p.role === "Manager")) return masterDone(at, "That list has no Manager, so no one could update it later. Nothing was changed.");
+  if (at === "team" && !r.people.some(p => p.email === signedIn && p.role === "Manager"))
+    return masterDone(at, "You aren't a Manager in that list, so you couldn't sign in to update it again. Nothing was changed.");
+  await setMaster(at, r.people, false, "Loaded " + persons(r.people.length) + "." +
+    (r.skipped.length ? " " + plural(r.skipped.length, "row") + " skipped: " + r.skipped.slice(0, 5).join(", ") + (r.skipped.length > 5 ? " and more" : "") + "." : ""));
+}
+function loadDemoMaster() { // the made-up people below (only while this laptop isn't set up)
+  if (loadMaster()) return;
+  setMaster("signin", DEMO_PEOPLE.map(([name, email, role, teams, password]) => ({ name, email, role, teams: cleanTeams(teams), password })), true,
+    "Loaded " + persons(DEMO_PEOPLE.length) + " (made up, for the demo).");
+}
+async function setMaster(at, people, demo, done) {
+  if (busy) return;
+  busy = true;
+  let ok = null;
+  try { ok = await storeMaster(people, demo); } catch (e) { ok = null; }
+  busy = false; teamPick = -1;
+  masterDone(at, ok === null ? "This browser can't scramble passwords, so the list wasn't loaded. Try an up-to-date Edge or Chrome."
+    : done + (ok ? "" : " This browser isn't saving, so load it again next time."));
+}
+function masterDone(at, text) { tell("master", text); draw(); focusId(at === "team" || !loadMaster() ? "masterFile" : "signEmail"); }
+
+// Made-up people for the demo (example-data/master-list.csv holds the same list): [name, email, role, teams, password]
+const DEMO_PEOPLE = [
+  ["Jo Brown", "jo.brown@example.com", "Worker", "Manchester;NQ1", "jo-demo"],
+  ["Priya Shah", "priya.shah@example.com", "Worker", "Manchester", "priya-demo"],
+  ["Tom Bennett", "tom.bennett@example.com", "Worker", "Manchester;NQ1", "tom-demo"],
+  ["Aisha Khan", "aisha.khan@example.com", "Senior", "Manchester", "aisha-demo"],
+  ["Dan Murphy", "dan.murphy@example.com", "Worker", "London;NQ1", "dan-demo"],
+  ["Grace Lee", "grace.lee@example.com", "Worker", "London", "grace-demo"],
+  ["Owen Price", "owen.price@example.com", "Senior", "London", "owen-demo"],
+  ["Hannah Clarke", "hannah.clarke@example.com", "Worker", "Leeds", "hannah-demo"],
+  ["Leo Patel", "leo.patel@example.com", "Worker", "Leeds;NQ1", "leo-demo"],
+  ["Ruth Evans", "ruth.evans@example.com", "Senior", "Leeds", "ruth-demo"],
+  ["Sarah Hughes", "sarah.hughes@example.com", "Manager", "Manchester;London;Leeds;NQ1", "sarah-demo"],
+  ["Ken Walsh", "ken.walsh@example.com", "Manager", "London", "ken-demo"]];
 
 // =====================================================================
 // Locked team files: AES-GCM, with a key made from the team code (PBKDF2-SHA256, random salt and IV)
@@ -1978,18 +2147,11 @@ function loadTeam() {       // everyone imported, by email (the latest file for 
   return t && typeof t === "object" && !Array.isArray(t) ? Object.keys(t).map(k => cleanPerson(t[k])).filter(Boolean) : [];
 }
 function saveTeam(list) { const t = {}; list.forEach(p => { t[p.email] = p; }); return save("teamData", t); }
-function loadRoster() {     // [{ name, email, teams: [..] }]
-  return loadList("roster").map(r => r && typeof r === "object" && validEmail(cleanEmail(r.email)) ? { name: cleanName(r.name), email: cleanEmail(r.email),
-    teams: (Array.isArray(r.teams) ? r.teams : []).map(cleanTeam).filter(Boolean).slice(0, 10) } : null).filter(Boolean);
-}
 function stepsOf(p) { return p.steps.filter(Boolean).length; }
 function minutesOf(p) { return p.pilots.reduce((n, x) => n + Math.max(0, x.baselineMinutes - x.aiMinutes), 0); }   // minutes saved per task, added up
 
 // "Export my data": on the Heat map (at = "heat") and in Settings (at = "set")
 function exportHtml(at) {
-  const me = loadProfile();
-  if (!me) return `<p>Add your name and work email first, so your senior or manager knows the file is yours.</p>
-    <button class="plain" id="addMe-${at}" onclick="go('profile')">Add my details</button>`;
   return `<p class="small">A locked file with your name, work email, reports, Start here ticks and pilots. Only someone with the team code can open it.</p>
     <div class="field"><label for="expCode-${at}">Team code</label><span class="small" id="expHelp-${at}">Your senior or manager gives you this.</span>
       <input id="expCode-${at}" type="text" maxlength="40" autocomplete="off" spellcheck="false" aria-describedby="expHelp-${at}" value="${safe(typedCode)}" oninput="typedCode = this.value"></div>
@@ -1999,31 +2161,35 @@ function exportHtml(at) {
 async function exportMine(at) {
   const say = text => { document.getElementById("expMsg-" + at).textContent = text; };
   if (!canEncrypt()) { say("This browser can't encrypt files, so nothing was saved. Try an up-to-date Edge or Chrome."); return; }
-  const me = loadProfile(), code = cleanCode(typedCode);
+  const who = me(), code = cleanCode(typedCode);
+  if (!who) return;
   if (code.length < 8) { say("Type the team code first (your senior or manager gives you this)."); focusId("expCode-" + at); return; }
-  const mine = { app: EXPORT_APP, kind: "team-data", version: 1, exportedOn: todayISO(), name: me.name, email: me.email, role: me.role,
+  const mine = { app: EXPORT_APP, kind: "team-data", version: 1, exportedOn: todayISO(), name: who.name, email: who.email, role: who.role, teams: who.teams,
     reports: loadReports().filter(r => !r.example).map(r => ({ date: r.date, section: r.section, type: r.type, wrong: r.wrong, task: r.task })),
     steps: loadSteps(), pilots: loadPilots() };
   say("Locking the file…");
   let file;
   try { file = JSON.stringify(await lockText(JSON.stringify(mine), code)); }
   catch (e) { say("This browser can't encrypt files, so nothing was saved. Try an up-to-date Edge or Chrome."); return; }
-  const name = "ai-suite-" + (me.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "me") + "-" + todayISO() + ".json";
+  const name = "ai-suite-" + (who.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "") || "me") + "-" + todayISO() + ".json";
   say(downloadFile(name, file) ? "Saved as " + name + ", locked with the team code. Send it to your senior or manager." : "This browser blocked the file, so nothing was saved.");
 }
 
 // =====================================================================
-// SCREEN 11: Team (Senior and Manager): team code and roster (Manager), import files, then the team's figures
+// SCREEN 11: Team (Senior and Manager): import files, then the team's figures; a Manager also has the team code and the master list
 // =====================================================================
-function teamNames() {      // every team on the roster, A to Z
+function teamNames() {      // every team on the master list, A to Z
   const names = [];
-  loadRoster().forEach(r => r.teams.forEach(t => { if (!names.includes(t)) names.push(t); }));
+  masterPeople().forEach(r => r.teams.forEach(t => { if (!names.includes(t)) names.push(t); }));
   return names.sort((a, b) => a.localeCompare(b, "en", { sensitivity: "base" }));
 }
-function teamRows() {       // everyone imported, with their teams from the roster, in the dropdown's team
-  const roster = loadRoster(), names = teamNames(), pick = names[teamPick];
-  return loadTeam().map(p => { const r = roster.find(x => x.email === p.email);
-      return Object.assign({}, p, { name: r && r.name ? r.name : p.name, teams: r ? r.teams : [] }); })
+function withMaster(p) {    // an imported person, with their name and teams from the master list (not on it: No team)
+  const r = masterPeople().find(x => x.email === p.email);
+  return Object.assign({}, p, { name: r ? r.name : p.name, teams: r ? r.teams : [] });
+}
+function teamRows() {       // everyone imported, in the dropdown's team
+  const names = teamNames(), pick = names[teamPick];
+  return loadTeam().map(withMaster)
     .filter(p => teamPick === -1 || (teamPick === -2 ? !p.teams.length : p.teams.includes(pick)))
     .sort((a, b) => a.name.localeCompare(b.name, "en", { sensitivity: "base" }));
 }
@@ -2037,10 +2203,10 @@ function statsHtml(rows, id) {   // the figures for the people shown (one person
 }
 
 function teamScreen() {
-  const roster = loadRoster(), names = teamNames(), all = loadTeam();
-  if (teamPick >= names.length) teamPick = -1;   // that team is no longer on the roster
+  const master = masterPeople(), names = teamNames(), all = loadTeam();
+  if (teamPick >= names.length) teamPick = -1;   // that team is no longer on the master list
   const rows = teamRows();
-  const noTeam = all.some(p => !roster.some(r => r.email === p.email && r.teams.length));
+  const noTeam = all.some(p => !withMaster(p).teams.length);
   const pickList = `<option value="-1"${teamPick === -1 ? " selected" : ""}>All teams</option>` +
     names.map((n, i) => `<option value="${i}"${teamPick === i ? " selected" : ""}>${safe(n)}</option>`).join("") +
     (noTeam ? `<option value="-2"${teamPick === -2 ? " selected" : ""}>No team</option>` : "");
@@ -2049,7 +2215,7 @@ function teamScreen() {
   const sq = teamSq ? `<p id="teamSqLine"><b>${SECTIONS[teamSq[0]]} / ${MISTAKE_TYPES[teamSq[1]]}:</b> ${plural(counts[teamSq[0]][teamSq[1]], "report")} from ${persons(inSq)}</p>` : "";
   const table = rows.map((p, i) => `<tr><th scope="row"><button class="link" id="person-${i}" onclick="openPerson(${i})">${safe(p.name)}</button>${p.demo ? ' <span class="small">(demo)</span>' : ""}<br><span class="small email">${safe(p.email)}</span></th>
     <td>${safe(teamsText(p))}</td><td>${p.reports.length}</td><td>${stepsOf(p)} of ${START_STEPS.length}</td></tr>`).join("");
-  const waiting = roster.filter(r => (teamPick === -1 || r.teams.includes(names[teamPick])) && teamPick !== -2 && !all.some(p => p.email === r.email)).length;
+  const waiting = master.filter(r => r.email !== signedIn && (teamPick === -1 || r.teams.includes(names[teamPick])) && teamPick !== -2 && !all.some(p => p.email === r.email)).length;
   return `<h1>Team</h1>
     <p class="grey">Your team's locked files, opened with the team code. Saved in this browser only.</p>
     <h2 id="viewHead">Team view</h2>
@@ -2059,7 +2225,7 @@ function teamScreen() {
       <h3>People</h3><div class="scroll"><table class="grid people"><caption>Pick a name to see their own map</caption>
         <tr><th scope="col">Name and email</th><th scope="col">Teams</th><th scope="col">Reports</th><th scope="col">Start here</th></tr>
         ${table || `<tr><td colspan="4">No one in this team has sent a file yet.</td></tr>`}</table></div>
-      ${waiting ? `<p class="small" id="waiting">${persons(waiting)} on the roster ${waiting === 1 ? "hasn't" : "haven't"} sent a file yet.</p>` : ""}
+      ${waiting ? `<p class="small" id="waiting">${persons(waiting)} on the master list ${waiting === 1 ? "hasn't" : "haven't"} sent a file yet.</p>` : ""}
       ${isManager() ? `<p><button class="plain" id="teamCsv" onclick="exportTeamCsv()">Export team data</button>
         <span class="small" id="csvMsg" role="status">Counts only: no descriptions of mistakes.</span></p>` : ""}`
     : `<p id="noTeamYet">No team files yet.</p>`}
@@ -2069,11 +2235,11 @@ function teamScreen() {
       <div class="field"><label for="importFiles">Files from your team</label><input id="importFiles" type="file" accept=".json,application/json" multiple></div>
       <button class="btn" id="importBtn" onclick="importTeam()">Import</button>
       <div id="importMsg" role="status">${importNote}</div></div>
-    ${isManager() ? managerHtml(roster, names) : ""}
-    <p class="small demoline"><button class="plain" id="demoBtn" onclick="loadDemo()">Load demo team</button> 8 made-up people in 3 teams.
+    ${isManager() ? managerHtml(master, names) : ""}
+    <p class="small demoline"><button class="plain" id="demoBtn" onclick="loadDemo()">Load demo team</button> Files from ${DEMO_TEAM.length} made-up people on the demo master list.
       Settings, "Clear my saved data", removes them.</p>`;
 }
-function managerHtml(roster, names) {   // the team code and the roster (Manager only)
+function managerHtml(master, names) {   // the team code and the master list (Manager only)
   const madeOn = load("codeMadeOn", "");
   const code = newCode ? `<p id="codeShown"><b>Your new team code (shown once):</b></p>
       <p><input id="codeOut" type="text" readonly value="${newCode}" aria-label="Your new team code"> <button class="plain" id="copyCode" onclick="copyText('codeOut', 'codeMsg')">Copy</button>
@@ -2083,10 +2249,10 @@ function managerHtml(roster, names) {   // the team code and the roster (Manager
     : `<p class="small" id="codeLine">${isISO(madeOn) ? "Last code made on " + formatDate(madeOn) + "." : "No team code yet."}</p>
       <button class="btn" id="makeCode" onclick="${isISO(madeOn) ? "ask('code')" : "makeCode()"}">${isISO(madeOn) ? "Make a new code" : "Make a team code"}</button>`;
   return `<div class="box"><h2 id="codeHead">Team code</h2>${code}</div>
-    <div class="box"><h2 id="rosterHead">Roster</h2>
-      <p class="small">A CSV file with the columns name, email, teams. Separate two teams with ; (e.g. Leeds audit;Tax).</p>
-      <div class="field"><label for="rosterFile">Upload roster</label><input id="rosterFile" type="file" accept=".csv,text/csv" onchange="readRoster(this.files[0])"></div>
-      <p class="small" id="rosterMsg" role="status">${msg("roster") || (roster.length ? "Roster: " + persons(roster.length) + " in " + plural(names.length, "team") + "." : "No roster yet: everyone shows as No team.")}</p></div>`;
+    <div class="box"><h2 id="masterHead">Master list</h2>
+      <p class="small" id="masterLine">Who can sign in on this laptop: ${persons(master.length)} in ${plural(names.length, "team")}${loadMaster().loadedOn ? ", loaded on " + formatDate(loadMaster().loadedOn) : ""}.
+        Loading a new list replaces it.</p>
+      ${masterFileHtml("Update master list")}</div>`;
 }
 function makeCode() {       // a random 12-letter code, shown once
   if (!isManager()) return;
@@ -2097,7 +2263,7 @@ function makeCode() {       // a random 12-letter code, shown once
   draw(); focusId("copyCode");
 }
 
-// The roster: name,email,teams. Quotes are allowed ("Smith, Jo"); a header row is optional.
+// Reading a CSV file: quotes are allowed ("Smith, Jo"), and Windows or Mac line endings
 function parseCsv(text) {
   const rows = []; let row = [], cell = "", quoted = false;
   for (let i = 0; i < text.length; i++) {
@@ -2111,27 +2277,6 @@ function parseCsv(text) {
   if (cell || row.length) { row.push(cell); rows.push(row); }
   return rows.filter(r => r.some(x => x.trim()));
 }
-async function readRoster(file) {
-  if (!file || !isManager()) return;
-  let text = "";
-  try { text = file.size > 1000000 ? "" : await file.text(); } catch (e) { text = ""; }
-  const rows = parseCsv(text.replace(/^﻿/, "")), head = (rows[0] || []).map(h => h.trim().toLowerCase());
-  const col = (word, fallback) => head.includes(word) ? head.indexOf(word) : fallback, hasHead = head.includes("email");
-  const [n, e, t] = [col("name", 0), col("email", 1), col("teams", head.includes("team") ? head.indexOf("team") : 2)];
-  const byEmail = {}; let skipped = 0;
-  rows.slice(hasHead ? 1 : 0, 5000).forEach(r => {
-    const email = cleanEmail(r[e]);
-    if (!validEmail(email)) { skipped++; return; }
-    byEmail[email] = { name: cleanName(r[n]), email, teams: String(r[t] || "").split(";").map(cleanTeam).filter(Boolean).slice(0, 10) };
-  });
-  const list = Object.keys(byEmail).map(k => byEmail[k]);
-  if (!list.length) { tell("roster", "No one could be read from that file. It needs the columns name, email, teams."); draw(); return; }
-  save("roster", list); teamPick = -1;
-  const teams = new Set(list.flatMap(r => r.teams)).size;
-  tell("roster", "Roster: " + persons(list.length) + " in " + plural(teams, "team") + "." + (skipped ? " " + plural(skipped, "row") + " skipped (no valid email)." : ""));
-  draw(); focusId("rosterFile");
-}
-
 async function importTeam() {   // open each file with the code; the same email replaces that person's old entry
   if (!canTeam()) return;
   const box = document.getElementById("importMsg"), files = Array.from(document.getElementById("importFiles").files || []), code = cleanCode(importCode);
@@ -2165,9 +2310,9 @@ function openPerson(i) { personEmail = teamRows()[i].email; go("person"); }
 
 // SCREEN 12: one person's own map, from the Team tab
 function personScreen() {
-  const roster = loadRoster(), p0 = loadTeam().find(p => p.email === personEmail);
+  const p0 = loadTeam().find(p => p.email === personEmail);
   if (!p0) return `<h1>Team</h1><p>This person's file has gone.</p><button class="plain" id="personBack" onclick="go('team')">Back to Team</button>`;
-  const r = roster.find(x => x.email === p0.email), p = Object.assign({}, p0, { name: r && r.name ? r.name : p0.name, teams: r ? r.teams : [] }), counts = countReports(p.reports);
+  const p = withMaster(p0), counts = countReports(p.reports);
   const sq = personSq ? `<p id="personSqLine"><b>${SECTIONS[personSq[0]]} / ${MISTAKE_TYPES[personSq[1]]}:</b> ${plural(counts[personSq[0]][personSq[1]], "report")}</p>` : "";
   return `<h1>${safe(p.name)}</h1>
     <p class="small" id="personLine">${safe(p.email)} · ${safe(teamsText(p))}${p.exportedOn ? " · file from " + formatDate(p.exportedOn) : ""}${p.demo ? " · made-up demo person" : ""}</p>
@@ -2194,31 +2339,30 @@ function exportTeamCsv() {  // the people shown, as counts only (never what went
   document.getElementById("csvMsg").textContent = ok ? "Saved as " + name + " (counts only)." : "This browser blocked the file.";
 }
 
-// The demo team: 8 made-up people in 3 teams, with a matching roster. [name, teams, steps done, minutes saved, reports as "section.type" pairs]
+// The demo team: files from 8 made-up people on the demo master list (their teams come from the master list).
+// [name, steps done, minutes saved, reports as "section.type" pairs]
 const DEMO_TEAM = [
-  ["Priya Shah", "Manchester audit", 6, 15, "2.2 2.2 2.1 4.2 5.1"], ["Tom Bennett", "Manchester audit", 3, 0, "2.0 0.1 2.2"],
-  ["Aisha Khan", "Manchester audit;Leeds audit", 5, 20, "4.2 4.3 1.1"], ["Dan Murphy", "Leeds audit", 2, 0, "3.1 3.1 2.2 7.0"],
-  ["Grace Lee", "Leeds audit", 4, 10, "5.2 5.2"], ["Owen Price", "Birmingham audit", 1, 0, "6.0 6.1 2.2 2.3"],
-  ["Hannah Clarke", "Birmingham audit", 6, 25, "1.1"], ["Leo Patel", "Birmingham audit", 0, 0, ""]];
-function demoEmail(name) { return name.toLowerCase().replace(/\s+/g, ".") + "@example.com"; }
+  ["Priya Shah", 6, 15, "2.2 2.2 2.1 4.2 5.1"], ["Tom Bennett", 3, 0, "2.0 0.1 2.2"], ["Aisha Khan", 5, 20, "4.2 4.3 1.1"], ["Dan Murphy", 2, 0, "3.1 3.1 2.2 7.0"],
+  ["Grace Lee", 4, 10, "5.2 5.2"], ["Owen Price", 1, 0, "6.0 6.1 2.2 2.3"], ["Hannah Clarke", 6, 25, "1.1"], ["Leo Patel", 0, 0, ""]];
 function loadDemo() {
-  const list = loadTeam(), roster = loadRoster(), date = todayISO();
-  DEMO_TEAM.forEach(([name, teams, done, mins, reps]) => {
-    const email = demoEmail(name);
+  if (!canTeam()) return;
+  const list = loadTeam(), date = todayISO();
+  DEMO_TEAM.forEach(([name, done, mins, reps]) => {
+    const email = DEMO_PEOPLE.find(d => d[0] === name)[1];
     const p = cleanPerson({ name, email, demo: true, exportedOn: date, steps: START_STEPS.map((s, i) => i < done),
       reports: reps.split(" ").filter(Boolean).map(x => ({ date, section: SECTIONS[x.split(".")[0]], type: MISTAKE_TYPES[x.split(".")[1]] })),
       pilots: mins ? [{ baselineMinutes: 30, aiMinutes: 30 - mins, errorsCaught: 1, startedWith: 1, stillUsing: 1 }] : [] });
     const at = list.findIndex(x => x.email === email); if (at >= 0) list[at] = p; else list.push(p);
-    const r = roster.findIndex(x => x.email === email), entry = { name, email, teams: teams.split(";") };
-    if (r >= 0) roster[r] = entry; else roster.push(entry);
   });
-  saveTeam(list); save("roster", roster); teamPick = -1; teamSq = null;
-  importNote = "<p><b>Demo team loaded: 8 made-up people in 3 teams.</b></p>";
+  saveTeam(list); teamPick = -1; teamSq = null;
+  importNote = `<p><b>Demo team loaded: files from ${DEMO_TEAM.length} made-up people.</b></p>`;
   draw(); focusId("demoBtn");
 }
 
-// The first visit opens on "About you" (once; Not now, or any tab, goes on to the app)
-if (!loadProfile() && !load("profileAsked", false)) { screen = "profile"; save("profileAsked", true); document.title = "About you · Settling into AI"; }
+// Start: still signed in from earlier in this tab (a refresh), or the sign-in screen
+signedIn = readSession();
+if (!me()) { signedIn = ""; screen = "signin"; document.title = "Sign in · Settling into AI"; }
+resetState();
 draw();   // show the first screen
 
 </script>

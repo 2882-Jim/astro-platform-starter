@@ -1,0 +1,13 @@
+﻿name,email,role,teams,password
+Jo Brown,jo.brown@example.com,Worker,Manchester;NQ1,jo-demo
+Priya Shah,priya.shah@example.com,Worker,Manchester,priya-demo
+Tom Bennett,tom.bennett@example.com,Worker,Manchester;NQ1,tom-demo
+Aisha Khan,aisha.khan@example.com,Senior,Manchester,aisha-demo
+Dan Murphy,dan.murphy@example.com,Worker,London;NQ1,dan-demo
+Grace Lee,grace.lee@example.com,Worker,London,grace-demo
+Owen Price,owen.price@example.com,Senior,London,owen-demo
+Hannah Clarke,hannah.clarke@example.com,Worker,Leeds,hannah-demo
+Leo Patel,leo.patel@example.com,Worker,Leeds;NQ1,leo-demo
+Ruth Evans,ruth.evans@example.com,Senior,Leeds,ruth-demo
+Sarah Hughes,sarah.hughes@example.com,Manager,Manchester;London;Leeds;NQ1,sarah-demo
+Ken Walsh,ken.walsh@example.com,Manager,London,ken-demo

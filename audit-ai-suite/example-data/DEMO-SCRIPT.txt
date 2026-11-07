@@ -1,0 +1,100 @@
+DEMO SCRIPT: the full loop on one laptop (about 5 minutes)
+==========================================================
+
+Everything here is made up. The people, emails and passwords are not real.
+Prototype only. A real version would use the firm's own login.
+
+Before you start
+- Use Edge or Chrome. Open audit-ai-suite-final.html (double-click it).
+- If it opens on Home instead of "Sign in", someone has used it before:
+  Home > TESTING ONLY box at the bottom > Reset everything > Yes, reset.
+- The team code for this demo is:  DEMO-TEAM-CODE
+  (In real use the manager makes a code on the Team tab and gives it out first.
+  Any code of 8 or more letters works; capitals, spaces and dashes don't matter.)
+
+Demo people you'll use (all on the master list):
+  Jo Brown      Worker    jo.brown@example.com       password: jo-demo
+  Aisha Khan    Senior    aisha.khan@example.com     password: aisha-demo
+  Sarah Hughes  Manager   sarah.hughes@example.com   password: sarah-demo
+
+1. Load the demo master
+   - The screen says "This laptop isn't set up yet".
+   - Click "Load demo master".
+   - It says "Loaded 12 people (made up, for the demo)." and shows the
+     "Demo people (made up)" table with every email and password.
+   (Or: "Set up this laptop: load master list" and pick
+    example-data/master-list.csv. It says "Loaded 12 people." The same people
+    and passwords, but the table isn't shown.)
+
+2. Sign in as the worker
+   - In the table, click "Fill in" next to Jo Brown (or type
+     jo.brown@example.com and jo-demo), then click "Sign in".
+   - Home shows "Signed in as Jo Brown (Worker)" at the top right.
+     There are 6 tabs and no Team tab: her role comes from the master list.
+
+3. Log 2 reports
+   - Click the "Heat map" tab.
+   - What went wrong?  Bank total misread from the statement
+     Area: Cash and bank.  Mistake: Wrong number.  Click "Log it".
+   - What went wrong?  Invented a lease clause
+     Area: Planning.  Mistake: Made something up.  Click "Log it".
+   - "My reports" now shows the 2 squares.
+
+4. Export with the code
+   - Still on Heat map, scroll to "Send my data".
+   - Team code: type DEMO-TEAM-CODE
+   - Click "Export my data". It says "Saved as ai-suite-jo-brown-<date>.json,
+     locked with the team code." The file goes to Downloads.
+   - (Point out: open the file in Notepad and it's unreadable without the code.)
+
+5. Sign out
+   - Click the "Home" tab, then "Sign out" at the top right.
+   - Back on "Sign in". It says "Signed out."
+
+6. Sign in as the manager
+   - Click "Fill in" next to Sarah Hughes, then "Sign in".
+   - "Signed in as Sarah Hughes (Manager)". There's a 7th tab: Team.
+   - (Point out: her Heat map is empty. Jo's reports stay with Jo, even on
+     the same laptop.)
+
+7. Create or enter the code
+   - Click the "Team" tab.
+   - Optional: under "Team code" click "Make a team code" to show how a
+     manager makes one (shown once, never saved). It fills in the import
+     box for you, but Jo's file used DEMO-TEAM-CODE, so:
+   - In "Import team files", Team code: clear the box and type DEMO-TEAM-CODE
+
+8. Import
+   - Files from your team: click "Choose files" and pick
+     ai-suite-jo-brown-<date>.json from Downloads.
+   - Click "Import". It says "Imported 1 person."
+
+9. Team view
+   - Team view shows 1 person, 2 mistake reports, the team heat map and
+     the People table (Jo Brown, teams Manchester, NQ1, from the master list).
+   - "Show": pick Manchester (Jo is there), then London (no files yet), then
+     All teams again. The line under the table says who hasn't sent a file.
+
+10. Person view
+   - In People, click "Jo Brown": her own map (Cash and bank / Wrong number,
+     Planning / Made something up). Click a square to see its count.
+   - Click "Back to Team".
+
+11. CSV export
+   - Click "Export team data". It saves team-data-all-teams-<date>.csv:
+     counts only, never what went wrong. Opens in Excel.
+
+Extras if there's time
+- "Load demo team" (bottom of the Team tab) adds files from 8 more made-up
+  people, so the team map and the Show dropdown look fuller.
+- Master list box (Manager only): "Update master list" and pick
+  example-data/master-list.csv. It says "Loaded 12 people." Loading a list
+  replaces the old one. Passwords are scrambled before saving; the file
+  itself isn't kept.
+- Sign out and sign in as Aisha Khan (Senior): she can import and see the
+  team, but has no team code, master list or CSV export.
+- Wrong password: "Email or password not recognised."
+
+To run the demo again: Home > TESTING ONLY > Reset everything > Yes, reset.
+That deletes everything on this laptop, including the master list, so you
+start again at step 1.
