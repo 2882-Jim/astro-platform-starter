@@ -41,5 +41,6 @@
     "displayName": "Manchester Chartered Accountant Students' Society (MCASS)",
     "founded": "1882",
     "mcassLogoLight": "/images/logos/mcass-logo-light.png",
-    "mailingListUrl": "https://example.com/REPLACE-WITH-MAILCHIMP-SIGNUP-LINK"
+    "mailingListUrl": "https://example.com/REPLACE-WITH-MAILCHIMP-SIGNUP-LINK",
+    "charityRegisterUrl": "https://register-of-charities.charitycommission.gov.uk/en/charity-search/-/charity-details/217014"
 }

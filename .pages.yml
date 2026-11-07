@@ -103,6 +103,7 @@ content:
       - { name: linkedinUrl, label: LinkedIn URL, type: string }
       - { name: instagramUrl, label: Instagram URL, type: string }
       - { name: icaewPageUrl, label: MCASS page on icaew.com, type: string }
+      - { name: charityRegisterUrl, label: Charity Commission register page, type: string }
       - { name: joinUrl, label: Join / sign-up link, type: string }
       - { name: mailingListUrl, label: "Mailing list sign-up form link (e.g. Mailchimp or Microsoft Forms). Leave blank to use email.", type: string }
       - { name: heroImage, label: Home page main photo, type: image }

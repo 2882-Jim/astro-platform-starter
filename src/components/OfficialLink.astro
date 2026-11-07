@@ -1,0 +1,67 @@
+---
+// Link to MCASS's official ICAEW page or Charity Commission entry.
+// On hover or keyboard focus, a small preview card fades in above the link.
+import site from '../data/site.json';
+interface Props {
+    kind: 'icaew' | 'charity';
+    variant?: 'inline' | 'card' | 'button';
+    tone?: 'dark' | 'light';
+    label?: string;
+}
+const { kind, variant = 'inline', tone = 'dark', label } = Astro.props;
+const info = {
+    icaew: {
+        href: site.icaewPageUrl,
+        domain: 'icaew.com',
+        title: 'Manchester Student Society',
+        text: "ICAEW's official page for MCASS, the student society for ACA students in Greater Manchester.",
+        label: 'MCASS on icaew.com'
+    },
+    charity: {
+        href: site.charityRegisterUrl,
+        domain: 'charitycommission.gov.uk',
+        title: `Registered charity ${site.charityNumber}`,
+        text: "Our entry on the Charity Commission's register of charities, including our latest accounts.",
+        label: `Registered charity ${site.charityNumber}`
+    }
+}[kind];
+const text = label ?? info.label;
+---
+
+<span class:list={['group/ol relative', variant === 'card' ? 'block h-full' : 'inline-block']}>
+    {
+        variant === 'card' ? (
+            <a href={info.href} class="lift flex h-full items-start gap-4 border border-ink-100 border-l-4 border-l-accent-500 bg-white p-5 text-left">
+                <span class="grid h-10 w-10 shrink-0 place-items-center bg-ink-50 text-[10px] font-bold uppercase tracking-wider text-accent-500">{kind === 'icaew' ? 'ICAEW' : 'CC'}</span>
+                <span>
+                    <span class="block text-xs uppercase tracking-[0.12em] text-stone-500">{info.domain}</span>
+                    <span class="mt-1 block font-bold text-ink-900 group-hover/ol:text-accent-500">{info.title} ↗</span>
+                    <span class="mt-1 block text-sm text-stone-600">{info.text}</span>
+                </span>
+            </a>
+        ) : (
+            <a
+                href={info.href}
+                class:list={[
+                    variant === 'button' ? 'btn-outline' : 'link-underline font-semibold',
+                    tone === 'light' ? 'text-white' : 'text-ink-900 hover:text-accent-500'
+                ]}
+            >
+                {text} <span aria-hidden="true">↗</span>
+            </a>
+        )
+    }
+    {
+        variant !== 'card' && (
+            <span
+                role="tooltip"
+                class="pointer-events-none absolute bottom-full left-0 z-50 mb-3 w-72 translate-y-1 border-t-4 border-accent-500 bg-white p-4 text-left text-ink-900 opacity-0 shadow-2xl ring-1 ring-black/5 transition duration-200 ease-out group-hover/ol:translate-y-0 group-hover/ol:opacity-100 group-focus-within/ol:translate-y-0 group-focus-within/ol:opacity-100"
+            >
+                <span class="block text-[10px] font-semibold uppercase tracking-[0.15em] text-stone-500">{info.domain}</span>
+                <span class="mt-1 block text-sm font-bold">{info.title}</span>
+                <span class="mt-1 block text-xs font-normal normal-case leading-relaxed tracking-normal text-stone-600">{info.text}</span>
+                <span class="mt-2 block text-[10px] font-bold uppercase tracking-[0.12em] text-accent-500">Opens {info.domain} ↗</span>
+            </span>
+        )
+    }
+</span>

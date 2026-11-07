@@ -1,4 +1,5 @@
 ---
+import OfficialLink from './OfficialLink.astro';
 import site from '../data/site.json';
 import nav from '../data/nav.json';
 import Logo from './Logo.astro';
@@ -34,14 +35,15 @@ const year = new Date().getFullYear();
         <div class="text-sm">
             <p class="text-xs font-bold uppercase tracking-[0.15em] text-white">More</p>
             <ul class="mt-4 space-y-2">
-                <li><a class="hover:text-white" href={site.icaewPageUrl}>MCASS on icaew.com</a></li>
+                <li><OfficialLink kind="icaew" tone="light" /></li>
+                <li><OfficialLink kind="charity" tone="light" label="Charity Commission register" /></li>
                 <li><a class="hover:text-white" href="/privacy/">Privacy notice</a></li>
             </ul>
         </div>
     </div>
     <div class="border-t border-white/10">
         <p class="container-site py-5 text-xs text-stone-400">
-            © {year} {site.fullName}. Registered charity in England and Wales, number {site.charityNumber}.
+            © {year} {site.fullName}. Registered charity in England and Wales, number <a class="underline hover:text-white" href={site.charityRegisterUrl}>{site.charityNumber}</a>.
         </p>
     </div>
 </footer>

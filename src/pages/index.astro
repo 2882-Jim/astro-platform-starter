@@ -1,4 +1,5 @@
 ---
+import OfficialLink from '../components/OfficialLink.astro';
 import Layout from '../layouts/Layout.astro';
 import Photo from '../components/Photo.astro';
 import Logo from '../components/Logo.astro';
@@ -28,6 +29,7 @@ const areas = [
             <a href="/events/" class="btn-primary">View events</a>
             <a href={mailingListHref} class="btn-light">Join our mailing list</a>
         </div>
+        <p class="mt-6 text-sm"><OfficialLink kind="icaew" tone="light" label="Our official page on icaew.com" /></p>
     </Hero>
 
 
@@ -58,6 +60,16 @@ const areas = [
         </div>
     </section>
 
+    <section class="pt-10">
+        <div class="container-site">
+            <h2>Official links</h2>
+            <div class="mt-6 grid gap-4 md:grid-cols-2">
+                <OfficialLink kind="icaew" variant="card" />
+                <OfficialLink kind="charity" variant="card" />
+            </div>
+        </div>
+    </section>
+
     <section class="section">
         <div class="container-site reveal">
             <h2>What we do</h2>
@@ -84,7 +96,7 @@ const areas = [
             <div class="px-4 py-14 sm:px-12 lg:py-20">
                 <h2>Run by trainees</h2>
                 <p class="mt-5 max-w-lg leading-relaxed text-stone-600">A committee of ACA trainees, elected every year, organises everything we do.</p>
-                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
+                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales: <OfficialLink kind="charity" label={`number ${site.charityNumber}`} /></p>
                 <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
                     {
                         site.stats.slice(0, 4).map((s) => (
