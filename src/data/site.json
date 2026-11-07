@@ -3,21 +3,21 @@
     "shortName": "MCASS",
     "fullName": "The Manchester Chartered Accountants Students' Society",
     "tagline": "The ICAEW student society for ACA trainees in Greater Manchester.",
-    "intro": "We run revision sessions and socials for ACA trainees in Greater Manchester, plus the Annual Ball.",
+    "intro": "We run revision sessions, socials and fitness events for trainee accountants in Manchester, plus the Annual Ball.",
     "email": "hello@mcass.uk",
     "eventsEmail": "events@mcass.uk",
     "sponsorshipEmail": "hello@mcass.uk",
     "charityNumber": "217014",
     "registeredSince": "1963",
-    "linkedinUrl": "",
+    "linkedinUrl": "https://www.linkedin.com/company/manchestercass/",
     "instagramUrl": "https://www.instagram.com/mcass_icaew/",
     "joinUrl": "",
     "heroImage": "",
     "cloudflareAnalyticsToken": "",
     "stats": [
         {
-            "value": "TBC",
-            "label": "ACA students in our area",
+            "value": "1882",
+            "label": "Founded",
             "confirmed": false
         },
         {
@@ -26,9 +26,9 @@
             "confirmed": false
         },
         {
-            "value": "TBC",
-            "label": "Events a year",
-            "confirmed": false
+            "value": "650+",
+            "label": "LinkedIn followers",
+            "confirmed": true
         },
         {
             "value": "1963",
@@ -37,8 +37,12 @@
         }
     ],
     "icaewPageUrl": "https://www.icaew.com/students/student-support-and-benefits/student-societies-and-groups/manchester-student-society",
-    "mcassLogo": "",
+    "mcassLogo": "/images/logos/mcass-logo.png",
     "icaewLogo": "",
     "acaLogo": "",
-    "brandColour": "#9b1b5a"
+    "brandColour": "#9b1b5a",
+    "displayName": "Manchester Chartered Accountant Students' Society (MCASS)",
+    "founded": "1882",
+    "mcassLogoLight": "/images/logos/mcass-logo-light.png",
+    "mailingListUrl": ""
 }

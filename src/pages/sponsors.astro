@@ -15,7 +15,7 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
 
 <Layout title="Sponsorship" description="Sponsorship packages for firms who want to reach ACA students in Greater Manchester.">
     <Hero label="Sponsor branding at the Annual Ball">
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">Sponsorship</p>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">{site.displayName}</p>
         <h1 class="mt-4 max-w-3xl text-white">Sponsor MCASS</h1>
         <p class="mt-5 max-w-xl text-lg text-white/85">{sp.intro}</p>
         <a href={mailto} class="btn-primary mt-8">Ask for the sponsor pack</a>

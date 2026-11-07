@@ -24,7 +24,7 @@ content:
       - name: category
         label: Category
         type: select
-        options: { values: [Social, Sports, Revision, Professional, Ball] }
+        options: { values: [Social, Sports, Fitness, Revision, Professional, Ball] }
       - { name: summary, label: Short summary, type: text, required: true }
       - { name: image, label: Photo, type: image }
       - { name: ticketUrl, label: Ticket link, type: string }
@@ -70,7 +70,7 @@ content:
       - name: tier
         label: Tier
         type: select
-        options: { values: [Headline Partner, Event Partner, Supporter] }
+        options: { values: [Headline Partner, Event Partner, Supporter, Event sponsor] }
       - { name: logo, label: Logo, type: image }
       - { name: website, label: Website, type: string }
       - { name: blurb, label: Short description, type: text }
@@ -96,11 +96,14 @@ content:
     fields:
       - { name: draftMode, label: "Draft mode (shows banner, hides from Google)", type: boolean }
       - { name: shortName, label: Short name, type: string }
-      - { name: fullName, label: Full name, type: string }
+      - { name: fullName, label: Legal name (charity register), type: string }
+      - { name: displayName, label: Name shown on the site, type: string }
+      - { name: founded, label: Year founded, type: string }
       - { name: tagline, label: Tagline, type: string }
       - { name: intro, label: Home page intro, type: text }
       - { name: brandColour, label: "Brand colour (hex, e.g. #9b1b5a)", type: string }
       - { name: mcassLogo, label: MCASS logo, type: image }
+      - { name: mcassLogoLight, label: MCASS logo (white version for dark footer), type: image }
       - { name: icaewLogo, label: ICAEW logo, type: image, description: "Use the official file supplied by ICAEW." }
       - { name: acaLogo, label: ACA logo, type: image, description: "Use the official file supplied by ICAEW." }
       - { name: email, label: General email, type: string }
@@ -112,6 +115,7 @@ content:
       - { name: instagramUrl, label: Instagram URL, type: string }
       - { name: icaewPageUrl, label: MCASS page on icaew.com, type: string }
       - { name: joinUrl, label: Join / sign-up link, type: string }
+      - { name: mailingListUrl, label: "Mailing list sign-up form link (e.g. Mailchimp or Microsoft Forms). Leave blank to use email.", type: string }
       - { name: heroImage, label: Home page main photo, type: image }
       - { name: cloudflareAnalyticsToken, label: Cloudflare Web Analytics token, type: string }
       - name: stats

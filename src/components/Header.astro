@@ -8,10 +8,12 @@ const active = (href: string) => path.startsWith(href);
 
 <div class="bg-accent-500 text-white">
     <div class="container-site flex h-9 items-center justify-between gap-4 text-xs">
-        <p class="hidden truncate sm:block">ICAEW student society for Greater Manchester</p>
+        <p class="hidden truncate sm:block">{site.displayName}</p>
         <ul class="flex items-center gap-5">
-            <li><a href={`mailto:${site.email}`} class="hover:underline">{site.email}</a></li>
+            <li class="hidden md:block"><a href={`mailto:${site.email}`} class="hover:underline">{site.email}</a></li>
             {site.instagramUrl && <li><a href={site.instagramUrl} class="hover:underline">Instagram</a></li>}
+            {site.linkedinUrl && <li><a href={site.linkedinUrl} class="hover:underline">LinkedIn</a></li>}
+            <li><a href="/join/" class="font-bold hover:underline">Mailing list</a></li>
             <li><a href="/sponsors/" class="font-bold hover:underline">Sponsor us</a></li>
         </ul>
     </div>

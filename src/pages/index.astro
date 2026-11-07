@@ -6,32 +6,34 @@ import Hero from '../components/Hero.astro';
 import Gallery from '../components/Gallery.astro';
 import EventCard from '../components/EventCard.astro';
 import site from '../data/site.json';
-import { getEvents, getActiveSponsors } from '../lib/format';
+import { getEvents, getActiveSponsors, mailingListHref } from '../lib/format';
 
-const { upcoming } = await getEvents();
+const { upcoming, past } = await getEvents();
+const showUpcoming = upcoming.length > 0;
+const eventList = showUpcoming ? upcoming.slice(0, 3) : past.slice(0, 3);
 const sponsors = await getActiveSponsors();
 const areas = [
-    { title: 'Revision', text: 'Sessions before each exam sitting.', photo: 'Revision session', href: '/events/' },
-    { title: 'Networking', text: 'Meet people from other firms.', photo: 'Networking event', href: '/events/' },
-    { title: 'Socials and sport', text: 'Post-exam socials and the Summer Games.', photo: 'Summer Games', href: '/events/' }
+    { title: 'Socials', text: 'Quiz nights, golf and the Christmas party.', photo: 'Quiz night at BOX Deansgate', href: '/events/' },
+    { title: 'Fitness', text: 'Run club and discounted Barry\'s classes.', photo: 'Run club or Barry\'s class', href: '/events/' },
+    { title: 'The Annual Ball', text: 'Black tie, every September.', photo: 'Annual Ball 2026, The Deansgate Hotel', href: '/events/' }
 ];
 ---
 
 <Layout>
     <Hero image={site.heroImage} label="Annual Ball (wide shot)" tall>
-        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">ICAEW student society</p>
-        <h1 class="mt-4 max-w-3xl text-white">For ACA trainees in Greater Manchester</h1>
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">{site.displayName}</p>
+        <h1 class="mt-4 max-w-3xl text-white">Uniting Manchester's trainee accountants since {site.founded}</h1>
         <p class="mt-5 max-w-xl text-lg text-white/85">{site.intro}</p>
         <div class="mt-8 flex flex-wrap gap-3">
             <a href="/events/" class="btn-primary">View events</a>
-            <a href="/sponsors/" class="btn-light">Sponsorship</a>
+            <a href={mailingListHref} class="btn-light">Join the mailing list</a>
         </div>
     </Hero>
 
     <section class="border-b border-ink-100">
         <div class="container-site flex flex-wrap items-center justify-center gap-6 py-6">
             <div class="flex items-center gap-6">
-                <Logo kind="mcass" size="sm" />
+                <Logo kind="mcass" size="lg" />
                 <Logo kind="icaew" />
                 <Logo kind="aca" />
             </div>
@@ -89,7 +91,7 @@ const areas = [
         <div class="grid lg:grid-cols-2">
             <Photo alt="Committee" label="Committee group photo" class="aspect-[4/3] lg:aspect-auto lg:h-full" />
             <div class="px-4 py-14 sm:px-12 lg:py-20">
-                <h2>Run by trainees since {site.registeredSince}</h2>
+                <h2>Run by trainees</h2>
                 <p class="mt-5 max-w-lg leading-relaxed text-stone-600">A committee of ACA trainees, elected every year, organises everything we do.</p>
                 <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
                 <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
@@ -111,13 +113,13 @@ const areas = [
         <div class="container-site reveal">
             <div class="flex flex-wrap items-end justify-between gap-4">
                 <div>
-                    <h2>Upcoming events</h2>
+                    <h2>{showUpcoming ? 'Upcoming events' : 'Recent events'}</h2>
                 </div>
                 <a href="/events/" class="text-xs font-bold uppercase tracking-[0.12em] text-ink-900 underline underline-offset-4">All events</a>
             </div>
             {
-                upcoming.length ? (
-                    <div class="mt-10 grid gap-6 md:grid-cols-3">{upcoming.slice(0, 3).map((e) => <EventCard event={e} />)}</div>
+                eventList.length ? (
+                    <div class="mt-10 grid gap-6 md:grid-cols-3">{eventList.map((e) => <EventCard event={e} />)}</div>
                 ) : (
                     <p class="mt-8 text-stone-600">Nothing booked yet. Check back soon.</p>
                 )
@@ -129,8 +131,18 @@ const areas = [
         <div class="container-site reveal">
             <h2>Photos</h2>
             <div class="mt-10">
-                <Gallery labels={['Annual Ball', 'Summer Games', 'Post-exam social', 'Revision session', 'Awards']} />
+                <Gallery labels={['Annual Ball 2026', 'Quiz night', 'Run club', 'Golf at Pitch', 'Christmas social']} />
             </div>
+        </div>
+    </section>
+
+    <section class="bg-accent-500 text-white">
+        <div class="container-site flex flex-wrap items-center justify-between gap-6 py-12">
+            <div>
+                <h2 class="text-white">Never miss an event</h2>
+                <p class="mt-2 text-white/85">Join the mailing list for event dates and ticket links.</p>
+            </div>
+            <a href={mailingListHref} class="btn-light">Sign up</a>
         </div>
     </section>
 

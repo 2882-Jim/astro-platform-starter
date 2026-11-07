@@ -2,7 +2,8 @@ import { getCollection } from 'astro:content';
 
 export function formatEventDate(date: Date, confirmed: boolean): string {
     if (!confirmed) {
-        return `Date TBC (${date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'Europe/London' })})`;
+        const month = date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'Europe/London' });
+        return date < new Date() ? month : `Date TBC (${month})`;
     }
     return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/London' });
 }
@@ -18,7 +19,11 @@ export async function getEvents() {
 }
 
 export async function getActiveSponsors() {
-    const order = ['Headline Partner', 'Event Partner', 'Supporter'];
+    const order = ['Headline Partner', 'Event Partner', 'Supporter', 'Event sponsor'];
     const all = await getCollection('sponsors', (s) => s.data.active);
     return all.sort((a, b) => order.indexOf(a.data.tier) - order.indexOf(b.data.tier) || a.data.order - b.data.order);
 }
+
+import site from '../data/site.json';
+/** Mailing list sign-up link: the form URL if set in Site settings, otherwise an email. */
+export const mailingListHref = site.mailingListUrl || `mailto:${site.email}?subject=${encodeURIComponent('Add me to the MCASS mailing list')}`;

@@ -1,16 +1,16 @@
 ---
 title: About MCASS
-description: The ICAEW student society for ACA trainees in Greater Manchester.
+description: The ICAEW student society for trainee accountants in Greater Manchester.
 ---
 
-MCASS is the ICAEW student society for Greater Manchester. If you're training for the ACA here, it's your society. We've been a registered charity since 1963 (number 217014).
+The Manchester Chartered Accountant Students' Society (MCASS) has been bringing Manchester's trainee accountants together since 1882. We're the ICAEW student society for Greater Manchester and a registered charity (number 217014).
 
 ## What we do
 
+- Socials: quiz nights, golf, the Christmas party
+- Fitness: run club and discounted Barry's classes
 - Revision sessions before ACA exam sittings
-- Networking events with local firms
-- Post-exam socials and the Summer Games
-- The Annual Ball
+- The Annual Ball every September
 
 ## Who runs it
 

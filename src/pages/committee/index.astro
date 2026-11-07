@@ -8,30 +8,48 @@ import Breadcrumbs from '../../components/Breadcrumbs.astro';
 const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
 ---
 
-<Layout title="Committee" description="Meet the student committee that runs MCASS.">
+<Layout title="Committee" description="Meet the committee that runs MCASS.">
     <Hero label="Full committee group photo">
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">The committee</p>
         <h1 class="mt-4 text-white">Meet the committee</h1>
-        <p class="mt-4 max-w-xl text-lg text-white/85">We're ACA trainees, elected each year. Click a name to find out more.</p>
+        <p class="mt-4 max-w-xl text-lg text-white/85">We're trainee accountants, elected each year. Hover over (or tap) someone to find out more.</p>
     </Hero>
     <Breadcrumbs trail={[{ label: 'Committee' }]} />
     <section class="section">
         <div class="container-site">
-            <ul class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+            <ul class="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4">
                 {
-                    committee.map((m) => (
-                        <li class="reveal">
-                            <a href={`/committee/${m.id}/`} class="lift group block border border-ink-100 bg-white">
-                                <Photo src={m.data.photo} alt={m.data.name} label={`${m.data.role} headshot`} class="aspect-[4/5]" />
-                                <div class="border-t-4 border-accent-500 p-4">
-                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-accent-500">{m.data.role}</p>
-                                    <p class="mt-1 text-lg font-bold text-ink-900">{m.data.name}</p>
-                                    {m.data.firm && <p class="text-xs text-stone-500">{m.data.firm}</p>}
-                                    <p class="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-ink-900 group-hover:text-accent-500">Profile →</p>
+                    committee.map((m) => {
+                        const d = m.data;
+                        return (
+                            <li class="reveal">
+                                <div tabindex="0" class="group relative block overflow-hidden border border-ink-100 bg-white outline-none focus-visible:ring-2 focus-visible:ring-accent-500">
+                                    <Photo src={d.photo} alt={d.name} label={`${d.role} headshot`} class="aspect-[4/5]" />
+                                    <div class="border-t-4 border-accent-500 p-4">
+                                        <p class="text-xs font-bold uppercase tracking-[0.12em] text-accent-500">{d.role}</p>
+                                        <p class="mt-1 text-lg font-bold text-ink-900">{d.name}</p>
+                                    </div>
+                                    {/* More info slides up on hover, or on tap/keyboard focus */}
+                                    <div class="absolute inset-0 flex translate-y-full flex-col overflow-y-auto bg-ink-900 p-5 text-sm text-white transition-transform duration-300 ease-out group-hover:translate-y-0 group-focus-within:translate-y-0">
+                                        <p class="text-xs font-bold uppercase tracking-[0.12em] text-white/70">{d.role}</p>
+                                        <p class="mt-1 text-lg font-bold">{d.name}</p>
+                                        {d.quote && <p class="mt-3 border-l-2 border-accent-500 pl-3 italic text-white/90">“{d.quote}”</p>}
+                                        {d.bio && <p class="mt-3 text-white/80">{d.bio}</p>}
+                                        <dl class="mt-3 space-y-1 text-xs text-white/80">
+                                            {d.firm && <div><dt class="inline font-bold text-white">Firm: </dt><dd class="inline">{d.firm}</dd></div>}
+                                            {d.stage && <div><dt class="inline font-bold text-white">ACA stage: </dt><dd class="inline">{d.stage}</dd></div>}
+                                            {d.favouriteEvent && <div><dt class="inline font-bold text-white">Favourite event: </dt><dd class="inline">{d.favouriteEvent}</dd></div>}
+                                            {d.funFact && <div><dt class="inline font-bold text-white">Fun fact: </dt><dd class="inline">{d.funFact}</dd></div>}
+                                        </dl>
+                                        <div class="mt-auto flex gap-3 pt-4 text-xs font-bold uppercase tracking-[0.12em]">
+                                            {d.linkedinUrl && <a href={d.linkedinUrl} class="underline hover:text-accent-500">LinkedIn</a>}
+                                            {d.email && <a href={`mailto:${d.email}`} class="underline hover:text-accent-500">Email</a>}
+                                        </div>
+                                    </div>
                                 </div>
-                            </a>
-                        </li>
-                    ))
+                            </li>
+                        );
+                    })
                 }
             </ul>
         </div>

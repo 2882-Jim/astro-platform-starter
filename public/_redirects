@@ -5,3 +5,5 @@
 # /sponsorship   /sponsors/  301
 /sponsorship  /sponsors/  301
 /partners     /sponsors/  301
+/event-details/*  /events/  301
+/events-1         /events/  301

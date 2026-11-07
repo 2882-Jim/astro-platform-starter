@@ -2,6 +2,7 @@
 import site from '../data/site.json';
 import nav from '../data/nav.json';
 import Logo from './Logo.astro';
+import { mailingListHref } from '../lib/format';
 const year = new Date().getFullYear();
 ---
 
@@ -9,7 +10,7 @@ const year = new Date().getFullYear();
     <div class="container-site grid gap-10 py-14 md:grid-cols-4">
         <div>
             <Logo kind="mcass" tone="light" />
-            <p class="mt-4 text-sm leading-relaxed">{site.tagline}</p>
+            <p class="mt-4 text-sm leading-relaxed">{site.displayName}. {site.tagline}</p>
             <div class="mt-6 flex items-center gap-3">
                 <Logo kind="icaew" tone="light" size="sm" />
                 <Logo kind="aca" tone="light" size="sm" />
@@ -29,6 +30,7 @@ const year = new Date().getFullYear();
                 <li>Events: <a class="underline hover:text-white" href={`mailto:${site.eventsEmail}`}>{site.eventsEmail}</a></li>
                 {site.instagramUrl && <li><a class="underline hover:text-white" href={site.instagramUrl}>Instagram</a></li>}
                 {site.linkedinUrl && <li><a class="underline hover:text-white" href={site.linkedinUrl}>LinkedIn</a></li>}
+                <li><a class="underline hover:text-white" href={mailingListHref}>Join the mailing list</a></li>
             </ul>
         </div>
         <div class="text-sm">

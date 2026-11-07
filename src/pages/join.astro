@@ -2,6 +2,7 @@
 import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
+import { mailingListHref } from '../lib/format';
 const page = await getEntry('pages', 'join');
 if (!page) throw new Error('Missing src/content/pages/join.md');
 const { Content } = await page.render();
@@ -10,9 +11,16 @@ const { Content } = await page.render();
 <Layout title={page.data.title} description={page.data.description ?? undefined}>
     <Breadcrumbs trail={[{ label: 'Membership' }]} />
     <section class="section">
-        <div class="container-site">
-            <h1>{page.data.title}</h1>
-            <div class="prose-site mt-6"><Content /></div>
+        <div class="container-site grid gap-12 lg:grid-cols-[3fr_2fr]">
+            <div>
+                <h1>{page.data.title}</h1>
+                <div class="prose-site mt-6"><Content /></div>
+            </div>
+            <aside class="self-start border-t-4 border-accent-500 bg-ink-50 p-8">
+                <h2 class="text-xl">Mailing list</h2>
+                <p class="mt-2 text-stone-600">Get event dates and ticket links by email.</p>
+                <a href={mailingListHref} class="btn-primary mt-6 w-full">Sign up to the mailing list</a>
+            </aside>
         </div>
     </section>
 </Layout>
