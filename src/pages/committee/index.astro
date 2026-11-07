@@ -1,0 +1,39 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Hero from '../../components/Hero.astro';
+import Photo from '../../components/Photo.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
+---
+
+<Layout title="Committee" description="Meet the student committee that runs MCASS.">
+    <Hero label="Full committee group photo">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">The committee</p>
+        <h1 class="mt-4 text-white">Meet the committee</h1>
+        <p class="mt-4 max-w-xl text-lg text-white/85">MCASS is run by ACA students, elected each year. Select a member to read their profile.</p>
+    </Hero>
+    <Breadcrumbs trail={[{ label: 'Committee' }]} />
+    <section class="section">
+        <div class="container-site">
+            <ul class="grid grid-cols-2 gap-6 md:grid-cols-3 lg:grid-cols-4">
+                {
+                    committee.map((m) => (
+                        <li class="reveal">
+                            <a href={`/committee/${m.id}/`} class="lift group block border border-ink-100 bg-white">
+                                <Photo src={m.data.photo} alt={m.data.name} label={`${m.data.role} headshot`} class="aspect-[4/5]" />
+                                <div class="border-t-4 border-accent-500 p-4">
+                                    <p class="text-xs font-bold uppercase tracking-[0.12em] text-accent-500">{m.data.role}</p>
+                                    <p class="mt-1 text-lg font-bold text-ink-900">{m.data.name}</p>
+                                    {m.data.firm && <p class="text-xs text-stone-500">{m.data.firm}</p>}
+                                    <p class="mt-3 text-xs font-bold uppercase tracking-[0.12em] text-ink-900 group-hover:text-accent-500">View profile →</p>
+                                </div>
+                            </a>
+                        </li>
+                    ))
+                }
+            </ul>
+        </div>
+    </section>
+</Layout>

@@ -1,0 +1,63 @@
+---
+import { getCollection } from 'astro:content';
+import Layout from '../../layouts/Layout.astro';
+import Photo from '../../components/Photo.astro';
+import Breadcrumbs from '../../components/Breadcrumbs.astro';
+
+export async function getStaticPaths() {
+    const all = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
+    return all.map((m, i) => ({ params: { id: m.id }, props: { m, prev: all[i - 1], next: all[i + 1] } }));
+}
+const { m, prev, next } = Astro.props;
+const d = m.data;
+const facts = [
+    { label: 'Role', value: d.role },
+    { label: 'Training firm', value: d.firm },
+    { label: 'ACA stage', value: d.stage },
+    { label: 'On the committee since', value: d.joined },
+    { label: 'Favourite MCASS event', value: d.favouriteEvent },
+    { label: 'Fun fact', value: d.funFact }
+].filter((f) => f.value);
+---
+
+<Layout title={`${d.name}, ${d.role}`} description={`${d.role} of MCASS.`}>
+    <Breadcrumbs trail={[{ label: 'Committee', href: '/committee/' }, { label: d.role }]} />
+    <section class="section">
+        <div class="container-site grid gap-12 lg:grid-cols-[2fr_3fr]">
+            <div class="reveal">
+                <Photo src={d.photo} alt={d.name} label={`${d.role} headshot (portrait)`} class="aspect-[4/5]" />
+                <div class="mt-4 flex flex-wrap gap-3">
+                    {d.linkedinUrl && <a href={d.linkedinUrl} class="btn-primary">LinkedIn</a>}
+                    {d.email && <a href={`mailto:${d.email}`} class="btn-dark">Email</a>}
+                </div>
+            </div>
+            <div class="reveal">
+                <p class="eyebrow">{d.role}</p>
+                <h1 class="mt-3">{d.name}</h1>
+                {d.quote && <blockquote class="mt-6 border-l-4 border-accent-500 pl-5 text-xl font-medium leading-relaxed text-ink-900">“{d.quote}”</blockquote>}
+                {d.bio && <p class="mt-6 max-w-2xl leading-relaxed text-stone-700">{d.bio}</p>}
+                <dl class="mt-8 grid gap-px bg-ink-100 sm:grid-cols-2">
+                    {
+                        facts.map((f) => (
+                            <div class="bg-white p-4">
+                                <dt class="text-xs font-bold uppercase tracking-[0.12em] text-stone-500">{f.label}</dt>
+                                <dd class="mt-1 text-ink-900">{f.value}</dd>
+                            </div>
+                        ))
+                    }
+                </dl>
+                {
+                    d.interests.length > 0 && (
+                        <ul class="mt-6 flex flex-wrap gap-2">
+                            {d.interests.map((t) => <li class="border border-accent-500 px-3 py-1 text-xs font-semibold text-accent-500">{t}</li>)}
+                        </ul>
+                    )
+                }
+                <div class="mt-10 grid grid-cols-2 gap-px bg-ink-100 text-sm">
+                    {prev ? <a href={`/committee/${prev.id}/`} class="bg-ink-50 p-4 hover:text-accent-500">← {prev.data.role}</a> : <span class="bg-ink-50" />}
+                    {next ? <a href={`/committee/${next.id}/`} class="bg-ink-50 p-4 text-right hover:text-accent-500">{next.data.role} →</a> : <span class="bg-ink-50" />}
+                </div>
+            </div>
+        </div>
+    </section>
+</Layout>

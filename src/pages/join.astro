@@ -1,4 +1,5 @@
 ---
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import { getEntry } from 'astro:content';
 import Layout from '../layouts/Layout.astro';
 const page = await getEntry('pages', 'join');
@@ -7,6 +8,7 @@ const { Content } = await page.render();
 ---
 
 <Layout title={page.data.title} description={page.data.description ?? undefined}>
+    <Breadcrumbs trail={[{ label: 'Membership' }]} />
     <section class="section">
         <div class="container-site">
             <h1>{page.data.title}</h1>

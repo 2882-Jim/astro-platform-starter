@@ -6,6 +6,7 @@ import '@fontsource/inter/700.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import site from '../data/site.json';
+import { ViewTransitions } from 'astro:transitions';
 
 interface Props {
     title?: string;
@@ -31,6 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <meta property="og:type" content="website" />
         <meta property="og:url" content={canonical} />
         {site.draftMode && <meta name="robots" content="noindex" />}
+        <ViewTransitions />
     </head>
     <body class="flex min-h-screen flex-col" style={`--accent:${site.brandColour || '#9b1b5a'}`}>
         <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
@@ -42,7 +44,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
             )
         }
         <Header />
-        <main id="main" class="grow"><slot /></main>
+        <main id="main" class="grow" transition:animate="fade"><slot /></main>
         <Footer />
         {
             site.cloudflareAnalyticsToken && (
@@ -54,5 +56,18 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
                 />
             )
         }
+        <script>
+            // Fade sections in as they scroll into view.
+            function setupReveal() {
+                if (window.matchMedia('(prefers-reduced-motion: reduce)').matches || !('IntersectionObserver' in window)) return;
+                document.documentElement.classList.add('js-reveal');
+                const io = new IntersectionObserver(
+                    (entries) => entries.forEach((e) => e.isIntersecting && (e.target.classList.add('is-visible'), io.unobserve(e.target))),
+                    { threshold: 0.12 }
+                );
+                document.querySelectorAll('.reveal').forEach((el) => io.observe(el));
+            }
+            document.addEventListener('astro:page-load', setupReveal);
+        </script>
     </body>
 </html>

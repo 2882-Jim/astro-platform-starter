@@ -29,3 +29,26 @@
     .prose-site a { @apply text-ink-600 underline; }
     .prose-site strong { @apply text-ink-900; }
 }
+
+@layer components {
+    /* Placeholder photos: hatched, dashed red border, clearly labelled. */
+    .placeholder {
+        @apply flex flex-col items-center justify-center gap-2 border-2 border-dashed border-accent-500 p-4 text-center;
+        background: repeating-linear-gradient(45deg, #f5f5f4, #f5f5f4 12px, #ebe9e7 12px, #ebe9e7 24px);
+    }
+    .placeholder-dark {
+        background: repeating-linear-gradient(45deg, #57534e, #57534e 14px, #4a4642 14px, #4a4642 28px);
+    }
+    .zoom { @apply transition-transform duration-700 ease-out; }
+    .group:hover .zoom, .zoom:hover { transform: scale(1.04); }
+    .lift { @apply transition duration-300 hover:-translate-y-1 hover:shadow-lg; }
+    .link-underline { @apply bg-[length:0%_2px] bg-left-bottom bg-no-repeat transition-all duration-300 hover:bg-[length:100%_2px]; background-image: linear-gradient(var(--accent), var(--accent)); }
+}
+
+/* Fade-up on scroll. Content is visible by default; script adds .js-reveal. */
+.js-reveal .reveal { opacity: 0; transform: translateY(16px); transition: opacity 0.7s ease, transform 0.7s ease; }
+.js-reveal .reveal.is-visible { opacity: 1; transform: none; }
+@media (prefers-reduced-motion: reduce) {
+    .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
+    .zoom, .lift { transition: none; }
+}

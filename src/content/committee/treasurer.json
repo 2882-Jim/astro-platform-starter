@@ -4,5 +4,13 @@
     "firm": "[Training firm]",
     "photo": "",
     "linkedinUrl": "",
-    "order": 3
+    "order": 3,
+    "bio": "[A short introduction: who you are, where you train and what you do on the committee.]",
+    "quote": "[One line on why you joined MCASS.]",
+    "stage": "[e.g. Professional Level]",
+    "joined": "[Year]",
+    "favouriteEvent": "[e.g. The Annual Ball]",
+    "funFact": "[Something people might not know about you.]",
+    "email": "",
+    "interests": []
 }

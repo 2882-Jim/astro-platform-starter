@@ -8,18 +8,22 @@ interface Props {
 const { image, label, tall = false } = Astro.props;
 ---
 
-<section class:list={['relative isolate flex items-end bg-stone-500', tall ? 'min-h-[70vh]' : 'min-h-[45vh]']}>
+<section class:list={['relative isolate flex items-end overflow-hidden bg-ink-800', tall ? 'min-h-[72vh]' : 'min-h-[48vh]']}>
     {
         image ? (
-            <img src={image} alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" />
+            <img src={image} alt="" class="hero-img absolute inset-0 -z-10 h-full w-full object-cover" />
         ) : (
-            <div class="absolute inset-0 -z-10 flex items-start justify-end p-4 text-right text-xs uppercase tracking-[0.2em] text-white/70">
-                Photo: {label}
+            <div class="placeholder-dark absolute inset-0 -z-10">
+                <div class="absolute right-4 top-4 flex items-center gap-2 border-2 border-dashed border-white/70 bg-black/40 px-3 py-2 text-xs text-white">
+                    <span class="bg-accent-500 px-2 py-0.5 font-bold uppercase tracking-[0.2em]">Placeholder photo</span>
+                    <span>Replace with: {label}</span>
+                </div>
             </div>
         )
     }
-    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
-    <div class="container-site w-full pb-12 pt-32 text-white sm:pb-16">
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black/85 via-black/45 to-transparent"></div>
+    <div class="absolute bottom-0 left-0 -z-10 h-1.5 w-full bg-accent-500"></div>
+    <div class="container-site reveal w-full pb-12 pt-32 text-white sm:pb-16">
         <slot />
     </div>
 </section>

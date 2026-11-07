@@ -1,6 +1,6 @@
 ---
-// Shows the photo if one is set, otherwise a labelled placeholder
-// so the committee can see which picture goes where.
+// Shows the photo if one is set. Otherwise shows an unmistakable placeholder
+// telling the committee which photo to upload there.
 interface Props {
     src?: string | null;
     alt: string;
@@ -12,15 +12,17 @@ const { src, alt, label, class: className = 'aspect-[4/3]' } = Astro.props;
 
 {
     src ? (
-        <img src={src} alt={alt} loading="lazy" class:list={['h-full w-full object-cover', className]} />
+        <div class:list={['overflow-hidden', className]}>
+            <img src={src} alt={alt} loading="lazy" class="zoom h-full w-full object-cover" />
+        </div>
     ) : (
-        <div
-            role="img"
-            aria-label={`Photo placeholder: ${label ?? alt}`}
-            class:list={['flex flex-col items-center justify-center gap-1 bg-stone-100 p-4 text-center text-stone-500 outline outline-1 -outline-offset-8 outline-stone-300', className]}
-        >
-            <span class="text-[10px] font-semibold uppercase tracking-[0.2em]">Photo</span>
-            <span class="text-sm">{label ?? alt}</span>
+        <div role="img" aria-label={`Placeholder photo: ${label ?? alt}`} class:list={['placeholder', className]}>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" class="h-8 w-8 text-accent-500" aria-hidden="true">
+                <path d="M3 7h3l2-3h8l2 3h3v13H3z" />
+                <circle cx="12" cy="13" r="4" />
+            </svg>
+            <span class="bg-accent-500 px-2 py-0.5 text-[10px] font-bold uppercase tracking-[0.2em] text-white">Placeholder photo</span>
+            <span class="max-w-[16rem] text-sm font-medium text-ink-900">Replace with: {label ?? alt}</span>
         </div>
     )
 }

@@ -1,37 +1,40 @@
 ---
 import Logo from './Logo.astro';
-const links = [
-    { href: '/about/', label: 'About' },
-    { href: '/events/', label: 'Events' },
-    { href: '/sponsors/', label: 'Sponsorship' },
-    { href: '/join/', label: 'Membership' },
-    { href: '/contact/', label: 'Contact' }
-];
+import site from '../data/site.json';
+import nav from '../data/nav.json';
 const path = Astro.url.pathname;
+const active = (href: string) => path.startsWith(href);
 ---
 
-<header class="sticky top-0 z-40 border-b border-stone-200 bg-white">
+<div class="bg-accent-500 text-white">
+    <div class="container-site flex h-9 items-center justify-between gap-4 text-xs">
+        <p class="hidden truncate sm:block">ICAEW student society for Greater Manchester</p>
+        <ul class="flex items-center gap-5">
+            <li><a href={`mailto:${site.email}`} class="hover:underline">{site.email}</a></li>
+            {site.instagramUrl && <li><a href={site.instagramUrl} class="hover:underline">Instagram</a></li>}
+            <li><a href="/sponsors/" class="font-bold hover:underline">Sponsor us</a></li>
+        </ul>
+    </div>
+</div>
+<header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
     <div class="container-site flex h-20 items-center justify-between gap-6">
-        <a href="/" class="flex items-center gap-4 no-underline" aria-label="MCASS home">
+        <a href="/" class="flex items-center gap-4" aria-label="MCASS home">
             <Logo kind="mcass" />
-            <span class="hidden h-8 w-px bg-stone-300 sm:block"></span>
+            <span class="hidden h-8 w-px bg-ink-100 sm:block"></span>
             <span class="hidden items-center gap-2 sm:flex">
                 <Logo kind="icaew" size="sm" />
                 <Logo kind="aca" size="sm" />
             </span>
         </a>
         <nav aria-label="Main" class="hidden lg:block">
-            <ul class="flex items-center gap-8 text-sm">
+            <ul class="flex items-center gap-7 text-sm font-medium">
                 {
-                    links.map((l) => (
+                    nav.main.map((l) => (
                         <li>
                             <a
                                 href={l.href}
-                                class:list={[
-                                    'border-b-2 py-1 no-underline hover:border-ink-900',
-                                    path.startsWith(l.href) ? 'border-accent-500 text-ink-900' : 'border-transparent text-stone-600'
-                                ]}
-                                aria-current={path.startsWith(l.href) ? 'page' : undefined}
+                                class:list={['link-underline py-1', active(l.href) ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']}
+                                aria-current={active(l.href) ? 'page' : undefined}
                             >
                                 {l.label}
                             </a>
@@ -40,13 +43,13 @@ const path = Astro.url.pathname;
                 }
             </ul>
         </nav>
-        <details class="relative lg:hidden">
-            <summary class="cursor-pointer list-none border border-stone-300 px-3 py-2 text-xs font-semibold uppercase tracking-widest">Menu</summary>
-            <ul class="absolute right-0 mt-2 w-56 border border-stone-200 bg-white py-2 shadow-lg">
+        <details class="group relative lg:hidden">
+            <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">Menu</summary>
+            <ul class="absolute right-0 mt-2 w-64 border-t-4 border-accent-500 bg-white py-2 shadow-xl">
                 {
-                    links.map((l) => (
+                    nav.main.map((l) => (
                         <li>
-                            <a href={l.href} class="block px-4 py-2 text-sm no-underline hover:bg-ink-50">
+                            <a href={l.href} class:list={['block px-5 py-3 text-sm hover:bg-ink-50', active(l.href) && 'font-bold text-accent-500']}>
                                 {l.label}
                             </a>
                         </li>

@@ -1,5 +1,6 @@
 ---
-import { getCollection, getEntry } from 'astro:content';
+import { getEntry } from 'astro:content';
+import Breadcrumbs from '../components/Breadcrumbs.astro';
 import Layout from '../layouts/Layout.astro';
 import Photo from '../components/Photo.astro';
 import Hero from '../components/Hero.astro';
@@ -8,7 +9,6 @@ import Gallery from '../components/Gallery.astro';
 const page = await getEntry('pages', 'about');
 if (!page) throw new Error('Missing src/content/pages/about.md');
 const { Content } = await page.render();
-const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
 ---
 
 <Layout title={page.data.title} description={page.data.description ?? undefined}>
@@ -16,6 +16,7 @@ const committee = (await getCollection('committee')).sort((a, b) => a.data.order
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">About</p>
         <h1 class="mt-4 text-white">{page.data.title}</h1>
     </Hero>
+    <Breadcrumbs trail={[{ label: 'About' }]} />
     <section class="section">
         <div class="container-site grid gap-12 lg:grid-cols-[3fr_2fr]">
             <div class="prose-site"><Content /></div>
@@ -25,22 +26,13 @@ const committee = (await getCollection('committee')).sort((a, b) => a.data.order
             </div>
         </div>
     </section>
-    <section class="section bg-ink-50">
-        <div class="container-site">
-            <h2>Meet the committee</h2>
-            <ul class="mt-10 grid grid-cols-2 gap-6 sm:grid-cols-3 lg:grid-cols-4">
-                {
-                    committee.map((m) => (
-                        <li class="border border-stone-200 bg-white p-4">
-                            <Photo src={m.data.photo} alt={m.data.name} label={`Headshot: ${m.data.role}`} class="mx-auto aspect-square w-full" />
-                            <p class="mt-4 text-lg font-bold text-ink-900">{m.data.name}</p>
-                            <p class="text-xs uppercase tracking-[0.12em] text-accent-600">{m.data.role}</p>
-                            {m.data.firm && <p class="text-xs text-stone-500">{m.data.firm}</p>}
-                            {m.data.linkedinUrl && <a href={m.data.linkedinUrl} class="mt-2 inline-block text-xs text-ink-600 underline">LinkedIn</a>}
-                        </li>
-                    ))
-                }
-            </ul>
+    <section class="bg-accent-500 text-white">
+        <div class="container-site flex flex-wrap items-center justify-between gap-6 py-12">
+            <div>
+                <h2 class="text-white">Meet the committee</h2>
+                <p class="mt-2 text-white/85">Profiles of the students who run MCASS this year.</p>
+            </div>
+            <a href="/committee/" class="btn-light">View the committee</a>
         </div>
     </section>
     <section class="section">
