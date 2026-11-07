@@ -1,25 +1,60 @@
 ---
 import IcaewLinks from './IcaewLinks.astro';
 import site from '../data/site.json';
-import { nav } from '../data/nav';
-import { mailingListHref } from '../lib/format';
+import { nav, quickLinks, instagram, instagramHandle } from '../data/nav';
 const path = Astro.url.pathname;
 const active = (href: string) => path.startsWith(href);
 ---
 
-<div class="hidden bg-accent-500 text-white md:block">
-    <div class="container-site flex h-9 items-center justify-between gap-4 text-xs">
+<div class="relative z-50 bg-accent-500 text-white">
+    <div class="container-site flex h-10 items-center justify-between gap-4 text-xs">
         <p class="hidden truncate sm:block">{site.displayName}</p>
-        <ul class="flex items-center gap-5">
-            <li class="hidden md:block"><a href={`mailto:${site.email}`} class="hover:underline">{site.email}</a></li>
-            {site.instagramUrl && <li><a href={site.instagramUrl} class="hover:underline">Instagram</a></li>}
-            {site.linkedinUrl && <li><a href={site.linkedinUrl} class="hover:underline">LinkedIn</a></li>}
-            <li class="hidden md:block"><a href={site.icaewPageUrl} class="hover:underline">ICAEW page ↗</a></li>
-            <li><a href={mailingListHref} class="font-bold hover:underline">Join our mailing list</a></li>
-            <li><a href="/sponsors/" class="font-bold hover:underline">Sponsor us</a></li>
-        </ul>
+        <div class="ml-auto flex items-center gap-1">
+            {
+                instagram && (
+                    <a href={instagram} class="group flex items-center gap-2 px-3 py-2 transition-colors hover:bg-white/10" aria-label={`MCASS on Instagram (@${instagramHandle})`}>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true">
+                            <rect x="3" y="3" width="18" height="18" rx="5" />
+                            <circle cx="12" cy="12" r="4" />
+                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                        </svg>
+                        <span class="font-semibold">@{instagramHandle}</span>
+                    </a>
+                )
+            }
+            <span class="h-4 w-px bg-white/30" aria-hidden="true"></span>
+            <details class="quick-links group/ql relative">
+                <summary class="flex cursor-pointer list-none items-center gap-1.5 px-3 py-2 font-bold uppercase tracking-[0.12em] transition-colors hover:bg-white/10">
+                    Quick links
+                    <span class="text-[8px] transition-transform duration-200 group-open/ql:rotate-180" aria-hidden="true">▼</span>
+                </summary>
+                <ul class="absolute right-0 top-full w-64 border-t-4 border-ink-900 bg-white py-2 text-sm text-ink-900 shadow-xl ring-1 ring-black/5">
+                    {
+                        quickLinks.map((l) => (
+                            <li>
+                                <a href={l.href} class="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-ink-50 hover:text-accent-500">
+                                    {l.label}
+                                    <span class="text-xs text-accent-500" aria-hidden="true">{l.external ? '↗' : '→'}</span>
+                                </a>
+                            </li>
+                        ))
+                    }
+                </ul>
+            </details>
+        </div>
     </div>
 </div>
+<script>
+    // Close the Quick links dropdown when tapping or clicking anywhere else.
+    function setupQuickLinks() {
+        const dd = document.querySelector<HTMLDetailsElement>('details.quick-links');
+        if (!dd) return;
+        document.addEventListener('click', (e) => {
+            if (dd.open && !dd.contains(e.target as Node)) dd.open = false;
+        });
+    }
+    document.addEventListener('astro:page-load', setupQuickLinks);
+</script>
 <header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
     <div class="container-site relative flex h-20 items-center justify-between gap-6">
         <IcaewLinks />
@@ -37,10 +72,10 @@ const active = (href: string) => path.startsWith(href);
                                 aria-current={active(g.href) ? 'page' : undefined}
                             >
                                 {g.label}
-                                <span class="text-[9px] text-stone-400 transition-transform duration-200 group-hover/nav:rotate-180" aria-hidden="true">▼</span>
+                                {g.children.length > 0 && <span class="text-[9px] text-stone-400 transition-transform duration-200 group-hover/nav:rotate-180" aria-hidden="true">▼</span>}
                             </a>
                             {/* Dropdown: everything under this heading */}
-                            <ul class="invisible absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 translate-y-1 border-t-4 border-accent-500 bg-white py-2 opacity-0 shadow-xl ring-1 ring-black/5 transition duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100">
+                            {g.children.length > 0 && <ul class="invisible absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 translate-y-1 border-t-4 border-accent-500 bg-white py-2 opacity-0 shadow-xl ring-1 ring-black/5 transition duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100">
                                 {g.children.map((c) => (
                                     <li>
                                         <a href={c.href} class="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50 hover:text-accent-500">
@@ -49,7 +84,7 @@ const active = (href: string) => path.startsWith(href);
                                         </a>
                                     </li>
                                 ))}
-                            </ul>
+                            </ul>}
                         </li>
                     ))
                 }
@@ -63,7 +98,9 @@ const active = (href: string) => path.startsWith(href);
             <div class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t-4 border-accent-500 bg-white shadow-xl">
                 <a href="/" class="block border-b border-ink-100 px-5 py-4 text-base font-bold text-ink-900">Home</a>
                 {
-                    nav.map((g) => (
+                    nav.map((g) => g.children.length === 0 ? (
+                        <a href={g.href} class:list={['block border-b border-ink-100 px-5 py-4 text-base font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>{g.label}</a>
+                    ) : (
                         <details class="group/sub border-b border-ink-100">
                             <summary class:list={['flex cursor-pointer list-none items-center justify-between px-5 py-4 text-base font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>
                                 {g.label}

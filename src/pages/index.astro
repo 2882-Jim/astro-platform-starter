@@ -13,22 +13,6 @@ const sponsors = await getActiveSponsors();
 const showUpcoming = upcoming.length > 0;
 const eventList = showUpcoming ? upcoming.slice(0, 3) : past.slice(0, 3);
 
-// Quick links: site pages, ticket links and our official pages, in one place.
-// Any upcoming event with a ticket link gets its own "Tickets" tile.
-const eventTickets = upcoming
-    .filter((e) => e.data.ticketUrl)
-    .map((e) => ({ href: e.data.ticketUrl!, title: `Tickets: ${e.data.title}`, external: true }));
-const quickLinks = [
-    { href: site.ticketsUrl || '/events/', title: 'Buy tickets', external: Boolean(site.ticketsUrl) },
-    ...eventTickets,
-    { href: '/events/', title: 'Events', external: false },
-    { href: '/committee/', title: 'Committee', external: false },
-    { href: mailingListHref, title: 'Join our mailing list', external: true },
-    { href: '#photos', title: 'Photos', external: false },
-    { href: '/sponsors/', title: 'Sponsorship', external: false },
-    { href: site.icaewPageUrl, title: 'Our ICAEW page', external: true },
-    { href: site.charityRegisterUrl, title: 'Charity register', external: true }
-];
 const areas = [
     { title: 'Exams and revision', text: 'Revision sessions ahead of ACA exam sittings.', photo: 'Revision session', href: '/events/' },
     { title: 'Professional development', text: 'Talks and networking with firms across Greater Manchester.', photo: 'Networking event', href: '/events/' },
@@ -69,23 +53,6 @@ const areas = [
         </div>
     </section>
 
-    <section aria-labelledby="quick-links" class="border-y border-ink-100 bg-white">
-        <div class="container-site flex flex-col gap-4 py-6 md:flex-row md:items-center md:gap-10">
-            <h2 id="quick-links" class="shrink-0 text-xs font-semibold uppercase tracking-[0.2em] text-accent-500">Quick links</h2>
-            <ul class="grid grid-cols-2 gap-x-6 gap-y-3 sm:grid-cols-3 md:flex md:flex-wrap md:gap-x-8">
-                {
-                    quickLinks.map((q) => (
-                        <li>
-                            <a href={q.href} class="group inline-flex items-center gap-1.5 text-sm font-semibold text-ink-900 transition-colors hover:text-accent-500">
-                                <span class="link-underline">{q.title}</span>
-                                <span class="text-accent-500 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-px" aria-hidden="true">{q.external ? '↗' : '→'}</span>
-                            </a>
-                        </li>
-                    ))
-                }
-            </ul>
-        </div>
-    </section>
 
 
     <section id="events" class="section">
