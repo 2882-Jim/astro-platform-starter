@@ -3,63 +3,63 @@
   "version": 1,
   "madeWith": "final",
   "exportedOn": "2026-11-05",
-  "anonId": "p-9scvwtir",
+  "anonId": "p-7i88xcjm",
   "level": "Senior",
   "reports": [
     {
-      "id": "r-9scvwtir-0",
-      "date": "2026-09-28",
-      "section": "Revenue",
-      "type": "Missed something",
-      "wrong": "Lead list left out sales on the last day of the year.",
-      "caught": "Manager's review",
-      "impact": "A misleading note to the client",
-      "context": "real",
-      "task": "Pulling invoice details from scanned PDFs"
-    },
-    {
-      "id": "r-9scvwtir-1",
-      "date": "2026-10-20",
-      "section": "Related parties",
-      "type": "Made-up info",
-      "wrong": "Explained related parties with a rule that isn't in the standard.",
-      "caught": "Compared with my own working",
-      "impact": "A wrong conclusion on file",
-      "context": "real",
-      "task": "Finding directors' other companies on Companies House"
-    },
-    {
-      "id": "r-9scvwtir-2",
-      "date": "2026-10-09",
-      "section": "Cash and bank",
-      "type": "Wrong number",
-      "wrong": "Closing balance had two digits swapped.",
-      "caught": "",
-      "impact": "",
-      "context": "real",
-      "task": "Pulling balances from bank statements"
-    },
-    {
-      "id": "r-9scvwtir-3",
-      "date": "2026-11-05",
+      "id": "r-7i88xcjm-0",
+      "date": "2026-09-21",
       "section": "Revenue",
       "type": "Wrong number",
       "wrong": "Invoice total read as £1,850; the PDF says £1,580.",
-      "caught": "Reviewer asked for the quote",
-      "impact": "Testing the wrong sample",
+      "caught": "Checked against Companies House",
+      "impact": "",
       "context": "real",
       "task": "Flagging unusual sales near the year end (leads only)"
     },
     {
-      "id": "r-9scvwtir-4",
-      "date": "2026-10-15",
-      "section": "Revenue",
+      "id": "r-7i88xcjm-1",
+      "date": "2026-11-05",
+      "section": "Purchases",
       "type": "Wrong number",
-      "wrong": "VAT added twice in the sales schedule.",
+      "wrong": "Matched an invoice to the wrong ledger line.",
+      "caught": "Re-added it in Excel",
+      "impact": "A wrong figure on file",
+      "context": "real",
+      "task": "Drafting supplier statement requests"
+    },
+    {
+      "id": "r-7i88xcjm-2",
+      "date": "2026-09-25",
+      "section": "Cash and bank",
+      "type": "Missed or misread",
+      "wrong": "Old reconciling items list skipped one account.",
+      "caught": "Compared with my own working",
+      "impact": "A misleading note to the client",
+      "context": "real",
+      "task": "Drafting a bank confirmation request"
+    },
+    {
+      "id": "r-7i88xcjm-3",
+      "date": "2026-10-28",
+      "section": "Cash and bank",
+      "type": "Wrong number",
+      "wrong": "Closing balance had two digits swapped.",
       "caught": "Manager's review",
+      "impact": "A wrong figure on file",
+      "context": "real",
+      "task": "Spotting old reconciling items"
+    },
+    {
+      "id": "r-7i88xcjm-4",
+      "date": "2026-10-06",
+      "section": "Cash and bank",
+      "type": "Wrong number",
+      "wrong": "Bank balance copied from the wrong month.",
+      "caught": "Rechecked to the source document",
       "impact": "",
       "context": "real",
-      "task": "Flagging unusual sales near the year end (leads only)"
+      "task": "Drafting a bank confirmation request"
     }
   ],
   "steps": [
@@ -82,11 +82,24 @@
       2
     ]
   },
-  "settingsCopiedOn": "2026-11-03",
+  "settingsCopiedOn": "2026-11-02",
   "notes": [
     {
-      "id": "n-9scvwtir-0",
-      "date": "2026-09-23",
+      "id": "n-7i88xcjm-0",
+      "date": "2026-10-16",
+      "task": "Explaining a payroll report layout (made-up example)",
+      "tool": "A local model",
+      "checked": [
+        false,
+        true,
+        false,
+        true
+      ],
+      "reviewerRole": "Manager"
+    },
+    {
+      "id": "n-7i88xcjm-1",
+      "date": "2026-09-08",
       "task": "Searching for unrecorded liabilities",
       "tool": "Claude",
       "checked": [
@@ -98,39 +111,26 @@
       "reviewerRole": "Manager"
     },
     {
-      "id": "n-9scvwtir-1",
-      "date": "2026-10-14",
-      "task": "Drafting a bank confirmation request",
-      "tool": "Claude",
+      "id": "n-7i88xcjm-2",
+      "date": "2026-09-11",
+      "task": "Drafting supplier statement requests",
+      "tool": "Microsoft 365 Copilot",
       "checked": [
-        true,
-        true,
         false,
+        true,
+        true,
         true
       ],
       "reviewerRole": "Manager"
     },
     {
-      "id": "n-9scvwtir-2",
-      "date": "2026-09-09",
-      "task": "Process notes from meeting notes",
+      "id": "n-7i88xcjm-3",
+      "date": "2026-10-16",
+      "task": "Finding every place a figure appears",
       "tool": "Microsoft 365 Copilot",
       "checked": [
         true,
-        true,
-        true,
-        true
-      ],
-      "reviewerRole": "Manager"
-    },
-    {
-      "id": "n-9scvwtir-3",
-      "date": "2026-10-16",
-      "task": "Process notes from meeting notes",
-      "tool": "Claude",
-      "checked": [
-        true,
-        true,
+        false,
         true,
         true
       ],
@@ -139,7 +139,7 @@
   ],
   "pilots": [
     {
-      "id": "pl-9scvwtir-0",
+      "id": "pl-7i88xcjm-0",
       "goal": "Pulling balances from bank statements",
       "tool": "Microsoft 365 Copilot",
       "baselineMinutes": 40,
@@ -149,7 +149,7 @@
       "stillUsing": 4
     },
     {
-      "id": "pl-9scvwtir-1",
+      "id": "pl-7i88xcjm-1",
       "goal": "Matching invoices to the ledger",
       "tool": "Claude",
       "baselineMinutes": 50,

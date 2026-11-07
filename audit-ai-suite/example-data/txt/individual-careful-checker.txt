@@ -3,25 +3,69 @@
   "version": 1,
   "madeWith": "final",
   "exportedOn": "2026-11-06",
-  "anonId": "p-23zcm464",
+  "anonId": "p-58mpxjwh",
   "level": "Manager",
   "reports": [
     {
-      "id": "r-23zcm464-0",
-      "date": "2026-10-27",
-      "section": "Planning",
-      "type": "Wrong judgement",
-      "wrong": "Suggested materiality on profit when the entity makes a loss.",
-      "caught": "Re-added it in Excel",
+      "id": "r-58mpxjwh-0",
+      "date": "2026-11-02",
+      "section": "Accounts and disclosures",
+      "type": "Missed or misread",
+      "wrong": "Missed a note where the figure also appears.",
+      "caught": "Read the clause myself",
       "impact": "A misleading note to the client",
       "context": "real",
-      "task": "Industry research from public news"
+      "task": "Finding every place a figure appears"
     },
     {
-      "id": "r-23zcm464-1",
+      "id": "r-58mpxjwh-1",
+      "date": "2026-10-23",
+      "section": "Related parties",
+      "type": "Made something up",
+      "wrong": "Said a director resigned in 2024; the record shows no change.",
+      "caught": "Rechecked to the source document",
+      "impact": "",
+      "context": "real",
+      "task": "Explaining what counts as a related party"
+    },
+    {
+      "id": "r-58mpxjwh-2",
+      "date": "2026-09-18",
+      "section": "Revenue",
+      "type": "Wrong number",
+      "wrong": "Wrong invoice date copied from a scan.",
+      "caught": "Rechecked to the source document",
+      "impact": "",
+      "context": "real",
+      "task": "Deciding if revenue is recognised correctly"
+    },
+    {
+      "id": "r-58mpxjwh-3",
+      "date": "2026-11-04",
+      "section": "Planning",
+      "type": "Missed or misread",
+      "wrong": "Risk summary skipped the fraud risk in revenue.",
+      "caught": "Read the clause myself",
+      "impact": "",
+      "context": "real",
+      "task": "Setting materiality"
+    },
+    {
+      "id": "r-58mpxjwh-4",
+      "date": "2026-11-05",
+      "section": "Accounts and disclosures",
+      "type": "Missed or misread",
+      "wrong": "Checklist first pass skipped the going concern section.",
+      "caught": "Re-added it in Excel",
+      "impact": "",
+      "context": "real",
+      "task": "First pass against the disclosure checklist"
+    },
+    {
+      "id": "r-58mpxjwh-5",
       "date": "2026-10-26",
       "section": "Walkthroughs and controls",
-      "type": "Made-up info",
+      "type": "Made something up",
       "wrong": "Process flow added a control the client doesn't have.",
       "caught": "Reviewer asked for the quote",
       "impact": "",
@@ -29,21 +73,21 @@
       "task": "Process notes from meeting notes"
     },
     {
-      "id": "r-23zcm464-2",
+      "id": "r-58mpxjwh-6",
       "date": "2026-10-16",
       "section": "Related parties",
-      "type": "Made-up info",
-      "wrong": "Added a company to the group chart that doesn't exist.",
+      "type": "Made something up",
+      "wrong": "Invented a related party loan that isn't in the minutes.",
       "caught": "Re-added it in Excel",
       "impact": "",
       "context": "real",
       "task": "Explaining what counts as a related party"
     },
     {
-      "id": "r-23zcm464-3",
+      "id": "r-58mpxjwh-7",
       "date": "2026-11-03",
       "section": "Walkthroughs and controls",
-      "type": "Made-up info",
+      "type": "Made something up",
       "wrong": "Process notes said invoices are approved twice; the notes say once.",
       "caught": "Compared with my own working",
       "impact": "Client data outside the firm",
@@ -51,32 +95,32 @@
       "task": "Process flow from notes"
     },
     {
-      "id": "r-23zcm464-4",
+      "id": "r-58mpxjwh-8",
       "date": "2026-11-02",
       "section": "Accounts and disclosures",
-      "type": "Made-up info",
-      "wrong": "Said a disclosure was met with no quote to support it.",
+      "type": "Made something up",
+      "wrong": "Quoted a note that isn't in the accounts.",
       "caught": "Re-added it in Excel",
       "impact": "A wrong figure on file",
       "context": "practice",
       "task": "Finding every place a figure appears"
     },
     {
-      "id": "r-23zcm464-5",
+      "id": "r-58mpxjwh-9",
       "date": "2026-10-30",
       "section": "Related parties",
-      "type": "Made-up info",
-      "wrong": "Listed a directorship that isn't on Companies House.",
+      "type": "Made something up",
+      "wrong": "Explained related parties with a rule that isn't in the standard.",
       "caught": "Rechecked to the source document",
       "impact": "A misleading note to the client",
       "context": "real",
       "task": "Background checks on a director"
     },
     {
-      "id": "r-23zcm464-6",
+      "id": "r-58mpxjwh-10",
       "date": "2026-11-02",
       "section": "Walkthroughs and controls",
-      "type": "Made-up info",
+      "type": "Made something up",
       "wrong": "Process flow added a control the client doesn't have.",
       "caught": "Reviewer asked for the quote",
       "impact": "",
@@ -84,59 +128,15 @@
       "task": "Concluding on control design"
     },
     {
-      "id": "r-23zcm464-7",
+      "id": "r-58mpxjwh-11",
       "date": "2026-09-18",
       "section": "Related parties",
-      "type": "Made-up info",
-      "wrong": "Gave a director's company a made-up registration number.",
+      "type": "Made something up",
+      "wrong": "Added a company to the group chart that doesn't exist.",
       "caught": "Checked against Companies House",
       "impact": "Missing a cut-off error",
       "context": "real",
       "task": "Finding directors' other companies on Companies House"
-    },
-    {
-      "id": "r-23zcm464-8",
-      "date": "2026-10-09",
-      "section": "Revenue",
-      "type": "Wrong number",
-      "wrong": "Two invoices merged into one line in the table.",
-      "caught": "Checked against Companies House",
-      "impact": "",
-      "context": "real",
-      "task": "Flagging unusual sales near the year end (leads only)"
-    },
-    {
-      "id": "r-23zcm464-9",
-      "date": "2026-10-15",
-      "section": "Accounts and disclosures",
-      "type": "Made-up info",
-      "wrong": "Quoted a note that isn't in the accounts.",
-      "caught": "Checked against Companies House",
-      "impact": "",
-      "context": "real",
-      "task": "Finding every place a figure appears"
-    },
-    {
-      "id": "r-23zcm464-10",
-      "date": "2026-10-23",
-      "section": "Related parties",
-      "type": "Made-up info",
-      "wrong": "Said a director resigned in 2024; the record shows no change.",
-      "caught": "Rechecked to the source document",
-      "impact": "",
-      "context": "real",
-      "task": "Finding directors' other companies on Companies House"
-    },
-    {
-      "id": "r-23zcm464-11",
-      "date": "2026-09-24",
-      "section": "Walkthroughs and controls",
-      "type": "Made-up info",
-      "wrong": "Process notes said invoices are approved twice; the notes say once.",
-      "caught": "Rechecked to the source document",
-      "impact": "",
-      "context": "practice",
-      "task": "Process flow from notes"
     }
   ],
   "steps": [
@@ -162,10 +162,23 @@
   "settingsCopiedOn": "2026-11-04",
   "notes": [
     {
-      "id": "n-23zcm464-0",
-      "date": "2026-10-23",
-      "task": "Concluding on control design",
-      "tool": "Microsoft 365 Copilot",
+      "id": "n-58mpxjwh-0",
+      "date": "2026-09-18",
+      "task": "Searching for unrecorded liabilities",
+      "tool": "Claude",
+      "checked": [
+        false,
+        true,
+        true,
+        true
+      ],
+      "reviewerRole": "Manager"
+    },
+    {
+      "id": "n-58mpxjwh-1",
+      "date": "2026-10-02",
+      "task": "Searching for unrecorded liabilities",
+      "tool": "Claude",
       "checked": [
         true,
         true,
@@ -175,28 +188,15 @@
       "reviewerRole": "Manager"
     },
     {
-      "id": "n-23zcm464-1",
-      "date": "2026-09-28",
-      "task": "Setting materiality",
-      "tool": "A local model",
-      "checked": [
-        true,
-        true,
-        true,
-        true
-      ],
-      "reviewerRole": "Manager"
-    },
-    {
-      "id": "n-23zcm464-2",
-      "date": "2026-11-06",
+      "id": "n-58mpxjwh-2",
+      "date": "2026-10-27",
       "task": "Searching for unrecorded liabilities",
       "tool": "Microsoft 365 Copilot",
       "checked": [
         true,
         true,
-        true,
-        false
+        false,
+        true
       ],
       "reviewerRole": "Manager"
     }

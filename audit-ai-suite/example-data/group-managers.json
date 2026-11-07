@@ -17,29 +17,29 @@
           "id": "r-vi524jku-0",
           "date": "2026-10-29",
           "section": "Accounts and disclosures",
-          "type": "Wrong judgement",
-          "wrong": "Draft going concern wording sounded more certain than the evidence.",
-          "caught": "Rechecked to the source document",
-          "impact": "A misleading note to the client",
+          "type": "Missed or misread",
+          "wrong": "Misread the bank's support letter as unconditional.",
+          "caught": "Reviewer asked for the quote",
+          "impact": "A wrong conclusion on file",
           "context": "real",
           "task": "Drafting the going concern conclusion"
         },
         {
           "id": "r-vi524jku-1",
-          "date": "2026-10-28",
-          "section": "Planning",
-          "type": "Wrong judgement",
-          "wrong": "Suggested materiality on profit when the entity makes a loss.",
-          "caught": "Senior's review",
-          "impact": "",
+          "date": "2026-10-20",
+          "section": "Accounts and disclosures",
+          "type": "Missed or misread",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "Rechecked to the source document",
+          "impact": "A wrong conclusion on file",
           "context": "practice",
-          "task": "Industry research from public news"
+          "task": "First pass against the disclosure checklist"
         },
         {
           "id": "r-vi524jku-2",
           "date": "2026-10-15",
           "section": "Accounts and disclosures",
-          "type": "Made-up info",
+          "type": "Made something up",
           "wrong": "Quoted a note that isn't in the accounts.",
           "caught": "Checked against Companies House",
           "impact": "A misleading note to the client",
@@ -135,10 +135,10 @@
           "id": "r-dqmmq4rc-0",
           "date": "2026-09-28",
           "section": "Revenue",
-          "type": "Wrong judgement",
-          "wrong": "Said revenue on a long contract should all be taken at the start.",
-          "caught": "Rechecked to the source document",
-          "impact": "",
+          "type": "Missed or misread",
+          "wrong": "Missed a large sale on 31 March.",
+          "caught": "Re-added it in Excel",
+          "impact": "Client data outside the firm",
           "context": "practice",
           "task": "Deciding if revenue is recognised correctly"
         },
@@ -146,8 +146,8 @@
           "id": "r-dqmmq4rc-1",
           "date": "2026-10-08",
           "section": "Planning",
-          "type": "Wrong judgement",
-          "wrong": "Called a fraud risk 'low' with no reason given.",
+          "type": "Missed or misread",
+          "wrong": "Risk summary left out the new loan facility.",
           "caught": "Reviewer asked for the quote",
           "impact": "",
           "context": "real",
@@ -242,45 +242,45 @@
           "id": "r-3h2449ak-0",
           "date": "2026-10-16",
           "section": "Walkthroughs and controls",
-          "type": "Wrong judgement",
-          "wrong": "Said a review control was precise enough without evidence.",
-          "caught": "Re-added it in Excel",
-          "impact": "A misleading note to the client",
+          "type": "Missed or misread",
+          "wrong": "Process notes missed who can change supplier bank details.",
+          "caught": "Read the clause myself",
+          "impact": "Testing the wrong sample",
           "context": "real",
-          "task": "Concluding on control design"
+          "task": "Process flow from notes"
         },
         {
           "id": "r-3h2449ak-1",
-          "date": "2026-10-08",
+          "date": "2026-10-28",
           "section": "Accounts and disclosures",
-          "type": "Made-up info",
+          "type": "Made something up",
           "wrong": "Said a disclosure was met with no quote to support it.",
-          "caught": "Checked against Companies House",
-          "impact": "A wrong conclusion on file",
-          "context": "practice",
-          "task": "Drafting the going concern conclusion"
-        },
-        {
-          "id": "r-3h2449ak-2",
-          "date": "2026-10-21",
-          "section": "Revenue",
-          "type": "Wrong judgement",
-          "wrong": "Said revenue on a long contract should all be taken at the start.",
-          "caught": "Compared with my own working",
-          "impact": "",
-          "context": "real",
-          "task": "Flagging unusual sales near the year end (leads only)"
-        },
-        {
-          "id": "r-3h2449ak-3",
-          "date": "2026-10-27",
-          "section": "Planning",
-          "type": "Wrong judgement",
-          "wrong": "Suggested materiality on profit when the entity makes a loss.",
           "caught": "",
           "impact": "",
           "context": "real",
-          "task": "First draft of the planning memo"
+          "task": "Finding every place a figure appears"
+        },
+        {
+          "id": "r-3h2449ak-2",
+          "date": "2026-10-26",
+          "section": "Walkthroughs and controls",
+          "type": "Missed or misread",
+          "wrong": "Read one walkthrough as proof the control works all year.",
+          "caught": "Manager's review",
+          "impact": "Missing a cut-off error",
+          "context": "real",
+          "task": "Process flow from notes"
+        },
+        {
+          "id": "r-3h2449ak-3",
+          "date": "2026-10-29",
+          "section": "Accounts and disclosures",
+          "type": "Missed or misread",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
+          "task": "First pass against the disclosure checklist"
         }
       ],
       "steps": [
@@ -288,12 +288,12 @@
         true,
         true,
         true,
-        false,
+        true,
         true
       ],
       "game": {
         "picks": [
-          0,
+          3,
           3,
           1,
           2,
@@ -303,12 +303,38 @@
           2
         ]
       },
-      "settingsCopiedOn": "2026-10-19",
+      "settingsCopiedOn": "2026-10-25",
       "notes": [
         {
           "id": "n-3h2449ak-0",
+          "date": "2026-09-11",
+          "task": "First draft of the planning memo",
+          "tool": "A local model",
+          "checked": [
+            false,
+            false,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-1",
+          "date": "2026-10-26",
+          "task": "Background checks on a director",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
+            false,
+            true,
+            true,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-3h2449ak-2",
           "date": "2026-09-02",
-          "task": "First pass against the disclosure checklist",
+          "task": "Setting materiality",
           "tool": "A local model",
           "checked": [
             true,
@@ -319,47 +345,8 @@
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-3h2449ak-1",
-          "date": "2026-10-16",
-          "task": "First pass against the disclosure checklist",
-          "tool": "Microsoft 365 Copilot",
-          "checked": [
-            true,
-            true,
-            false,
-            true
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
-          "id": "n-3h2449ak-2",
-          "date": "2026-09-08",
-          "task": "Searching for unrecorded liabilities",
-          "tool": "Microsoft 365 Copilot",
-          "checked": [
-            true,
-            true,
-            true,
-            true
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
           "id": "n-3h2449ak-3",
-          "date": "2026-09-18",
-          "task": "Setting materiality",
-          "tool": "Microsoft 365 Copilot",
-          "checked": [
-            true,
-            true,
-            true,
-            true
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
-          "id": "n-3h2449ak-4",
-          "date": "2026-09-29",
+          "date": "2026-09-25",
           "task": "Drafting the going concern conclusion",
           "tool": "Claude",
           "checked": [
@@ -379,27 +366,27 @@
       "version": 1,
       "madeWith": "final",
       "exportedOn": "2026-10-30",
-      "anonId": "p-cnd79qu2",
+      "anonId": "p-rszvyiqc",
       "level": "Manager",
       "reports": [
         {
-          "id": "r-cnd79qu2-0",
-          "date": "2026-09-11",
-          "section": "Related parties",
-          "type": "Made-up info",
-          "wrong": "Said a director resigned in 2024; the record shows no change.",
-          "caught": "Senior's review",
+          "id": "r-rszvyiqc-0",
+          "date": "2026-10-28",
+          "section": "Accounts and disclosures",
+          "type": "Missed or misread",
+          "wrong": "Misread the bank's support letter as unconditional.",
+          "caught": "Reviewer asked for the quote",
           "impact": "",
           "context": "real",
-          "task": "Explaining what counts as a related party"
+          "task": "Finding every place a figure appears"
         },
         {
-          "id": "r-cnd79qu2-1",
+          "id": "r-rszvyiqc-1",
           "date": "2026-10-16",
           "section": "Accounts and disclosures",
-          "type": "Wrong judgement",
-          "wrong": "Draft going concern wording sounded more certain than the evidence.",
-          "caught": "Reviewer asked for the quote",
+          "type": "Missed or misread",
+          "wrong": "Missed a note where the figure also appears.",
+          "caught": "",
           "impact": "",
           "context": "real",
           "task": "First pass against the disclosure checklist"
@@ -410,66 +397,66 @@
         true,
         true,
         true,
-        false,
+        true,
         true
       ],
       "game": {
         "picks": [
           0,
+          -1,
+          1,
           3,
           1,
-          2,
-          -1,
-          0,
-          0,
+          1,
+          3,
           2
         ]
       },
-      "settingsCopiedOn": "2026-10-19",
+      "settingsCopiedOn": "2026-10-29",
       "notes": [
         {
-          "id": "n-cnd79qu2-0",
-          "date": "2026-10-09",
+          "id": "n-rszvyiqc-0",
+          "date": "2026-09-02",
           "task": "First draft of the planning memo",
-          "tool": "Microsoft 365 Copilot",
-          "checked": [
-            true,
-            true,
-            true,
-            false
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
-          "id": "n-cnd79qu2-1",
-          "date": "2026-09-30",
-          "task": "Drafting the going concern conclusion",
           "tool": "A local model",
           "checked": [
             true,
             true,
-            true,
+            false,
             true
           ],
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-cnd79qu2-2",
+          "id": "n-rszvyiqc-1",
           "date": "2026-09-18",
           "task": "Searching for unrecorded liabilities",
-          "tool": "Claude",
+          "tool": "A local model",
           "checked": [
             true,
+            true,
+            false,
+            true
+          ],
+          "reviewerRole": "Manager"
+        },
+        {
+          "id": "n-rszvyiqc-2",
+          "date": "2026-09-25",
+          "task": "Analysing employees' pay data",
+          "tool": "Microsoft 365 Copilot",
+          "checked": [
             false,
             true,
-            false
+            true,
+            true
           ],
           "reviewerRole": "Manager"
         }
       ],
       "pilots": [
         {
-          "id": "pl-cnd79qu2-0",
+          "id": "pl-rszvyiqc-0",
           "goal": "Spotting old reconciling items",
           "tool": "A local model",
           "baselineMinutes": 30,
@@ -486,40 +473,40 @@
       "version": 1,
       "madeWith": "final",
       "exportedOn": "2026-11-05",
-      "anonId": "p-zqwc79ag",
+      "anonId": "p-evqxksv8",
       "level": "Manager",
       "reports": [
         {
-          "id": "r-zqwc79ag-0",
-          "date": "2026-09-23",
-          "section": "Related parties",
-          "type": "Made-up info",
-          "wrong": "Invented a related party loan that isn't in the minutes.",
-          "caught": "Senior's review",
-          "impact": "A wrong figure on file",
-          "context": "real",
-          "task": "Finding directors' other companies on Companies House"
-        },
-        {
-          "id": "r-zqwc79ag-1",
-          "date": "2026-11-04",
+          "id": "r-evqxksv8-0",
+          "date": "2026-10-29",
           "section": "Accounts and disclosures",
-          "type": "Made-up info",
-          "wrong": "Quoted a note that isn't in the accounts.",
-          "caught": "Compared with my own working",
+          "type": "Missed or misread",
+          "wrong": "Checklist first pass skipped the going concern section.",
+          "caught": "",
           "impact": "",
           "context": "real",
-          "task": "Drafting the going concern conclusion"
+          "task": "Finding every place a figure appears"
         },
         {
-          "id": "r-zqwc79ag-2",
-          "date": "2026-10-23",
+          "id": "r-evqxksv8-1",
+          "date": "2026-11-05",
           "section": "Planning",
-          "type": "Wrong judgement",
-          "wrong": "Called a fraud risk 'low' with no reason given.",
+          "type": "Missed or misread",
+          "wrong": "Planning memo draft missed the change of year end.",
           "caught": "",
           "impact": "",
           "context": "practice",
+          "task": "Setting materiality"
+        },
+        {
+          "id": "r-evqxksv8-2",
+          "date": "2026-10-23",
+          "section": "Planning",
+          "type": "Missed or misread",
+          "wrong": "Read the entity as profit-making when the accounts show a loss.",
+          "caught": "",
+          "impact": "",
+          "context": "real",
           "task": "Industry research from public news"
         }
       ],
@@ -534,24 +521,24 @@
       "game": {
         "picks": [
           0,
-          0,
-          0,
+          -1,
           2,
           3,
+          3,
           1,
-          2,
-          1
+          3,
+          2
         ]
       },
-      "settingsCopiedOn": "2026-11-04",
+      "settingsCopiedOn": "2026-11-03",
       "notes": [
         {
-          "id": "n-zqwc79ag-0",
-          "date": "2026-10-23",
+          "id": "n-evqxksv8-0",
+          "date": "2026-09-11",
           "task": "Deciding if revenue is recognised correctly",
           "tool": "Claude",
           "checked": [
-            true,
+            false,
             false,
             true,
             true
@@ -559,48 +546,22 @@
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-zqwc79ag-1",
-          "date": "2026-10-09",
-          "task": "Concluding on control design",
+          "id": "n-evqxksv8-1",
+          "date": "2026-09-18",
+          "task": "Drafting the going concern conclusion",
           "tool": "Microsoft 365 Copilot",
           "checked": [
             true,
             true,
-            true,
-            true
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
-          "id": "n-zqwc79ag-2",
-          "date": "2026-09-29",
-          "task": "Concluding on control design",
-          "tool": "Claude",
-          "checked": [
-            true,
             false,
-            true,
             true
           ],
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-zqwc79ag-3",
-          "date": "2026-11-03",
-          "task": "Setting materiality",
-          "tool": "Claude",
-          "checked": [
-            true,
-            true,
-            true,
-            false
-          ],
-          "reviewerRole": "Manager"
-        },
-        {
-          "id": "n-zqwc79ag-4",
-          "date": "2026-09-10",
-          "task": "Analysing employees' pay data",
+          "id": "n-evqxksv8-2",
+          "date": "2026-10-02",
+          "task": "First pass against the disclosure checklist",
           "tool": "A local model",
           "checked": [
             true,
@@ -618,20 +579,20 @@
       "app": "audit-ai-suite",
       "version": 1,
       "madeWith": "final",
-      "exportedOn": "2026-11-05",
-      "anonId": "p-8766wcc6",
+      "exportedOn": "2026-10-30",
+      "anonId": "p-y6jjqecz",
       "level": "Manager",
       "reports": [
         {
-          "id": "r-8766wcc6-0",
-          "date": "2026-10-30",
-          "section": "Walkthroughs and controls",
-          "type": "Wrong judgement",
-          "wrong": "Concluded a control was well designed from one walkthrough.",
+          "id": "r-y6jjqecz-0",
+          "date": "2026-10-23",
+          "section": "Accounts and disclosures",
+          "type": "Missed or misread",
+          "wrong": "Misread the bank's support letter as unconditional.",
           "caught": "Re-added it in Excel",
-          "impact": "A wrong conclusion on file",
-          "context": "practice",
-          "task": "Process notes from meeting notes"
+          "impact": "",
+          "context": "real",
+          "task": "Drafting the going concern conclusion"
         }
       ],
       "steps": [
@@ -644,23 +605,23 @@
       ],
       "game": {
         "picks": [
-          -1,
+          0,
+          2,
+          2,
+          2,
           3,
-          1,
-          4,
           -1,
           -1,
-          3,
-          2
+          0
         ]
       },
-      "settingsCopiedOn": "2026-11-04",
+      "settingsCopiedOn": "2026-10-29",
       "notes": [
         {
-          "id": "n-8766wcc6-0",
-          "date": "2026-09-14",
-          "task": "First draft of the planning memo",
-          "tool": "Claude",
+          "id": "n-y6jjqecz-0",
+          "date": "2026-09-04",
+          "task": "Deciding if revenue is recognised correctly",
+          "tool": "Microsoft 365 Copilot",
           "checked": [
             true,
             true,
@@ -670,10 +631,10 @@
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-8766wcc6-1",
-          "date": "2026-10-23",
-          "task": "Setting materiality",
-          "tool": "A local model",
+          "id": "n-y6jjqecz-1",
+          "date": "2026-09-24",
+          "task": "Concluding on control design",
+          "tool": "Microsoft 365 Copilot",
           "checked": [
             true,
             true,
@@ -683,9 +644,9 @@
           "reviewerRole": "Manager"
         },
         {
-          "id": "n-8766wcc6-2",
-          "date": "2026-10-16",
-          "task": "Drafting the going concern conclusion",
+          "id": "n-y6jjqecz-2",
+          "date": "2026-10-28",
+          "task": "First pass against the disclosure checklist",
           "tool": "Microsoft 365 Copilot",
           "checked": [
             true,

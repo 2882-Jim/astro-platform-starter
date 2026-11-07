@@ -3,92 +3,92 @@
   "version": 1,
   "madeWith": "final",
   "exportedOn": "2026-11-04",
-  "anonId": "p-4ppsfsyn",
+  "anonId": "p-hyrsajay",
   "level": "NQ2",
   "reports": [
     {
-      "id": "r-4ppsfsyn-0",
-      "date": "2026-10-26",
+      "id": "r-hyrsajay-0",
+      "date": "2026-10-06",
       "section": "Payroll",
-      "type": "Data or privacy slip",
+      "type": "Privacy slip",
       "wrong": "Payroll file pasted into a personal chatbot.",
       "caught": "",
       "impact": "",
       "context": "practice",
-      "task": "Explaining a payroll report layout (made-up example)"
+      "task": "Excel formula to recalculate pay for a sample"
     },
     {
-      "id": "r-4ppsfsyn-1",
-      "date": "2026-10-27",
+      "id": "r-hyrsajay-1",
+      "date": "2026-10-02",
       "section": "Revenue",
       "type": "Wrong number",
-      "wrong": "Year-end sales total out by £2,000.",
+      "wrong": "VAT added twice in the sales schedule.",
+      "caught": "",
+      "impact": "",
+      "context": "practice",
+      "task": "Pulling invoice details from scanned PDFs"
+    },
+    {
+      "id": "r-hyrsajay-2",
+      "date": "2026-10-20",
+      "section": "Purchases",
+      "type": "Missed or misread",
+      "wrong": "Missed invoices for April that belong to March.",
       "caught": "",
       "impact": "",
       "context": "real",
-      "task": "Flagging unusual sales near the year end (leads only)"
-    },
-    {
-      "id": "r-4ppsfsyn-2",
-      "date": "2026-11-03",
-      "section": "Purchases",
-      "type": "Missed something",
-      "wrong": "Missed an unrecorded invoice from April.",
-      "caught": "Read the clause myself",
-      "impact": "A wrong figure on file",
-      "context": "practice",
       "task": "Drafting supplier statement requests"
     },
     {
-      "id": "r-4ppsfsyn-3",
-      "date": "2026-11-03",
+      "id": "r-hyrsajay-3",
+      "date": "2026-10-23",
       "section": "Revenue",
       "type": "Wrong number",
-      "wrong": "Credit note shown as a sale.",
-      "caught": "",
-      "impact": "",
+      "wrong": "Year-end sales total out by £2,000.",
+      "caught": "Compared with my own working",
+      "impact": "A wrong figure on file",
       "context": "real",
       "task": "Pulling invoice details from scanned PDFs"
     }
   ],
   "steps": [
     true,
-    false,
-    false,
     true,
     true,
-    true
+    true,
+    true,
+    false
   ],
   "game": {
     "picks": [
+      0,
       -1,
       1,
-      3,
-      4,
       2,
-      1,
+      3,
+      2,
       3,
       2
     ]
   },
-  "settingsCopiedOn": "2026-10-20",
+  "settingsCopiedOn": "2026-10-23",
   "notes": [
     {
-      "id": "n-4ppsfsyn-0",
-      "date": "2026-10-01",
+      "id": "n-hyrsajay-0",
+      "date": "2026-10-16",
       "task": "Excel formula to recalculate pay for a sample",
-      "tool": "A local model",
+      "tool": "Microsoft 365 Copilot",
       "checked": [
         true,
-        false,
+        true,
         true,
         true
       ],
       "reviewerRole": "Senior"
     },
     {
-      "id": "n-4ppsfsyn-x0",
-      "date": "2026-10-30",
+      "id": "n-hyrsajay-x0",
+      "date": "2026-10-15",
       "checked": [
         true,
         false,
