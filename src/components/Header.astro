@@ -1,7 +1,7 @@
 ---
 import IcaewLinks from './IcaewLinks.astro';
 import site from '../data/site.json';
-import nav from '../data/nav.json';
+import { nav } from '../data/nav';
 import { mailingListHref } from '../lib/format';
 const path = Astro.url.pathname;
 const active = (href: string) => path.startsWith(href);
@@ -25,16 +25,31 @@ const active = (href: string) => path.startsWith(href);
         <IcaewLinks />
         <nav aria-label="Main" class="hidden lg:block">
             <ul class="flex items-center gap-7 text-sm font-medium">
+                <li>
+                    <a href="/" class:list={['link-underline py-6', path === '/' ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']} aria-current={path === '/' ? 'page' : undefined}>Home</a>
+                </li>
                 {
-                    nav.main.map((l) => (
-                        <li>
+                    nav.map((g) => (
+                        <li class="group/nav relative">
                             <a
-                                href={l.href}
-                                class:list={['link-underline py-1', active(l.href) ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']}
-                                aria-current={active(l.href) ? 'page' : undefined}
+                                href={g.href}
+                                class:list={['link-underline inline-flex items-center gap-1 py-6', active(g.href) ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']}
+                                aria-current={active(g.href) ? 'page' : undefined}
                             >
-                                {l.label}
+                                {g.label}
+                                <span class="text-[9px] text-stone-400 transition-transform duration-200 group-hover/nav:rotate-180" aria-hidden="true">▼</span>
                             </a>
+                            {/* Dropdown: everything under this heading */}
+                            <ul class="invisible absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 translate-y-1 border-t-4 border-accent-500 bg-white py-2 opacity-0 shadow-xl ring-1 ring-black/5 transition duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100">
+                                {g.children.map((c) => (
+                                    <li>
+                                        <a href={c.href} class="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50 hover:text-accent-500">
+                                            {c.label}
+                                            <span class="text-xs text-accent-500" aria-hidden="true">{c.external ? '↗' : ''}</span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
                         </li>
                     ))
                 }
@@ -42,17 +57,27 @@ const active = (href: string) => path.startsWith(href);
         </nav>
         <details class="group relative lg:hidden">
             <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">Menu</summary>
-            <ul class="absolute right-0 mt-2 w-64 border-t-4 border-accent-500 bg-white py-2 shadow-xl">
+            <div class="absolute right-0 mt-2 max-h-[75vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto border-t-4 border-accent-500 bg-white py-2 shadow-xl">
+                <a href="/" class="block px-5 py-2 text-sm font-bold text-ink-900">Home</a>
                 {
-                    nav.main.map((l) => (
-                        <li>
-                            <a href={l.href} class:list={['block px-5 py-3 text-sm hover:bg-ink-50', active(l.href) && 'font-bold text-accent-500']}>
-                                {l.label}
+                    nav.map((g) => (
+                        <div class="border-t border-ink-100 px-5 py-3">
+                            <a href={g.href} class:list={['block text-sm font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>
+                                {g.label}
                             </a>
-                        </li>
+                            <ul class="mt-1 space-y-1">
+                                {g.children.map((c) => (
+                                    <li>
+                                        <a href={c.href} class="block py-1 pl-3 text-sm text-stone-600 hover:text-accent-500">
+                                            {c.label} {c.external && <span class="text-accent-500" aria-hidden="true">↗</span>}
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
                     ))
                 }
-            </ul>
+            </div>
         </details>
     </div>
 </header>

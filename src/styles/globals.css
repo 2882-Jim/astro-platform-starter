@@ -54,3 +54,6 @@
 }
 
 .committee-tile[aria-expanded='true'] .pop-card { transform: none; opacity: 1; }
+
+/* Jump links land below the sticky header. */
+[id] { scroll-margin-top: 6.5rem; }

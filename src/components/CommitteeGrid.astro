@@ -45,7 +45,7 @@ const listJoin = (a: string[]) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} 
     </ul>
     <div class="flex flex-wrap items-center justify-between gap-4 border-t-2 border-ink-900 px-6 py-4 text-sm text-stone-600">
         {council.length > 0 && (
-            <p class="flex items-center gap-2">
+            <p id="council" class="flex items-center gap-2">
                 <span class="inline-block h-3 w-3 shrink-0 bg-accent-500" aria-hidden="true" />
                 {listJoin(council)} are also our ICAEW Student Council representatives.
             </p>
