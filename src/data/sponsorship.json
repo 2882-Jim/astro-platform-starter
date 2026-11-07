@@ -1,87 +1,35 @@
 {
     "pricesConfirmed": false,
     "vatStatus": "unconfirmed",
-    "contractLength": "12 months",
-    "intro": "Sponsorship gives firms a direct, year-round presence among ACA students training across Greater Manchester, supporting the next generation of chartered accountants.",
+    "intro": "Support the next generation of chartered accountants and put your firm in front of ACA students across Greater Manchester.",
     "prospectusUrl": "",
     "tiers": [
         {
             "name": "Headline Partner",
             "price": "From £6,000",
-            "availability": "1 available · exclusive in your sector",
-            "featured": true,
-            "summary": "Our lead partner across the whole year, with naming on our biggest moments.",
+            "note": "One per year",
             "benefits": [
-                "Logo first on the website, social posts and all event materials",
-                "\"in partnership with\" naming on the Annual Ball",
-                "Sector exclusivity: no competing firm in the same sector at any tier",
-                "Speaking slot or stand at the Ball and one other flagship event",
-                "Allocation of Ball tickets (number to be agreed)",
-                "Dedicated social media features through the year",
-                "Post-event reports and an end-of-year partnership report"
+                "Lead branding across the website and the Annual Ball",
+                "Speaking or stand opportunity at flagship events",
+                "Ball tickets and social media features through the year"
             ]
         },
         {
-            "name": "Pillar Partner",
+            "name": "Event Partner",
             "price": "From £2,000",
-            "availability": "3 available · Social, Sports or Revision",
-            "featured": false,
-            "summary": "Own one pillar of the society's year and be the name members see at every event in it.",
+            "note": "Social, Sport or Revision",
             "benefits": [
-                "Naming on every event in your pillar (e.g. \"Summer Games, supported by …\")",
-                "Logo on the website and on pillar event materials",
-                "Stand, banner or short talk at your pillar's events",
-                "Social media posts for each pillar event",
-                "Post-event reports and an end-of-year report"
+                "Your name on every event in one strand",
+                "Logo on the website and event materials",
+                "Stand or banner at your events"
             ]
         },
         {
             "name": "Supporter",
             "price": "From £500",
-            "availability": "Several available",
-            "featured": false,
-            "summary": "Entry-level support for the society's programme for the year.",
-            "benefits": [
-                "Logo and link on the website's Partners section",
-                "Thank-you post on social media",
-                "Mention at one event of your choice",
-                "End-of-year report"
-            ]
+            "note": "Open to any firm",
+            "benefits": ["Logo and link on our website", "Thank-you post on social media"]
         }
     ],
-    "addons": [
-        {
-            "name": "Annual Ball headline sponsor",
-            "price": "From £3,000",
-            "summary": "Lead billing at our largest event. Can be combined with any tier."
-        },
-        {
-            "name": "Awards category",
-            "price": "From £500",
-            "summary": "Name and present one award category at the Ball."
-        },
-        {
-            "name": "Single event sponsor",
-            "price": "On request",
-            "summary": "Support one social, sports or revision event."
-        }
-    ],
-    "process": [
-        {
-            "title": "Get in touch",
-            "text": "Email us and we'll send the full prospectus and audience figures."
-        },
-        {
-            "title": "Agree a package",
-            "text": "We tailor benefits and confirm everything in a simple 12-month agreement."
-        },
-        {
-            "title": "Invoice",
-            "text": "We invoice from the society. Our charity number appears on every invoice."
-        },
-        {
-            "title": "Report back",
-            "text": "You get a short report after each event you support and an end-of-year summary."
-        }
-    ]
+    "smallPrint": "All packages run for 12 months, can be tailored and include a short report after each event. Annual Ball and awards sponsorship available on request."
 }

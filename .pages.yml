@@ -62,7 +62,7 @@ content:
       - name: tier
         label: Tier
         type: select
-        options: { values: [Headline Partner, Pillar Partner, Supporter, Event Sponsor] }
+        options: { values: [Headline Partner, Event Partner, Supporter] }
       - { name: logo, label: Logo, type: image }
       - { name: website, label: Website, type: string }
       - { name: blurb, label: Short description, type: text }
@@ -91,6 +91,7 @@ content:
       - { name: fullName, label: Full name, type: string }
       - { name: tagline, label: Tagline, type: string }
       - { name: intro, label: Home page intro, type: text }
+      - { name: brandColour, label: "Brand colour (hex, e.g. #9b1b5a)", type: string }
       - { name: mcassLogo, label: MCASS logo, type: image }
       - { name: icaewLogo, label: ICAEW logo, type: image, description: "Use the official file supplied by ICAEW." }
       - { name: acaLogo, label: ACA logo, type: image, description: "Use the official file supplied by ICAEW." }
@@ -125,32 +126,15 @@ content:
         label: VAT status (treasurer to confirm)
         type: select
         options: { values: [unconfirmed, registered, not-registered] }
-      - { name: contractLength, label: Contract length, type: string }
       - { name: intro, label: Intro, type: text }
       - { name: prospectusUrl, label: Prospectus PDF, type: file }
       - name: tiers
-        label: Tiers
+        label: Packages
         type: object
         list: true
         fields:
           - { name: name, label: Name, type: string }
           - { name: price, label: Price, type: string, description: "e.g. From £2,000. '+ VAT' is added automatically if VAT-registered." }
-          - { name: availability, label: Availability, type: string }
-          - { name: featured, label: Highlight this tier?, type: boolean }
-          - { name: summary, label: Summary, type: text }
-          - { name: benefits, label: Benefits, type: string, list: true }
-      - name: addons
-        label: Add-ons
-        type: object
-        list: true
-        fields:
-          - { name: name, label: Name, type: string }
-          - { name: price, label: Price, type: string }
-          - { name: summary, label: Summary, type: text }
-      - name: process
-        label: How it works steps
-        type: object
-        list: true
-        fields:
-          - { name: title, label: Title, type: string }
-          - { name: text, label: Text, type: text }
+          - { name: note, label: Short note, type: string }
+          - { name: benefits, label: Benefits (keep to 2-3), type: string, list: true }
+      - { name: smallPrint, label: Small print, type: text }

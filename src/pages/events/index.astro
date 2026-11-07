@@ -1,21 +1,25 @@
 ---
 import Layout from '../../layouts/Layout.astro';
 import EventCard from '../../components/EventCard.astro';
+import Hero from '../../components/Hero.astro';
 import { getEvents } from '../../lib/format';
 const { upcoming, past } = await getEvents();
 ---
 
 <Layout title="Events" description="Socials, sport, revision and the Annual Ball for ACA students in Greater Manchester.">
+    <Hero label="Event crowd or Annual Ball">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">Events</p>
+        <h1 class="mt-4 text-white">Events</h1>
+        <p class="mt-4 max-w-xl text-lg text-white/85">Revision sessions, professional events, post-exam socials, sport and the Annual Ball.</p>
+    </Hero>
     <section class="section">
         <div class="container-site">
-            <h1>Events</h1>
-            <p class="mt-4 max-w-2xl text-lg text-slate-600">Socials, sport, revision sessions and our Annual Ball.</p>
-            <h2 class="mt-12">Upcoming</h2>
+            <h2>Forthcoming</h2>
             {
                 upcoming.length ? (
                     <div class="mt-6 grid gap-6 md:grid-cols-2 lg:grid-cols-3">{upcoming.map((e) => <EventCard event={e} />)}</div>
                 ) : (
-                    <p class="mt-4 text-slate-600">New events will be announced soon.</p>
+                    <p class="mt-4 text-stone-600">New events will be announced soon.</p>
                 )
             }
             {

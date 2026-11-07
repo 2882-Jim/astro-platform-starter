@@ -6,13 +6,11 @@ export default {
     theme: {
         extend: {
             colors: {
-                navy: { 50: '#f2f4f7', 100: '#dde3eb', 600: '#24406a', 700: '#1a3154', 800: '#132541', 900: '#0c1a2f' },
-                accent: { 500: '#a0802e', 600: '#866a22' }
+                // Neutral greys; the single brand colour is set in Site settings (brandColour).
+                ink: { 50: '#f5f5f4', 100: '#e7e5e4', 600: '#44403c', 700: '#292524', 800: '#1c1917', 900: '#111111' },
+                accent: { 500: 'var(--accent)', 600: 'var(--accent)' }
             },
-            fontFamily: {
-                sans: ['Inter', ...defaultTheme.fontFamily.sans],
-                serif: ['"Source Serif 4"', ...defaultTheme.fontFamily.serif]
-            }
+            fontFamily: { sans: ['Inter', ...defaultTheme.fontFamily.sans] }
         }
     }
 };

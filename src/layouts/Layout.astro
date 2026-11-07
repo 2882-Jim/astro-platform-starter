@@ -3,7 +3,6 @@ import '../styles/globals.css';
 import '@fontsource/inter/400.css';
 import '@fontsource/inter/600.css';
 import '@fontsource/inter/700.css';
-import '@fontsource/source-serif-4/600.css';
 import Header from '../components/Header.astro';
 import Footer from '../components/Footer.astro';
 import site from '../data/site.json';
@@ -33,7 +32,7 @@ const canonical = new URL(Astro.url.pathname, Astro.site);
         <meta property="og:url" content={canonical} />
         {site.draftMode && <meta name="robots" content="noindex" />}
     </head>
-    <body class="flex min-h-screen flex-col">
+    <body class="flex min-h-screen flex-col" style={`--accent:${site.brandColour || '#9b1b5a'}`}>
         <a href="#main" class="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:bg-white focus:px-3 focus:py-2">Skip to content</a>
         {
             site.draftMode && (

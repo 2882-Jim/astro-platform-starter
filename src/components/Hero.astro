@@ -1,0 +1,25 @@
+---
+// Full-width photo banner with text over it.
+interface Props {
+    image?: string | null;
+    label: string;
+    tall?: boolean;
+}
+const { image, label, tall = false } = Astro.props;
+---
+
+<section class:list={['relative isolate flex items-end bg-stone-500', tall ? 'min-h-[70vh]' : 'min-h-[45vh]']}>
+    {
+        image ? (
+            <img src={image} alt="" class="absolute inset-0 -z-10 h-full w-full object-cover" />
+        ) : (
+            <div class="absolute inset-0 -z-10 flex items-start justify-end p-4 text-right text-xs uppercase tracking-[0.2em] text-white/70">
+                Photo: {label}
+            </div>
+        )
+    }
+    <div class="absolute inset-0 -z-10 bg-gradient-to-t from-black/80 via-black/40 to-transparent"></div>
+    <div class="container-site w-full pb-12 pt-32 text-white sm:pb-16">
+        <slot />
+    </div>
+</section>

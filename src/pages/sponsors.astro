@@ -1,142 +1,70 @@
 ---
 import Layout from '../layouts/Layout.astro';
-import Photo from '../components/Photo.astro';
+import Hero from '../components/Hero.astro';
+import Gallery from '../components/Gallery.astro';
 import site from '../data/site.json';
 import sp from '../data/sponsorship.json';
 import { getActiveSponsors } from '../lib/format';
 
 const sponsors = await getActiveSponsors();
 // Only say "+ VAT" once the treasurer has confirmed the society is VAT-registered.
-const vatSuffix = sp.vatStatus === 'registered' ? ' + VAT' : '';
+const vat = sp.vatStatus === 'registered' ? ' + VAT' : '';
 const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sponsorship enquiry')}`;
 ---
 
-<Layout title="Partner with us" description="Sponsorship packages for firms who want to reach ACA trainees in Greater Manchester.">
-    <section class="bg-navy-900 text-white">
-        <div class="container-site grid items-center gap-10 py-16 lg:grid-cols-2">
-            <div>
-                <p class="text-xs font-semibold uppercase tracking-[0.2em] text-navy-100">Sponsorship</p>
-                <h1 class="mt-5 text-white">Sponsorship opportunities</h1>
-                <div class="rule mt-6"></div>
-                <p class="mt-6 text-lg leading-relaxed text-navy-100">{sp.intro}</p>
-                <div class="mt-8 flex flex-wrap gap-3">
-                    <a href={mailto} class="btn-primary">Request the prospectus</a>
-                    {sp.prospectusUrl && <a href={sp.prospectusUrl} class="btn-outline text-white">Download prospectus (PDF)</a>}
-                </div>
-            </div>
-            <Photo alt="Sponsor stand or banner at an MCASS event" label="Sponsor branding at the Annual Ball" class="aspect-[4/3]" />
-        </div>
-    </section>
-
-    <section class="border-b border-slate-200 bg-navy-50">
-        <dl class="container-site grid grid-cols-2 divide-slate-200 md:grid-cols-4 md:divide-x">
-            {
-                site.stats.map((s) => (
-                    <div class="flex flex-col px-4 py-8 text-center">
-                        <dt class="order-2 mt-1 text-xs uppercase tracking-[0.12em] text-slate-500">{s.label}</dt>
-                        <dd class="font-serif text-3xl font-semibold text-navy-900">{s.value}</dd>
-                    </div>
-                ))
-            }
-        </dl>
-    </section>
+<Layout title="Sponsorship" description="Sponsorship packages for firms who want to reach ACA students in Greater Manchester.">
+    <Hero label="Sponsor branding at the Annual Ball">
+        <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">Sponsorship</p>
+        <h1 class="mt-4 max-w-3xl text-white">Partner with MCASS</h1>
+        <p class="mt-5 max-w-xl text-lg text-white/85">{sp.intro}</p>
+        <a href={mailto} class="btn-primary mt-8">Request the prospectus</a>
+    </Hero>
 
     <section class="section">
         <div class="container-site">
             <p class="eyebrow">Packages</p>
-            <h2 class="mt-4">Annual partnership packages</h2>
-            <p class="mt-3 max-w-2xl text-slate-600">All partnerships run for {sp.contractLength}. Every package can be tailored.</p>
-            {
-                !sp.pricesConfirmed && (
-                    <p class="mt-4 inline-block border border-amber-300 bg-amber-50 px-3 py-2 text-xs text-amber-900">
-                        Draft prices, subject to committee approval.
-                    </p>
-                )
-            }
-            <div class="mt-10 grid border-l border-t border-slate-200 lg:grid-cols-3">
+            <h2 class="mt-3">Three ways to partner</h2>
+            {!sp.pricesConfirmed && <p class="mt-3 text-xs text-amber-800">Draft prices, subject to committee approval.</p>}
+            <div class="mt-10 grid gap-px bg-ink-100 md:grid-cols-3">
                 {
-                    sp.tiers.map((t) => (
-                        <div class:list={['flex flex-col border-b border-r border-slate-200 p-8', t.featured && 'border-t-4 border-t-navy-900 bg-navy-50']}>
-                            <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent-600">{t.featured ? 'Lead partner' : 'Partner'}</p>
-                            <h3 class="mt-2 font-serif text-2xl font-semibold">{t.name}</h3>
-                            <p class="mt-4 font-serif text-3xl font-semibold text-navy-900">
+                    sp.tiers.map((t, i) => (
+                        <div class:list={['flex flex-col bg-white p-8', i === 0 && 'border-t-4 border-accent-500']}>
+                            <h3 class="text-xl font-bold">{t.name}</h3>
+                            <p class="mt-1 text-xs uppercase tracking-[0.12em] text-stone-500">{t.note}</p>
+                            <p class="mt-6 text-3xl font-bold text-ink-900">
                                 {t.price}
-                                <span class="text-base font-semibold text-slate-500">{vatSuffix}</span>
+                                <span class="text-sm font-normal text-stone-500">{vat}</span>
                             </p>
-                            <p class="mt-1 text-xs uppercase tracking-[0.1em] text-slate-500">{t.availability}</p>
-                            <p class="mt-4 text-sm text-slate-600">{t.summary}</p>
-                            <ul class="mt-6 grow divide-y divide-slate-200 border-t border-slate-200 text-sm">
-                                {t.benefits.map((b) => (
-                                    <li class="py-2.5">{b}</li>
-                                ))}
+                            <ul class="mt-6 grow space-y-3 text-sm text-stone-700">
+                                {t.benefits.map((b) => <li class="border-l-2 border-ink-100 pl-3">{b}</li>)}
                             </ul>
-                            <a href={`${mailto}${encodeURIComponent(': ' + t.name)}`} class="btn-dark mt-8">
-                                Enquire
-                            </a>
+                            <a href={`${mailto}${encodeURIComponent(': ' + t.name)}`} class="btn-dark mt-8">Enquire</a>
                         </div>
                     ))
                 }
             </div>
+            <p class="mt-6 max-w-3xl text-sm text-stone-500">{sp.smallPrint}</p>
         </div>
     </section>
 
-    <section class="section bg-slate-50">
+    <section class="pb-14 sm:pb-20">
         <div class="container-site">
-            <p class="eyebrow">Additional options</p>
-            <h2 class="mt-4">Add-ons</h2>
-            <p class="mt-3 text-slate-600">Available on their own or alongside any tier.</p>
-            <div class="mt-8 grid gap-4 md:grid-cols-3">
-                {
-                    sp.addons.map((a) => (
-                        <div class="card">
-                            <h3 class="font-serif text-lg font-semibold">{a.name}</h3>
-                            <p class="mt-2 font-semibold text-navy-900">
-                                {a.price}
-                                {a.price.startsWith('From') && vatSuffix}
-                            </p>
-                            <p class="mt-2 text-sm text-slate-600">{a.summary}</p>
-                        </div>
-                    ))
-                }
+            <p class="eyebrow">Your brand at our events</p>
+            <h2 class="mt-3">Where partners are seen</h2>
+            <div class="mt-10">
+                <Gallery labels={['Sponsor banner at the Ball', 'Partner speaking at an event', 'Branded table', 'Revision session sponsor', 'Summer Games kit']} />
             </div>
-        </div>
-    </section>
-
-    <section class="section">
-        <div class="container-site">
-            <p class="eyebrow">Process</p>
-            <h2 class="mt-4">How sponsorship works</h2>
-            <ol class="mt-8 grid gap-6 md:grid-cols-4">
-                {
-                    sp.process.map((step, i) => (
-                        <li class="card">
-                            <span class="font-serif text-3xl font-semibold text-accent-500">0{i + 1}</span>
-                            <h3 class="mt-4">{step.title}</h3>
-                            <p class="mt-2 text-sm text-slate-600">{step.text}</p>
-                        </li>
-                    ))
-                }
-            </ol>
-            <p class="mt-8 max-w-3xl text-sm text-slate-500">
-                {site.fullName} is a registered charity in England and Wales (number {site.charityNumber}).
-                {sp.vatStatus === 'registered' ? ' Prices exclude VAT.' : ''}
-            </p>
         </div>
     </section>
 
     {
         sponsors.length > 0 && (
-            <section class="section bg-slate-50">
+            <section class="section bg-ink-50">
                 <div class="container-site">
-                    <h2>Our current partners</h2>
-                    <ul class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+                    <h2>Current partners</h2>
+                    <ul class="mt-8 flex flex-wrap items-center gap-10">
                         {sponsors.map((s) => (
-                            <li class="card">
-                                {s.data.logo && <img src={s.data.logo} alt={s.data.name} class="h-12 w-auto" />}
-                                <p class="mt-3 font-semibold">{s.data.name}</p>
-                                <p class="text-xs uppercase tracking-[0.1em] text-slate-500">{s.data.tier}</p>
-                                {s.data.blurb && <p class="mt-2 text-sm text-slate-600">{s.data.blurb}</p>}
-                            </li>
+                            <li title={s.data.name}>{s.data.logo ? <img src={s.data.logo} alt={s.data.name} class="h-12 w-auto" /> : <span class="font-bold">{s.data.name}</span>}</li>
                         ))}
                     </ul>
                 </div>
@@ -144,11 +72,15 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
         )
     }
 
-    <section class="bg-navy-900 text-white">
-        <div class="container-site py-14 text-center">
-            <h2 class="text-white">Discuss a partnership</h2>
-            <p class="mt-3 text-navy-100">Contact the committee for the full prospectus, audience figures and availability.</p>
-            <a href={mailto} class="btn-primary mt-6">{site.sponsorshipEmail}</a>
+    <section class="bg-ink-900 text-white">
+        <div class="container-site flex flex-wrap items-center justify-between gap-6 py-12">
+            <div>
+                <h2 class="text-white">Discuss a partnership</h2>
+                <p class="mt-2 text-white/75">
+                    {site.fullName} is a registered charity (number {site.charityNumber}).
+                </p>
+            </div>
+            <a href={mailto} class="btn-light">{site.sponsorshipEmail}</a>
         </div>
     </section>
 </Layout>

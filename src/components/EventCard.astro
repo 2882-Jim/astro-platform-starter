@@ -10,13 +10,13 @@ const { event } = Astro.props;
 const d = event.data;
 ---
 
-<article class="flex flex-col border border-slate-200 bg-white">
+<article class="flex flex-col border border-stone-200 bg-white">
     <Photo src={d.image} alt={d.title} label={`${d.title} photo`} class="aspect-[16/9]" />
     <div class="flex grow flex-col p-6">
-        <p class="text-xs font-semibold uppercase tracking-[0.15em] text-accent-600">{d.category}</p>
-        <h3 class="mt-2 font-serif text-xl font-semibold"><a href={`/events/${event.slug}/`} class="no-underline hover:underline">{d.title}</a></h3>
-        <p class="mt-1 text-sm text-slate-500">{formatEventDate(d.date, d.dateConfirmed)}</p>
-        <p class="mt-3 grow text-sm leading-relaxed text-slate-600">{d.summary}</p>
-        <a href={`/events/${event.slug}/`} class="mt-5 text-xs font-semibold uppercase tracking-[0.12em] text-navy-900 underline underline-offset-4">Event details</a>
+        <p class="text-xs font-bold uppercase tracking-[0.15em] text-accent-600">{d.category}</p>
+        <h3 class="mt-2 text-xl font-bold"><a href={`/events/${event.slug}/`} class="no-underline hover:underline">{d.title}</a></h3>
+        <p class="mt-1 text-sm text-stone-500">{formatEventDate(d.date, d.dateConfirmed)}</p>
+        <p class="mt-3 grow text-sm leading-relaxed text-stone-600">{d.summary}</p>
+        <a href={`/events/${event.slug}/`} class="mt-5 text-xs font-bold uppercase tracking-[0.12em] text-ink-900 underline underline-offset-4">Event details</a>
     </div>
 </article>

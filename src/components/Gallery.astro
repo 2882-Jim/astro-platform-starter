@@ -1,0 +1,21 @@
+---
+// Photo grid. Pass uploaded images; empty slots show labelled placeholders.
+import Photo from './Photo.astro';
+interface Props {
+    images?: { src?: string | null; alt: string }[];
+    labels: string[];
+}
+const { images = [], labels } = Astro.props;
+// Layout fits exactly 5 photos: one large, four small.
+const slots = labels.slice(0, 5).map((label, i) => ({ src: images[i]?.src ?? null, alt: images[i]?.alt ?? label, label }));
+---
+
+<div class="grid grid-cols-2 gap-2 md:grid-cols-4">
+    {
+        slots.map((s, i) => (
+            <div class:list={[i === 0 && 'col-span-2 row-span-2']}>
+                <Photo src={s.src} alt={s.alt} label={s.label} class="aspect-square h-full" />
+            </div>
+        ))
+    }
+</div>

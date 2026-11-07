@@ -18,7 +18,7 @@ export async function getEvents() {
 }
 
 export async function getActiveSponsors() {
-    const order = ['Headline Partner', 'Pillar Partner', 'Supporter', 'Event Sponsor'];
+    const order = ['Headline Partner', 'Event Partner', 'Supporter'];
     const all = await getCollection('sponsors', (s) => s.data.active);
     return all.sort((a, b) => order.indexOf(a.data.tier) - order.indexOf(b.data.tier) || a.data.order - b.data.order);
 }

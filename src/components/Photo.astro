@@ -17,7 +17,7 @@ const { src, alt, label, class: className = 'aspect-[4/3]' } = Astro.props;
         <div
             role="img"
             aria-label={`Photo placeholder: ${label ?? alt}`}
-            class:list={['flex flex-col items-center justify-center gap-1 bg-slate-100 p-4 text-center text-slate-500 outline outline-1 -outline-offset-8 outline-slate-300', className]}
+            class:list={['flex flex-col items-center justify-center gap-1 bg-stone-100 p-4 text-center text-stone-500 outline outline-1 -outline-offset-8 outline-stone-300', className]}
         >
             <span class="text-[10px] font-semibold uppercase tracking-[0.2em]">Photo</span>
             <span class="text-sm">{label ?? alt}</span>

@@ -33,7 +33,7 @@ const sponsors = defineCollection({
     type: 'data',
     schema: z.object({
         name: z.string(),
-        tier: z.enum(['Headline Partner', 'Pillar Partner', 'Supporter', 'Event Sponsor']),
+        tier: z.enum(['Headline Partner', 'Event Partner', 'Supporter']),
         logo: z.string().optional().nullable(),
         website: z.string().optional().nullable(),
         blurb: z.string().optional().nullable(),

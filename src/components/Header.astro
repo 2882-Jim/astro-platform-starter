@@ -10,11 +10,11 @@ const links = [
 const path = Astro.url.pathname;
 ---
 
-<header class="sticky top-0 z-40 border-b border-slate-200 bg-white">
+<header class="sticky top-0 z-40 border-b border-stone-200 bg-white">
     <div class="container-site flex h-20 items-center justify-between gap-6">
         <a href="/" class="flex items-center gap-4 no-underline" aria-label="MCASS home">
             <Logo kind="mcass" />
-            <span class="hidden h-8 w-px bg-slate-300 sm:block"></span>
+            <span class="hidden h-8 w-px bg-stone-300 sm:block"></span>
             <span class="hidden items-center gap-2 sm:flex">
                 <Logo kind="icaew" size="sm" />
                 <Logo kind="aca" size="sm" />
@@ -28,8 +28,8 @@ const path = Astro.url.pathname;
                             <a
                                 href={l.href}
                                 class:list={[
-                                    'border-b-2 py-1 no-underline hover:border-navy-900',
-                                    path.startsWith(l.href) ? 'border-accent-500 text-navy-900' : 'border-transparent text-slate-600'
+                                    'border-b-2 py-1 no-underline hover:border-ink-900',
+                                    path.startsWith(l.href) ? 'border-accent-500 text-ink-900' : 'border-transparent text-stone-600'
                                 ]}
                                 aria-current={path.startsWith(l.href) ? 'page' : undefined}
                             >
@@ -41,12 +41,12 @@ const path = Astro.url.pathname;
             </ul>
         </nav>
         <details class="relative lg:hidden">
-            <summary class="cursor-pointer list-none border border-slate-300 px-3 py-2 text-xs font-semibold uppercase tracking-widest">Menu</summary>
-            <ul class="absolute right-0 mt-2 w-56 border border-slate-200 bg-white py-2 shadow-lg">
+            <summary class="cursor-pointer list-none border border-stone-300 px-3 py-2 text-xs font-semibold uppercase tracking-widest">Menu</summary>
+            <ul class="absolute right-0 mt-2 w-56 border border-stone-200 bg-white py-2 shadow-lg">
                 {
                     links.map((l) => (
                         <li>
-                            <a href={l.href} class="block px-4 py-2 text-sm no-underline hover:bg-navy-50">
+                            <a href={l.href} class="block px-4 py-2 text-sm no-underline hover:bg-ink-50">
                                 {l.label}
                             </a>
                         </li>
