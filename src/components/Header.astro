@@ -7,7 +7,7 @@ const path = Astro.url.pathname;
 const active = (href: string) => path.startsWith(href);
 ---
 
-<div class="bg-accent-500 text-white">
+<div class="hidden bg-accent-500 text-white md:block">
     <div class="container-site flex h-9 items-center justify-between gap-4 text-xs">
         <p class="hidden truncate sm:block">{site.displayName}</p>
         <ul class="flex items-center gap-5">
@@ -21,7 +21,7 @@ const active = (href: string) => path.startsWith(href);
     </div>
 </div>
 <header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
-    <div class="container-site flex h-20 items-center justify-between gap-6">
+    <div class="container-site relative flex h-20 items-center justify-between gap-6">
         <IcaewLinks />
         <nav aria-label="Main" class="hidden lg:block">
             <ul class="flex items-center gap-7 text-sm font-medium">
@@ -55,26 +55,30 @@ const active = (href: string) => path.startsWith(href);
                 }
             </ul>
         </nav>
-        <details class="group relative lg:hidden">
-            <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">Menu</summary>
-            <div class="absolute right-0 mt-2 max-h-[75vh] w-[min(20rem,calc(100vw-2rem))] overflow-y-auto border-t-4 border-accent-500 bg-white py-2 shadow-xl">
-                <a href="/" class="block px-5 py-2 text-sm font-bold text-ink-900">Home</a>
+        <details class="group/menu lg:hidden">
+            <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">
+                <span class="group-open/menu:hidden">Menu</span><span class="hidden group-open/menu:inline">Close</span>
+            </summary>
+            {/* Phone menu: headings only; tap one to see its links */}
+            <div class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t-4 border-accent-500 bg-white shadow-xl">
+                <a href="/" class="block border-b border-ink-100 px-5 py-4 text-base font-bold text-ink-900">Home</a>
                 {
                     nav.map((g) => (
-                        <div class="border-t border-ink-100 px-5 py-3">
-                            <a href={g.href} class:list={['block text-sm font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>
+                        <details class="group/sub border-b border-ink-100">
+                            <summary class:list={['flex cursor-pointer list-none items-center justify-between px-5 py-4 text-base font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>
                                 {g.label}
-                            </a>
-                            <ul class="mt-1 space-y-1">
+                                <span class="text-xs text-stone-400 transition-transform duration-200 group-open/sub:rotate-180" aria-hidden="true">▼</span>
+                            </summary>
+                            <ul class="bg-ink-50 pb-2">
                                 {g.children.map((c) => (
                                     <li>
-                                        <a href={c.href} class="block py-1 pl-3 text-sm text-stone-600 hover:text-accent-500">
+                                        <a href={c.href} class="block px-8 py-2.5 text-sm text-stone-700">
                                             {c.label} {c.external && <span class="text-accent-500" aria-hidden="true">↗</span>}
                                         </a>
                                     </li>
                                 ))}
                             </ul>
-                        </div>
+                        </details>
                     ))
                 }
             </div>

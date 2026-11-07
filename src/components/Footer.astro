@@ -19,12 +19,12 @@ const year = new Date().getFullYear();
         </div>
         <div>
             <p class="text-xs font-bold uppercase tracking-[0.15em] text-white">Site map</p>
-            <div class="mt-4 grid grid-cols-2 gap-x-6 gap-y-8 text-sm sm:grid-cols-3">
+            <div class="mt-4 grid grid-cols-2 gap-x-6 gap-y-3 text-sm sm:grid-cols-3 sm:gap-y-8">
                 {
                     nav.map((g) => (
                         <div>
                             <a href={g.href} class="font-bold text-white hover:underline">{g.label}</a>
-                            <ul class="mt-2 space-y-1.5">
+                            <ul class="mt-2 hidden space-y-1.5 sm:block">
                                 {g.children.map((c) => (
                                     <li>
                                         <a href={c.href} class="hover:text-white hover:underline">
