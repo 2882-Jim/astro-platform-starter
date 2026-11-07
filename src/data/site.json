@@ -42,5 +42,6 @@
     "founded": "1882",
     "mcassLogoLight": "/images/logos/mcass-logo-light.png",
     "mailingListUrl": "https://example.com/REPLACE-WITH-MAILCHIMP-SIGNUP-LINK",
-    "charityRegisterUrl": "https://register-of-charities.charitycommission.gov.uk/en/charity-search/-/charity-details/217014"
+    "charityRegisterUrl": "https://register-of-charities.charitycommission.gov.uk/en/charity-search/-/charity-details/217014",
+    "ticketsUrl": "https://example.com/REPLACE-WITH-TICKETS-LINK"
 }

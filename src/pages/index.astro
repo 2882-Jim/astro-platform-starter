@@ -1,5 +1,4 @@
 ---
-import OfficialLink from '../components/OfficialLink.astro';
 import Layout from '../layouts/Layout.astro';
 import Photo from '../components/Photo.astro';
 import Logo from '../components/Logo.astro';
@@ -13,6 +12,25 @@ const { upcoming, past } = await getEvents();
 const showUpcoming = upcoming.length > 0;
 const eventList = showUpcoming ? upcoming.slice(0, 3) : past.slice(0, 3);
 const sponsors = await getActiveSponsors();
+
+// Quick links: site pages, ticket links and our official pages, in one place.
+// Any upcoming event with a ticket link gets its own "Tickets" tile.
+const eventTickets = upcoming
+    .filter((e) => e.data.ticketUrl)
+    .map((e) => ({ href: e.data.ticketUrl!, title: `Tickets: ${e.data.title}`, text: 'Book now', external: true }));
+const quickLinks = [
+    { href: site.ticketsUrl || '/events/', title: 'Buy tickets', text: 'Book an event', external: Boolean(site.ticketsUrl) },
+    ...eventTickets,
+    { href: '/events/', title: 'Events', text: "What's on", external: false },
+    { href: '/committee/', title: 'Committee', text: 'Who runs MCASS', external: false },
+    { href: '/join/', title: 'Membership', text: 'How to join', external: false },
+    { href: mailingListHref, title: 'Mailing list', text: 'Get event emails', external: true },
+    { href: '/sponsors/', title: 'Sponsorship', text: 'For firms', external: false },
+    { href: '/about/', title: 'About', text: 'Who we are', external: false },
+    { href: '/contact/', title: 'Contact', text: 'Get in touch', external: false },
+    { href: site.icaewPageUrl, title: 'Our ICAEW page', text: 'icaew.com', external: true },
+    { href: site.charityRegisterUrl, title: 'Charity register', text: `Charity ${site.charityNumber}`, external: true }
+];
 const areas = [
     { title: 'Socials', text: 'Quiz nights, golf and the Christmas party.', photo: 'Quiz night at BOX Deansgate', href: '/events/' },
     { title: 'Fitness', text: 'Run club and discounted Barry\'s classes.', photo: 'Run club or Barry\'s class', href: '/events/' },
@@ -36,21 +54,14 @@ const areas = [
     <section class="section pb-0">
         <div class="container-site">
             <h2>Quick links</h2>
-            <ul class="mt-8 grid grid-cols-2 gap-px bg-ink-100 md:grid-cols-3 lg:grid-cols-6">
+            <ul class="mt-8 grid grid-cols-2 gap-px bg-ink-100 md:grid-cols-5">
                 {
-                    [
-                        { href: '/events/', title: 'Events', text: "What's on" },
-                        { href: '/committee/', title: 'Committee', text: 'Who runs MCASS' },
-                        { href: '/join/', title: 'Membership', text: 'How to join' },
-                        { href: '/sponsors/', title: 'Sponsorship', text: 'For firms' },
-                        { href: '/about/', title: 'About', text: 'Who we are' },
-                        { href: '/contact/', title: 'Contact', text: 'Get in touch' }
-                    ].map((q) => (
+                    quickLinks.map((q) => (
                         <li>
                             <a href={q.href} class="group flex h-full flex-col bg-white p-5 transition-colors duration-300 hover:bg-accent-500">
                                 <span class="text-base font-bold text-ink-900 group-hover:text-white">{q.title}</span>
                                 <span class="mt-1 text-xs text-stone-500 group-hover:text-white/85">{q.text}</span>
-                                <span class="mt-4 text-accent-500 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white" aria-hidden="true">→</span>
+                                <span class="mt-4 text-accent-500 transition-transform duration-300 group-hover:translate-x-1 group-hover:text-white" aria-hidden="true">{q.external ? '↗' : '→'}</span>
                             </a>
                         </li>
                     ))
@@ -85,7 +96,7 @@ const areas = [
             <div class="px-4 py-14 sm:px-12 lg:py-20">
                 <h2>Run by trainees</h2>
                 <p class="mt-5 max-w-lg leading-relaxed text-stone-600">A committee of ACA trainees, elected every year, organises everything we do.</p>
-                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales: <OfficialLink kind="charity" label={`number ${site.charityNumber}`} /></p>
+                <p class="mt-4 max-w-lg text-sm text-stone-500">Registered charity in England and Wales, number {site.charityNumber}.</p>
                 <dl class="mt-8 grid max-w-lg grid-cols-2 gap-6">
                     {
                         site.stats.slice(0, 4).map((s) => (
