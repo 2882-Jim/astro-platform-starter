@@ -90,7 +90,6 @@ content:
       - { name: shortName, label: Short name, type: string }
       - { name: fullName, label: Legal name (charity register), type: string }
       - { name: displayName, label: Name shown on the site, type: string }
-      - { name: founded, label: Year founded, type: string }
       - { name: tagline, label: Tagline, type: string }
       - { name: intro, label: Home page intro, type: text }
       - { name: brandColour, label: "Brand colour (hex, e.g. #9b1b5a)", type: string }

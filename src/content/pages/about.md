@@ -3,7 +3,7 @@ title: About MCASS
 description: The ICAEW student society for trainee accountants in Greater Manchester.
 ---
 
-The Manchester Chartered Accountant Students' Society (MCASS) has been bringing Manchester's trainee accountants together since 1882. We're the ICAEW student society for Greater Manchester and a registered charity (number 217014).
+The Manchester Chartered Accountant Students' Society (MCASS) is the ICAEW student society for Greater Manchester and a registered charity (number 217014).
 
 ## What we do
 
