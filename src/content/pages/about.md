@@ -10,8 +10,12 @@ The Manchester Chartered Accountant Students' Society (MCASS) has been bringing 
 - Socials: quiz nights, golf, the Christmas party
 - Fitness: run club and discounted Barry's classes
 - Revision sessions before ACA exam sittings
-- The Annual Ball every September
+- The Annual Ball (Great Gatsby theme in 2026)
+
+## Shaped by members
+
+In 2026 we asked members what they want from MCASS through a short survey. The answers are shaping our 2026 events.
 
 ## Who runs it
 
-A committee of trainees, elected every year. [Meet them](/committee/).
+A committee of trainees from firms across Manchester, elected at our AGM. [Meet the 2026/27 committee](/committee/).

@@ -37,24 +37,16 @@ content:
     type: collection
     path: src/content/committee
     format: json
-    filename: "{fields.role}.json"
+    filename: "{fields.name}.json"
     view:
       fields: [role, name]
       default: { sort: order, order: asc }
     fields:
       - { name: name, label: Name, type: string, required: true }
       - { name: role, label: Role, type: string, required: true }
-      - { name: firm, label: Training firm, type: string }
-      - { name: photo, label: Headshot, type: image }
-      - { name: linkedinUrl, label: LinkedIn URL, type: string }
-      - { name: email, label: Email (optional), type: string }
-      - { name: bio, label: About me, type: text }
-      - { name: quote, label: Why I joined MCASS (one line), type: string }
-      - { name: stage, label: ACA stage, type: string }
-      - { name: joined, label: Joined committee (year), type: string }
-      - { name: favouriteEvent, label: Favourite MCASS event, type: string }
-      - { name: funFact, label: Fun fact, type: string }
-      - { name: interests, label: Interests, type: string, list: true }
+      - { name: firm, label: Firm, type: string }
+      - { name: photo, label: Photo, type: image }
+      - { name: studentCouncil, label: ICAEW Student Council representative?, type: boolean }
       - { name: order, label: Display order, type: number, default: 99 }
 
   - name: sponsors

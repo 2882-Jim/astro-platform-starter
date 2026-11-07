@@ -52,3 +52,5 @@
     .js-reveal .reveal { opacity: 1; transform: none; transition: none; }
     .zoom, .lift { transition: none; }
 }
+
+.committee-tile[aria-expanded='true'] .pop-card { transform: none; opacity: 1; }

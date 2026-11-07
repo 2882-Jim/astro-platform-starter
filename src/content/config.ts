@@ -24,15 +24,7 @@ const committee = defineCollection({
         role: z.string(),
         firm: z.string().optional().nullable(),
         photo: z.string().optional().nullable(),
-        linkedinUrl: z.string().optional().nullable(),
-        email: z.string().optional().nullable(),
-        bio: z.string().optional().nullable(),
-        quote: z.string().optional().nullable(),
-        stage: z.string().optional().nullable(),
-        joined: z.string().optional().nullable(),
-        favouriteEvent: z.string().optional().nullable(),
-        funFact: z.string().optional().nullable(),
-        interests: z.array(z.string()).default([]),
+        studentCouncil: z.boolean().default(false),
         order: z.number().default(99)
     })
 });

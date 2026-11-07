@@ -2,8 +2,7 @@ import { getCollection } from 'astro:content';
 
 export function formatEventDate(date: Date, confirmed: boolean): string {
     if (!confirmed) {
-        const month = date.toLocaleDateString('en-GB', { month: 'long', year: 'numeric', timeZone: 'Europe/London' });
-        return date < new Date() ? month : `Date TBC (${month})`;
+        return '[Date to confirm]';
     }
     return date.toLocaleDateString('en-GB', { weekday: 'short', day: 'numeric', month: 'long', year: 'numeric', timeZone: 'Europe/London' });
 }
@@ -25,5 +24,5 @@ export async function getActiveSponsors() {
 }
 
 import site from '../data/site.json';
-/** Mailing list sign-up link: the form URL if set in Site settings, otherwise an email. */
+/** Mailing list sign-up link. PLACEHOLDER: replace mailingListUrl in Site settings with the Mailchimp sign-up form link. */
 export const mailingListHref = site.mailingListUrl || `mailto:${site.email}?subject=${encodeURIComponent('Add me to the MCASS mailing list')}`;

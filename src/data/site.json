@@ -2,7 +2,7 @@
     "draftMode": true,
     "shortName": "MCASS",
     "fullName": "The Manchester Chartered Accountants Students' Society",
-    "tagline": "The ICAEW student society for ACA trainees in Greater Manchester.",
+    "tagline": "Uniting Manchester's trainee accountants since 1882.",
     "intro": "We run revision sessions, socials and fitness events for trainee accountants in Manchester, plus the Annual Ball.",
     "email": "hello@mcass.uk",
     "eventsEmail": "events@mcass.uk",
@@ -26,7 +26,7 @@
             "confirmed": false
         },
         {
-            "value": "650+",
+            "value": "654",
             "label": "LinkedIn followers",
             "confirmed": true
         },
@@ -44,5 +44,5 @@
     "displayName": "Manchester Chartered Accountant Students' Society (MCASS)",
     "founded": "1882",
     "mcassLogoLight": "/images/logos/mcass-logo-light.png",
-    "mailingListUrl": ""
+    "mailingListUrl": "https://example.com/REPLACE-WITH-MAILCHIMP-SIGNUP-LINK"
 }

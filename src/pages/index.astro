@@ -15,18 +15,18 @@ const sponsors = await getActiveSponsors();
 const areas = [
     { title: 'Socials', text: 'Quiz nights, golf and the Christmas party.', photo: 'Quiz night at BOX Deansgate', href: '/events/' },
     { title: 'Fitness', text: 'Run club and discounted Barry\'s classes.', photo: 'Run club or Barry\'s class', href: '/events/' },
-    { title: 'The Annual Ball', text: 'Black tie, every September.', photo: 'Annual Ball 2026, The Deansgate Hotel', href: '/events/' }
+    { title: 'The Annual Ball', text: 'Great Gatsby theme in 2026.', photo: 'Annual Ball 2026, The Deansgate Hotel', href: '/events/' }
 ];
 ---
 
 <Layout>
     <Hero image={site.heroImage} label="Annual Ball (wide shot)" tall>
         <p class="text-xs font-semibold uppercase tracking-[0.2em] text-white/80">{site.displayName}</p>
-        <h1 class="mt-4 max-w-3xl text-white">Uniting Manchester's trainee accountants since {site.founded}</h1>
+        <h1 class="mt-4 max-w-3xl text-white">{site.tagline}</h1>
         <p class="mt-5 max-w-xl text-lg text-white/85">{site.intro}</p>
         <div class="mt-8 flex flex-wrap gap-3">
             <a href="/events/" class="btn-primary">View events</a>
-            <a href={mailingListHref} class="btn-light">Join the mailing list</a>
+            <a href={mailingListHref} class="btn-light">Join our mailing list</a>
         </div>
     </Hero>
 
@@ -142,7 +142,7 @@ const areas = [
                 <h2 class="text-white">Never miss an event</h2>
                 <p class="mt-2 text-white/85">Join the mailing list for event dates and ticket links.</p>
             </div>
-            <a href={mailingListHref} class="btn-light">Sign up</a>
+            <a href={mailingListHref} class="btn-light">Join our mailing list</a>
         </div>
     </section>
 

@@ -5,7 +5,7 @@ dateConfirmed: false
 time: ""
 venue: Pitch Manchester
 category: Social
-summary: Golf simulators and games, whether you've played before or not.
+summary: Golf simulators and games. Sponsored by Crowe Watson Recruitment.
 image: ""
 ticketUrl: ""
 sponsor: Crowe Watson Recruitment

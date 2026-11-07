@@ -2,6 +2,7 @@
 import Logo from './Logo.astro';
 import site from '../data/site.json';
 import nav from '../data/nav.json';
+import { mailingListHref } from '../lib/format';
 const path = Astro.url.pathname;
 const active = (href: string) => path.startsWith(href);
 ---
@@ -13,7 +14,7 @@ const active = (href: string) => path.startsWith(href);
             <li class="hidden md:block"><a href={`mailto:${site.email}`} class="hover:underline">{site.email}</a></li>
             {site.instagramUrl && <li><a href={site.instagramUrl} class="hover:underline">Instagram</a></li>}
             {site.linkedinUrl && <li><a href={site.linkedinUrl} class="hover:underline">LinkedIn</a></li>}
-            <li><a href="/join/" class="font-bold hover:underline">Mailing list</a></li>
+            <li><a href={mailingListHref} class="font-bold hover:underline">Join our mailing list</a></li>
             <li><a href="/sponsors/" class="font-bold hover:underline">Sponsor us</a></li>
         </ul>
     </div>

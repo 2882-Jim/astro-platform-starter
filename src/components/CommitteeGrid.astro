@@ -1,0 +1,74 @@
+---
+// Compact grid of committee photos inside a frame styled on the MCASS logo
+// (black and white with a red accent). Hover, tap or tab to a photo to see
+// name, role and firm.
+import { getCollection } from 'astro:content';
+import Logo from './Logo.astro';
+
+const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
+const council = committee.filter((m) => m.data.studentCouncil).map((m) => m.data.name);
+const initials = (n: string) => n.split(/[\s-]+/).map((p) => p[0]).join('').slice(0, 2).toUpperCase();
+const listJoin = (a: string[]) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} and ${a.at(-1)}` : a[0] ?? '');
+---
+
+<div class="border-2 border-ink-900 bg-white">
+    <div class="flex flex-wrap items-center justify-between gap-6 border-b-2 border-ink-900 px-6 py-5">
+        <Logo kind="mcass" />
+        <div class="text-right">
+            <p class="text-xs font-bold uppercase tracking-[0.15em] text-accent-500">2026/27</p>
+            <p class="text-xl font-bold text-ink-900">Committee</p>
+        </div>
+    </div>
+    <ul class="grid grid-cols-3 bg-white sm:grid-cols-4 md:grid-cols-6">
+        {
+            committee.map((m) => {
+                const d = m.data;
+                return (
+                    <li class="relative bg-white outline outline-1 outline-ink-100">
+                        <button type="button" aria-expanded="false" class="committee-tile group relative block aspect-square w-full overflow-hidden text-left outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-accent-500" aria-label={`${d.name}, ${d.role}${d.firm ? ', ' + d.firm : ''}`}>
+                            {d.photo ? (
+                                <img src={d.photo} alt={d.name} loading="lazy" class="zoom h-full w-full object-cover grayscale transition duration-500 group-hover:grayscale-0" />
+                            ) : (
+                                <span class="placeholder h-full w-full gap-1 border-0 p-2">
+                                    <span class="text-2xl font-bold text-ink-900">{initials(d.name)}</span>
+                                    <span class="bg-accent-500 px-1.5 py-0.5 text-[9px] font-bold uppercase tracking-[0.15em] text-white">Photo needed</span>
+                                </span>
+                            )}
+                            {d.studentCouncil && <span class="absolute right-2 top-2 h-3 w-3 bg-accent-500 ring-2 ring-white" aria-hidden="true" />}
+                            <span class="pop-card absolute inset-0 flex flex-col translate-y-full justify-end overflow-y-auto opacity-0 group-hover:opacity-100 group-focus:opacity-100 flex-col border-t-4 border-accent-500 bg-ink-900 p-2 text-white sm:p-3 transition-all duration-300 ease-out group-hover:translate-y-0 group-focus:translate-y-0">
+                                <span class="text-xs font-bold leading-tight sm:text-sm">{d.name}</span>
+                                <span class="mt-1 text-[10px] leading-snug text-white/80 sm:text-[11px]">{d.role}</span>
+                                {d.firm && <span class="mt-1 text-[10px] font-bold uppercase tracking-[0.1em] text-white sm:text-[11px]">{d.firm}</span>}
+                                {d.studentCouncil && <span class="mt-1 text-[9px] text-white/70 sm:text-[10px]">ICAEW Student Council rep</span>}
+                            </span>
+                        </button>
+                    </li>
+                );
+            })
+        }
+    </ul>
+    <div class="flex flex-wrap items-center justify-between gap-4 border-t-2 border-ink-900 px-6 py-4 text-sm text-stone-600">
+        {council.length > 0 && (
+            <p class="flex items-center gap-2">
+                <span class="inline-block h-3 w-3 shrink-0 bg-accent-500" aria-hidden="true" />
+                {listJoin(council)} are also our ICAEW Student Council representatives.
+            </p>
+        )}
+        <p class="text-xs text-stone-500">Hover over or tap a photo for details.</p>
+    </div>
+</div>
+
+<script>
+    // Tap support for phones: tapping a photo opens its card, tapping again (or another) closes it.
+    function setupTiles() {
+        const tiles = document.querySelectorAll<HTMLButtonElement>('.committee-tile');
+        tiles.forEach((t) =>
+            t.addEventListener('click', () => {
+                const open = t.getAttribute('aria-expanded') === 'true';
+                tiles.forEach((o) => o.setAttribute('aria-expanded', 'false'));
+                t.setAttribute('aria-expanded', String(!open));
+            })
+        );
+    }
+    document.addEventListener('astro:page-load', setupTiles);
+</script>
