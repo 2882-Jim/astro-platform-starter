@@ -97,10 +97,7 @@ content:
       - { name: mcassLogo, label: MCASS logo, type: image }
       - { name: mcassLogoLight, label: MCASS logo (white version for dark footer), type: image }
       - { name: icaewLogo, label: ICAEW logo, type: image, description: "Use the official file supplied by ICAEW." }
-      - { name: acaLogo, label: ACA logo, type: image, description: "Use the official file supplied by ICAEW." }
-      - { name: email, label: General email, type: string }
-      - { name: eventsEmail, label: Events email, type: string }
-      - { name: sponsorshipEmail, label: Sponsorship email, type: string }
+      - { name: email, label: Contact email, type: string }
       - { name: charityNumber, label: Charity number, type: string }
       - { name: registeredSince, label: Registered since, type: string }
       - { name: linkedinUrl, label: LinkedIn URL, type: string }

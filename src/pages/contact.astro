@@ -10,22 +10,10 @@ import site from '../data/site.json';
         <div class="container-site">
             <h1>Contact us</h1>
             <p class="mt-4 text-stone-600">Follow MCASS on <a class="underline" href={site.instagramUrl}>Instagram</a> for news and events.</p>
-            <div class="mt-10 grid gap-6 md:grid-cols-3">
-                <div class="card">
-                    <h2 class="text-2xl">General enquiries</h2>
-                    <p class="mt-2 text-stone-600">Anything else.</p>
-                    <a href={`mailto:${site.email}`} class="btn-dark mt-4">{site.email}</a>
-                </div>
-                <div class="card">
-                    <h2 class="text-2xl">Events</h2>
-                    <p class="mt-2 text-stone-600">Tickets and bookings.</p>
-                    <a href={`mailto:${site.eventsEmail}`} class="btn-dark mt-4">{site.eventsEmail}</a>
-                </div>
-                <div class="card">
-                    <h2 class="text-2xl">Sponsorship</h2>
-                    <p class="mt-2 text-stone-600">Ask for the sponsor pack.</p>
-                    <a href={`mailto:${site.sponsorshipEmail}?subject=Sponsorship%20enquiry`} class="btn-dark mt-4">Email about sponsorship</a>
-                </div>
+            <div class="card mt-10 max-w-xl">
+                <h2 class="text-2xl">Email us</h2>
+                <p class="mt-2 text-stone-600">Events, membership, sponsorship or anything else.</p>
+                <a href={`mailto:${site.email}`} class="btn-dark mt-4">{site.email}</a>
             </div>
         </div>
     </section>

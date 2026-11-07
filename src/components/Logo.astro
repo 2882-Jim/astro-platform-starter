@@ -8,7 +8,7 @@ interface Props {
     size?: 'sm' | 'md' | 'lg';
 }
 const { kind, tone = 'dark', size = 'md' } = Astro.props;
-const src = { mcass: tone === 'light' ? site.mcassLogoLight || site.mcassLogo : site.mcassLogo, icaew: site.icaewLogo, aca: site.acaLogo }[kind];
+const src = { mcass: tone === 'light' ? site.mcassLogoLight || site.mcassLogo : site.mcassLogo, icaew: site.icaewLogo, aca: '' }[kind];
 const alt = { mcass: "Manchester Chartered Accountant Students' Society (MCASS) logo", icaew: 'ICAEW logo', aca: 'ACA logo' }[kind];
 const h = kind === 'mcass' ? { sm: 'h-10', md: 'h-14', lg: 'h-20' }[size] : { sm: 'h-7', md: 'h-10', lg: 'h-14' }[size];
 const text = tone === 'light' ? 'text-white border-white/60' : 'text-ink-900 border-ink-900';

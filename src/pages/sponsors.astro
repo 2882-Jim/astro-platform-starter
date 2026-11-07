@@ -10,7 +10,7 @@ import { getActiveSponsors } from '../lib/format';
 const sponsors = await getActiveSponsors();
 // Only say "+ VAT" once the treasurer has confirmed the society is VAT-registered.
 const vat = sp.vatStatus === 'registered' ? ' + VAT' : '';
-const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sponsorship enquiry')}`;
+const mailto = `mailto:${site.email}?subject=${encodeURIComponent('Sponsorship enquiry')}`;
 ---
 
 <Layout title="Sponsorship" description="Sponsorship packages for firms who want to reach ACA students in Greater Manchester.">
@@ -80,7 +80,7 @@ const mailto = `mailto:${site.sponsorshipEmail}?subject=${encodeURIComponent('Sp
                     {site.fullName} is a registered charity (number {site.charityNumber}).
                 </p>
             </div>
-            <a href={mailto} class="btn-light">{site.sponsorshipEmail}</a>
+            <a href={mailto} class="btn-light">{site.email}</a>
         </div>
     </section>
 </Layout>

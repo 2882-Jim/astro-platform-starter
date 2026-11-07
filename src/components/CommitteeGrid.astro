@@ -3,7 +3,6 @@
 // (black and white with a red accent). Hover, tap or tab to a photo to see
 // name, role and firm.
 import { getCollection } from 'astro:content';
-import Logo from './Logo.astro';
 
 const committee = (await getCollection('committee')).sort((a, b) => a.data.order - b.data.order);
 const council = committee.filter((m) => m.data.studentCouncil).map((m) => m.data.name);
@@ -13,11 +12,8 @@ const listJoin = (a: string[]) => (a.length > 1 ? `${a.slice(0, -1).join(', ')} 
 
 <div class="border-2 border-ink-900 bg-white">
     <div class="flex flex-wrap items-center justify-between gap-6 border-b-2 border-ink-900 px-6 py-5">
-        <Logo kind="mcass" />
-        <div class="text-right">
-            <p class="text-xs font-bold uppercase tracking-[0.15em] text-accent-500">2026/27</p>
-            <p class="text-xl font-bold text-ink-900">Committee</p>
-        </div>
+        <p class="text-xl font-bold text-ink-900">Committee</p>
+        <p class="text-xs font-bold uppercase tracking-[0.15em] text-accent-500">2026/27</p>
     </div>
     <ul class="grid grid-cols-3 bg-white sm:grid-cols-4 md:grid-cols-6">
         {
