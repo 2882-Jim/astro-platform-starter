@@ -1,51 +1,134 @@
 ---
 import IcaewLinks from './IcaewLinks.astro';
 import site from '../data/site.json';
-import { nav, quickLinks, instagram, instagramHandle } from '../data/nav';
+import { tabs, quickLinks, instagram, instagramHandle } from '../data/nav';
 const path = Astro.url.pathname;
-const active = (href: string) => path.startsWith(href);
+const active = (href: string) => (href === '/' ? path === '/' : path.startsWith(href));
 ---
 
-<div class="relative z-50 bg-accent-500 text-white">
-    <div class="container-site flex h-10 items-center justify-between gap-4 text-xs">
-        <p class="hidden truncate sm:block">{site.displayName}</p>
-        <div class="ml-auto flex items-center gap-1">
-            {
-                instagram && (
-                    <a href={instagram} class="group flex items-center gap-2 px-3 py-2 transition-colors hover:bg-white/10" aria-label={`MCASS on Instagram (@${instagramHandle})`}>
-                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true">
-                            <rect x="3" y="3" width="18" height="18" rx="5" />
-                            <circle cx="12" cy="12" r="4" />
-                            <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
-                        </svg>
-                        <span class="font-semibold">@{instagramHandle}</span>
-                    </a>
-                )
-            }
-            <span class="h-4 w-px bg-white/30" aria-hidden="true"></span>
-            <details class="quick-links group/ql relative">
-                <summary class="flex cursor-pointer list-none items-center gap-1.5 px-3 py-2 font-bold uppercase tracking-[0.12em] transition-colors hover:bg-white/10">
-                    Quick links
-                    <span class="text-[8px] transition-transform duration-200 group-open/ql:rotate-180" aria-hidden="true">▼</span>
-                </summary>
-                <ul class="absolute right-0 top-full w-64 border-t-4 border-ink-900 bg-white py-2 text-sm text-ink-900 shadow-xl ring-1 ring-black/5">
-                    {
-                        quickLinks.map((l) => (
-                            <li>
-                                <a href={l.href} class="flex items-center justify-between gap-3 px-4 py-2.5 hover:bg-ink-50 hover:text-accent-500">
-                                    {l.label}
-                                    <span class="text-xs text-accent-500" aria-hidden="true">{l.external ? '↗' : '→'}</span>
-                                </a>
-                            </li>
-                        ))
-                    }
-                </ul>
-            </details>
-        </div>
+<div class="hidden bg-accent-500 text-white md:block">
+    <div class="container-site flex h-8 items-center text-xs">
+        <p class="truncate">{site.displayName}</p>
     </div>
 </div>
+<header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
+    <div class="container-site relative flex h-20 items-center justify-between gap-6">
+        <IcaewLinks />
+
+        <nav aria-label="Main" class="hidden xl:block">
+            <ul class="flex items-center gap-6 text-sm font-medium">
+                <li>
+                    <details class="quick-links group/ql relative">
+                        <summary class="flex cursor-pointer list-none items-center gap-1.5 bg-accent-500 px-3 py-2 text-xs font-bold uppercase tracking-[0.12em] text-white transition-opacity hover:opacity-90">
+                            Quick links
+                            <span class="text-[8px] transition-transform duration-200 group-open/ql:rotate-180" aria-hidden="true">▼</span>
+                        </summary>
+                        <div class="absolute left-0 top-full z-50 mt-3 grid w-[40rem] grid-cols-3 gap-6 border-t-4 border-accent-500 bg-white p-6 shadow-xl ring-1 ring-black/5">
+                            {
+                                quickLinks.map((g) => (
+                                    <div>
+                                        <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500">{g.heading}</p>
+                                        <ul class="mt-3 space-y-2">
+                                            {g.links.map((l) => (
+                                                <li>
+                                                    <a href={l.href} class="group/l flex items-center justify-between gap-2 text-sm text-ink-900 hover:text-accent-500">
+                                                        <span>{l.label}</span>
+                                                        <span class="text-xs text-accent-500 transition-transform group-hover/l:translate-x-0.5" aria-hidden="true">{l.external ? '↗' : '→'}</span>
+                                                    </a>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
+                                ))
+                            }
+                        </div>
+                    </details>
+                </li>
+                {
+                    tabs.map((t) => (
+                        <li>
+                            <a
+                                href={t.href}
+                                class:list={['link-underline py-1', active(t.href) ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']}
+                                aria-current={active(t.href) ? 'page' : undefined}
+                            >
+                                {t.label}
+                            </a>
+                        </li>
+                    ))
+                }
+                {
+                    instagram && (
+                        <li>
+                            <a href={instagram} class="group inline-flex items-center gap-1.5 text-ink-700 hover:text-accent-500" aria-label={`Instagram (@${instagramHandle})`}>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-4 w-4 transition-transform duration-300 group-hover:scale-110" aria-hidden="true">
+                                    <rect x="3" y="3" width="18" height="18" rx="5" />
+                                    <circle cx="12" cy="12" r="4" />
+                                    <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                                </svg>
+                                <span class="link-underline">Instagram</span>
+                            </a>
+                        </li>
+                    )
+                }
+            </ul>
+        </nav>
+
+        {/* Phone and tablet menu */}
+        <details class="group/menu xl:hidden">
+            <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">
+                <span class="group-open/menu:hidden">Menu</span><span class="hidden group-open/menu:inline">Close</span>
+            </summary>
+            <div class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t-4 border-accent-500 bg-white shadow-xl">
+                <details class="group/sub border-b border-ink-100 bg-ink-50">
+                    <summary class="flex cursor-pointer list-none items-center justify-between px-5 py-4 text-base font-bold text-accent-500">
+                        Quick links
+                        <span class="text-xs transition-transform duration-200 group-open/sub:rotate-180" aria-hidden="true">▼</span>
+                    </summary>
+                    <div class="space-y-4 px-5 pb-4">
+                        {
+                            quickLinks.map((g) => (
+                                <div>
+                                    <p class="text-[10px] font-bold uppercase tracking-[0.15em] text-stone-500">{g.heading}</p>
+                                    <ul class="mt-1">
+                                        {g.links.map((l) => (
+                                            <li>
+                                                <a href={l.href} class="block py-2 text-sm text-ink-900">
+                                                    {l.label} <span class="text-accent-500" aria-hidden="true">{l.external ? '↗' : ''}</span>
+                                                </a>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                </div>
+                            ))
+                        }
+                    </div>
+                </details>
+                {
+                    tabs.map((t) => (
+                        <a href={t.href} class:list={['block border-b border-ink-100 px-5 py-4 text-base font-bold', active(t.href) ? 'text-accent-500' : 'text-ink-900']}>
+                            {t.label}
+                        </a>
+                    ))
+                }
+                {
+                    instagram && (
+                        <a href={instagram} class="flex items-center gap-2 px-5 py-4 text-base font-bold text-ink-900">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" class="h-5 w-5" aria-hidden="true">
+                                <rect x="3" y="3" width="18" height="18" rx="5" />
+                                <circle cx="12" cy="12" r="4" />
+                                <circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none" />
+                            </svg>
+                            Instagram <span class="font-normal text-stone-500">@{instagramHandle}</span>
+                        </a>
+                    )
+                }
+            </div>
+        </details>
+    </div>
+</header>
 <script>
-    // Close the Quick links dropdown when tapping or clicking anywhere else.
+    // Close the Quick links dropdown when clicking anywhere else.
     function setupQuickLinks() {
         const dd = document.querySelector<HTMLDetailsElement>('details.quick-links');
         if (!dd) return;
@@ -55,70 +138,3 @@ const active = (href: string) => path.startsWith(href);
     }
     document.addEventListener('astro:page-load', setupQuickLinks);
 </script>
-<header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
-    <div class="container-site relative flex h-20 items-center justify-between gap-6">
-        <IcaewLinks />
-        <nav aria-label="Main" class="hidden lg:block">
-            <ul class="flex items-center gap-7 text-sm font-medium">
-                <li>
-                    <a href="/" class:list={['link-underline py-6', path === '/' ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']} aria-current={path === '/' ? 'page' : undefined}>Home</a>
-                </li>
-                {
-                    nav.map((g) => (
-                        <li class="group/nav relative">
-                            <a
-                                href={g.href}
-                                class:list={['link-underline inline-flex items-center gap-1 py-6', active(g.href) ? 'bg-[length:100%_2px] text-accent-500' : 'text-ink-700 hover:text-accent-500']}
-                                aria-current={active(g.href) ? 'page' : undefined}
-                            >
-                                {g.label}
-                                {g.children.length > 0 && <span class="text-[9px] text-stone-400 transition-transform duration-200 group-hover/nav:rotate-180" aria-hidden="true">▼</span>}
-                            </a>
-                            {/* Dropdown: everything under this heading */}
-                            {g.children.length > 0 && <ul class="invisible absolute left-1/2 top-full z-50 w-60 -translate-x-1/2 translate-y-1 border-t-4 border-accent-500 bg-white py-2 opacity-0 shadow-xl ring-1 ring-black/5 transition duration-200 group-hover/nav:visible group-hover/nav:translate-y-0 group-hover/nav:opacity-100 group-focus-within/nav:visible group-focus-within/nav:translate-y-0 group-focus-within/nav:opacity-100">
-                                {g.children.map((c) => (
-                                    <li>
-                                        <a href={c.href} class="flex items-center justify-between gap-3 px-4 py-2.5 text-sm text-ink-700 hover:bg-ink-50 hover:text-accent-500">
-                                            {c.label}
-                                            <span class="text-xs text-accent-500" aria-hidden="true">{c.external ? '↗' : ''}</span>
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>}
-                        </li>
-                    ))
-                }
-            </ul>
-        </nav>
-        <details class="group/menu lg:hidden">
-            <summary class="cursor-pointer list-none bg-accent-500 px-4 py-2 text-xs font-bold uppercase tracking-widest text-white">
-                <span class="group-open/menu:hidden">Menu</span><span class="hidden group-open/menu:inline">Close</span>
-            </summary>
-            {/* Phone menu: headings only; tap one to see its links */}
-            <div class="absolute inset-x-0 top-full max-h-[80vh] overflow-y-auto border-t-4 border-accent-500 bg-white shadow-xl">
-                <a href="/" class="block border-b border-ink-100 px-5 py-4 text-base font-bold text-ink-900">Home</a>
-                {
-                    nav.map((g) => g.children.length === 0 ? (
-                        <a href={g.href} class:list={['block border-b border-ink-100 px-5 py-4 text-base font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>{g.label}</a>
-                    ) : (
-                        <details class="group/sub border-b border-ink-100">
-                            <summary class:list={['flex cursor-pointer list-none items-center justify-between px-5 py-4 text-base font-bold', active(g.href) ? 'text-accent-500' : 'text-ink-900']}>
-                                {g.label}
-                                <span class="text-xs text-stone-400 transition-transform duration-200 group-open/sub:rotate-180" aria-hidden="true">▼</span>
-                            </summary>
-                            <ul class="bg-ink-50 pb-2">
-                                {g.children.map((c) => (
-                                    <li>
-                                        <a href={c.href} class="block px-8 py-2.5 text-sm text-stone-700">
-                                            {c.label} {c.external && <span class="text-accent-500" aria-hidden="true">↗</span>}
-                                        </a>
-                                    </li>
-                                ))}
-                            </ul>
-                        </details>
-                    ))
-                }
-            </div>
-        </details>
-    </div>
-</header>
