@@ -1,4 +1,5 @@
 ---
+import IcaewLinks from './IcaewLinks.astro';
 import OfficialLink from './OfficialLink.astro';
 import site from '../data/site.json';
 import nav from '../data/nav.json';
@@ -10,11 +11,11 @@ const year = new Date().getFullYear();
 <footer class="border-t-4 border-accent-500 bg-ink-900 text-stone-300">
     <div class="container-site grid gap-10 py-14 md:grid-cols-4">
         <div>
-            <Logo kind="mcass" tone="light" />
+            <a href={site.icaewPageUrl} class="inline-block transition-opacity hover:opacity-80" aria-label={`${site.displayName}: our page on icaew.com (opens icaew.com)`}>
+                <Logo kind="mcass" tone="light" />
+            </a>
             <p class="mt-4 text-sm leading-relaxed">{site.displayName}. {site.tagline}</p>
-            <div class="mt-6 flex items-center gap-3">
-                <Logo kind="icaew" tone="light" size="sm" />
-            </div>
+            <div class="mt-6"><IcaewLinks tone="light" showLogo={false} /></div>
         </div>
         <div class="text-sm">
             <p class="text-xs font-bold uppercase tracking-[0.15em] text-white">Site map</p>

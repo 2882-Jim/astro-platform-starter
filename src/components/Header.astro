@@ -1,5 +1,5 @@
 ---
-import Logo from './Logo.astro';
+import IcaewLinks from './IcaewLinks.astro';
 import site from '../data/site.json';
 import nav from '../data/nav.json';
 import { mailingListHref } from '../lib/format';
@@ -22,13 +22,7 @@ const active = (href: string) => path.startsWith(href);
 </div>
 <header class="sticky top-0 z-40 border-b border-ink-100 bg-white/95 backdrop-blur">
     <div class="container-site flex h-20 items-center justify-between gap-6">
-        <a href="/" class="flex items-center gap-4" aria-label="MCASS home">
-            <Logo kind="mcass" />
-            <span class="hidden h-8 w-px bg-ink-100 sm:block"></span>
-            <span class="hidden items-center gap-2 sm:flex">
-                <Logo kind="icaew" size="sm" />
-            </span>
-        </a>
+        <IcaewLinks />
         <nav aria-label="Main" class="hidden lg:block">
             <ul class="flex items-center gap-7 text-sm font-medium">
                 {
